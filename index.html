@@ -5040,6 +5040,10 @@ body { background-color: var(--bg); background-image: none; }
         <div class="toggle" id="contrast-toggle" onclick="toggleContrast()"></div>
       </div>
       <div class="setting-row">
+        <span class="setting-name">Disable firefly/butterfly animation<br><span style="font-size:11px;color:var(--text3);font-weight:400">Turns off decorative background motion.</span></span>
+        <div class="toggle" id="anim-toggle" onclick="toggleParticles()"></div>
+      </div>
+      <div class="setting-row">
         <span class="setting-name">Replay intro tour</span>
         <button class="btn btn-ghost" onclick="replayTour()" style="font-size:11px;padding:5px 12px">Replay</button>
       </div>
@@ -5140,23 +5144,6 @@ body { background-color: var(--bg); background-image: none; }
       <div class="setting-row">
         <span class="setting-name">Export all data</span>
         <button class="btn btn-ghost" onclick="exportData('all')" style="font-size:11px;padding:5px 12px">↓ Full Backup</button>
-      </div>
-    </div>
-
-    <!-- ── SECTION 5: ACCESSIBILITY ── -->
-    <div class="setting-group">
-      <div class="setting-label">ACCESSIBILITY</div>
-      <div class="setting-row">
-        <span class="setting-name">Larger text in EC cards</span>
-        <div class="toggle" id="large-text-toggle" onclick="toggleLargeText()"></div>
-      </div>
-      <div class="setting-row">
-        <span class="setting-name">High contrast labels</span>
-        <div class="toggle" id="hicontrast-labels-toggle" onclick="toggleHighContrast()"></div>
-      </div>
-      <div class="setting-row">
-        <span class="setting-name">Disable firefly/butterfly animation</span>
-        <div class="toggle" id="anim-toggle" onclick="toggleParticles()"></div>
       </div>
     </div>
 
@@ -9305,6 +9292,10 @@ function applyMode(mode){
     el.innerHTML = game ? el.getAttribute('data-game-cache') : el.getAttribute('data-std');
   });
 
+  // mode-aware search placeholder (game keeps "spells"; Planar reads plain)
+  const mks = document.getElementById('mkt-search');
+  if (mks) mks.placeholder = game ? 'Search spells...' : 'Search activities...';
+
   // settings UI reflectors
   const tog = document.getElementById('mode-toggle');
   if (tog) tog.classList.toggle('on', game);
@@ -9397,7 +9388,7 @@ function renderMarketplace() {
   else if (mktSort==='rarity') filtered.sort(function(a,b){return (rarityO[(b.rarity||'').toLowerCase()]||0)-(rarityO[(a.rarity||'').toLowerCase()]||0);});
   else if (mktSort==='newest') filtered.reverse();
   if (!filtered.length) {
-    grid.innerHTML = '<div class="mkt-empty">No spells match your filters.<br><span style="font-size:11px;opacity:.6">Try broadening your selection above.</span></div>';
+    grid.innerHTML = '<div class="mkt-empty">No ' + (isGameMode()?'spells':'activities') + ' match your filters.<br><span style="font-size:11px;opacity:.6">Try broadening your selection above.</span></div>';
     return;
   }
   var shown = 0;
@@ -9434,7 +9425,7 @@ function renderMarketplace() {
     if (shown < filtered.length) {
       var btn = document.createElement('button');
       btn.className = 'load-more-btn';
-      btn.textContent = 'Load more — showing ' + shown + ' of ' + filtered.length + ' spells';
+      btn.textContent = 'Load more — showing ' + shown + ' of ' + filtered.length + ' ' + (isGameMode()?'spells':'activities');
       btn.onclick = renderBatch;
       grid.appendChild(btn);
     }
@@ -11636,7 +11627,7 @@ function submitSpell() {
   var catEl  = document.getElementById('list-cat');
   var descEl = document.getElementById('list-desc');
   if (!nameEl||!catEl||!descEl||!nameEl.value.trim()||!catEl.value||!descEl.value.trim()) {
-    alert('Please fill in the Spell Name, Category, and Description at minimum.');
+    alert('Please fill in the ' + (isGameMode()?'Spell Name':'Activity Name') + ', Category, and Description at minimum.');
     return;
   }
   var sub = {
@@ -11741,22 +11732,6 @@ function toggleReduceMotion(){
   var animals = document.querySelectorAll('[class*="herd-"],[class*="birds-"],[class*="whale-"],[class*="fish-"]');
   animals.forEach(function(el){el.style.animationPlayState = on ? 'running' : 'paused';});
   try{localStorage.setItem('arc-reduce-motion', on?'0':'1');}catch(e){}
-}
-function toggleLargeText(){
-  var tog = document.getElementById('large-text-toggle');
-  if(tog) tog.classList.toggle('on');
-  var on = tog && tog.classList.contains('on');
-  document.documentElement.style.setProperty('--ec-card-name-size', on?'15px':'13px');
-  try{localStorage.setItem('arc-large-text', on?'1':'0');}catch(e){}
-  showNotif(on ? 'Larger text enabled.' : 'Text size reset.');
-}
-function toggleHighContrast(){
-  var tog = document.getElementById('hicontrast-labels-toggle');
-  if(tog) tog.classList.toggle('on');
-  var on = tog && tog.classList.contains('on');
-  document.documentElement.classList.toggle('high-contrast', on);
-  try{localStorage.setItem('arc-high-contrast', on?'1':'0');}catch(e){}
-  showNotif(on ? 'High contrast enabled.' : 'High contrast off.');
 }
 function toggleParticles(){
   var tog = document.getElementById('anim-toggle');

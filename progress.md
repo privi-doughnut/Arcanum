@@ -10,14 +10,12 @@
 Ordered roughly by priority. _(The bug patch + readability + Planar redesign from this session are DONE — see below.)_
 
 1. **Your review of the Planar redesign** — eyeball both themes + a real phone, then tell me what to tweak. This is the main open loop.
-2. **Fix the game-language leaks in Planar mode** — "Search spells", "No spells match", "showing X of Y spells", "Scroll to browse ECs". Needs mode-aware strings so game mode keeps its voice and Planar reads plain. *(Needs your OK — touches copy.)*
-3. **Consolidate the two ACCESSIBILITY sections** in the Chamber into one clean block (see bug B4). The id-collision is already fixed; the remaining question is whether to merge the overlapping "Larger text" / "High contrast" pairs. *(Needs your OK — removing UI.)*
-4. **Remove the dead duplicate light-theme CSS block** (see B5) — a full `[data-theme="light"]` stylesheet is pasted twice; the later copy wins, the first is dead weight. Safe cleanup once you confirm. *(Needs your OK — deletes a big block.)*
-5. **Live + total users widget** — design below under "Only Privi can do" (needs a Worker/KV backend + deploy). Claude writes the Worker + client widget once you approve the approach.
-6. **Cloudflare Pages / single-Worker migration** — prep the combined frontend+backend Worker (design below). Claude writes it; you deploy.
-7. **Surface real error messages in `sendMsg()`** (currently everything becomes "connection unstable"). Small, safe improvement — awaiting your go.
-8. **Game-mode tiny fonts (R3)** — nav 5.5px / essence label 5px are near-illegible. Left alone for now (layout risk + it's the arcade aesthetic; the "Larger text" a11y zoom covers accessibility). Revisit if you want.
-9. **Marketplace "Load more" perf** — append only the new batch instead of rebuilding all shown cards. Nice-to-have.
+2. **Cloudflare Pages / single-Worker migration** — _scheduled for tomorrow (Privi's call)._ Prep the combined frontend+backend Worker (design below). Claude writes it; you deploy.
+3. **Live + total users widget** — design below under "Only Privi can do" (needs a Worker/KV backend + deploy). Claude writes the Worker + client widget once you approve the approach. (Pairs naturally with the migration.)
+4. **B5 — remove the dead duplicate light-theme CSS block.** DEFERRED for safety (see Done/notes); best done alongside the migration when we can fully verify. *(Needs your OK — deletes a big interleaved block.)*
+5. **Surface real error messages in `sendMsg()`** (currently everything becomes "connection unstable"). Small, safe improvement — awaiting your go.
+6. **Game-mode tiny fonts (R3)** — nav 5.5px / essence label 5px are near-illegible. Left alone for now (layout risk + it's the arcade aesthetic; the "Larger text" a11y zoom covers accessibility). Revisit if you want.
+7. **Marketplace "Load more" perf** — append only the new batch instead of rebuilding all shown cards. Nice-to-have.
 
 ---
 
@@ -44,8 +42,11 @@ These need your accounts / dashboards / deploy access. Claude will prep the code
 - ✅ **B3 — Planar mobile scaling fixed.** Added `@media(max-width:600px)` Planar font overrides at winning specificity/order (verified in the parsed stylesheet: override exists, comes after the fixed rule, wins ≤600px; desktop unchanged at 16px).
 - ✅ **R1 — contrast improved.** `--text3` darkened/brightened in all three token blocks (base dark, both light copies) toward AA; `--text2` nudged on dark. Planar gets a full AA-contrast palette (below).
 - ✅ **Planar redesign — business-chic skin shipped.** New neutral palette scoped to `[data-mode="standard"]` (dark = deep slate, light = cool off-white), ink Cormorant wordmark (retired the cursive), ink headings, confident buttons, cool-neutralized ~20 previously-warm "parchment" surfaces, subtle card shadows. Game mode 100% untouched.
-- ✅ Verified after all edits: JS parses, **0 dangling handlers**, API_URL ×1, model ×6, catalog intact, no duplicate ids. Diff is additive (+112/−7 on index.html).
+- ✅ **R4 — Planar language leaks fixed (mode-aware, game voice preserved).** Search placeholder ("Search spells…"→"Search activities…" in Planar), empty-state ("No spells/activities match"), Load-more count ("… of N spells/activities"), and the Quill validation ("Spell Name"/"Activity Name"). Game mode keeps every word it had.
+- ✅ **B4 — accessibility settings consolidated.** Merged the two duplicate ACCESSIBILITY sections into one: Read aloud · Larger text (whole-app zoom) · High contrast (the robust `data-contrast` one) · Disable animation · Replay tour. Removed the two weaker redundant toggles ("Larger text in EC cards", "High contrast labels") and their now-dead functions (`toggleLargeText`, `toggleHighContrast`). No user DATA keys touched. Verified: 1 section, no dup ids, 0 dangling handlers.
+- ✅ Verified after all edits: JS parses, **0 dangling handlers**, API_URL ×1, model ×6, catalog intact, no duplicate ids.
 - ⏳ _Not yet real-device tested — B3 is verified by cascade logic; Privi should eyeball on an actual phone (the browser here has a min-width and can't emulate <600px)._
+- ⏸ **B5 (dead duplicate light-theme CSS) — intentionally DEFERRED.** The two light-theme blocks are large and **interleaved with non-light rules**, so a safe delete needs a line-by-line diff I can't fully visually verify here. It's harmless dead weight (the later copy just wins). Not worth a regression risk on a competition build for invisible byte savings — revisit once there's a build/verify step, or when doing the Cloudflare migration.
 
 ---
 
