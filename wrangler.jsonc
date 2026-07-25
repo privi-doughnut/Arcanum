@@ -1,8 +1,13 @@
 {
-"name": "arcanum",
-"compatibility_date": "2026-01-01",
-"assets": {
-"directory": "./",
-"not_found_handling": "404-page"
-}
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "arcanum",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-01",
+  // Serve the static app AND run the Worker (for the POST /advisor proxy).
+  // GET requests are served from assets; POST falls through to worker.js.
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  }
 }

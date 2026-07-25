@@ -10810,8 +10810,21 @@ async function sendMsg() {
         messages: chatHistory
       })
     });
-    const data = await res.json();
+    const data = await res.json().catch(function(){ return {}; });
     typing.remove();
+    // Surface the real reason instead of masking every failure as "unstable" (this once hid a live outage)
+    if (!res.ok || data.error) {
+      console.error('[Arcanum] Advisor request failed:', res.status, data.error || data);
+      const busy = res.status === 429 || res.status === 529 ||
+                   (data.error && /overloaded|rate.?limit/i.test((data.error.type||'') + ' ' + (data.error.message||'')));
+      appendBubble('jeb', busy
+        ? (isGameMode() ? 'Jebadias is overwhelmed with seekers right now — give him a moment and try again.'
+                        : 'The advisor is busy right now. Please wait a moment and try again.')
+        : (isGameMode() ? 'The connection to the Arcanum faltered. Try again in a moment.'
+                        : 'The advisor could not respond just now. Please try again in a moment.'));
+      if (statusEl) statusEl.textContent = 'DISCONNECTED';
+      return;
+    }
     const reply = data.content?.map(c=>c.text||'').join('') || 'Something went wrong. Try again.';
     typeBubble(reply);
     chatHistory.push({role:'assistant', content:reply});
@@ -10819,7 +10832,10 @@ async function sendMsg() {
     if (statusEl) statusEl.textContent = 'AVAILABLE';
   } catch(err) {
     typing.remove();
-    appendBubble('jeb', 'The connection to the Arcanum is unstable. Check your API configuration and try again.');
+    console.error('[Arcanum] Advisor network error:', err);
+    appendBubble('jeb', isGameMode()
+      ? 'The connection to the Arcanum is unstable. Check your connection and try again.'
+      : 'Could not reach the advisor. Check your internet connection and try again.');
     if (statusEl) statusEl.textContent = 'DISCONNECTED';
   }
 }

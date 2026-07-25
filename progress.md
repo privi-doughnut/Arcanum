@@ -10,12 +10,12 @@
 Ordered roughly by priority. _(The bug patch + readability + Planar redesign from this session are DONE — see below.)_
 
 1. **Your review of the Planar redesign** — eyeball both themes + a real phone, then tell me what to tweak. This is the main open loop.
-2. **Cloudflare Pages / single-Worker migration** — _scheduled for tomorrow (Privi's call)._ Prep the combined frontend+backend Worker (design below). Claude writes it; you deploy.
+2. **Cloudflare single-Worker migration — CODE IS PREPPED ✅, YOU DEPLOY.** `worker.js`, `wrangler.jsonc`, and `.assetsignore` are ready (see Done + deploy steps below). Nothing is live until you run `wrangler deploy`. Steps are in the "Deploy the single Worker" box below.
 3. **Live + total users widget** — design below under "Only Privi can do" (needs a Worker/KV backend + deploy). Claude writes the Worker + client widget once you approve the approach. (Pairs naturally with the migration.)
 4. **B5 — remove the dead duplicate light-theme CSS block.** DEFERRED for safety (see Done/notes); best done alongside the migration when we can fully verify. *(Needs your OK — deletes a big interleaved block.)*
-5. **Surface real error messages in `sendMsg()`** (currently everything becomes "connection unstable"). Small, safe improvement — awaiting your go.
-6. **Game-mode tiny fonts (R3)** — nav 5.5px / essence label 5px are near-illegible. Left alone for now (layout risk + it's the arcade aesthetic; the "Larger text" a11y zoom covers accessibility). Revisit if you want.
-7. **Marketplace "Load more" perf** — append only the new batch instead of rebuilding all shown cards. Nice-to-have.
+5. **Game-mode tiny fonts (R3)** — nav 5.5px / essence label 5px are near-illegible. Left alone for now (layout risk + it's the arcade aesthetic; the "Larger text" a11y zoom covers accessibility). Revisit if you want.
+6. **Marketplace "Load more" perf** — append only the new batch instead of rebuilding all shown cards. Nice-to-have.
+7. **~~Surface real `sendMsg()` errors~~ — DONE this session (S2).**
 
 ---
 
@@ -56,6 +56,23 @@ These need your accounts / dashboards / deploy access. Claude will prep the code
 - ✅ **Comprehensive, replayable onboarding.** Rebuilt the first-run tour into 11 plain-language slides covering every feature AND every Settings section (Account/sync, Appearance, Accessibility, Data export/backup, Replay). Progress dots now generate dynamically; replay resets cleanly; card scrolls on small screens. Replayable from Settings → Accessibility → Replay intro tour.
 - ✅ Verified: JS parses, 0 dangling handlers, no streak refs, default=standard, 11 tour steps, API_URL/model/catalog intact. Onboarding flow tested end-to-end in-browser (dots, Back/Next, "Begin ✦", Settings slide).
 - ❓ **Mobile (B3):** the confirmed root cause (Planar `!important` font scaling) is fixed and verified by cascade logic, but this environment's viewport is locked at 1440px so I could NOT capture a real phone screenshot. **Please eyeball on an actual phone.** If other mobile issues remain (overflow, overlays, ported game sections), send me what you see and I'll fix them specifically.
+
+### Session 4 (2026-07-25) — advisor reliability + Cloudflare migration prep
+- ✅ **`sendMsg()` error handling fixed (S2).** It no longer masks every failure as "connection unstable." Now: real errors are `console.error`-logged for diagnosis (an HTTP/API error used to be swallowed silently); the user sees a **busy/overloaded** message (429/529/rate-limit) vs a **network** message vs a generic API error, all mode-aware (game vs Planar voice). Happy path unchanged.
+- ✅ **Cloudflare single-Worker migration — code prepped (you deploy).**
+  - `worker.js` is now a **combined Worker**: POST → Anthropic proxy (identical behaviour to before), everything else → static app via `env.ASSETS`. Backward compatible — if deployed with no assets binding it falls back to the old proxy-only behaviour.
+  - `wrangler.jsonc` gains `main: worker.js` + an `assets` binding (`ASSETS`) + SPA not-found handling.
+  - **`.assetsignore` added — SECURITY FIX.** The old config (`directory: "./"`, no ignore) would have **publicly served `CLAUDE.md`, `progress.md`, `claude-code-brief.md`, `worker.js`, `arcanum-data.js`** if deployed. `.assetsignore` now keeps everything but `index.html` private.
+  - `API_URL` in index.html is **left untouched** (still the old proxy URL) so nothing breaks pre- or post-deploy; switch it to the new worker's origin only after you've verified.
+
+> **📦 Deploy the single Worker (Privi):**
+> 1. `npm install -D wrangler@latest`
+> 2. `npx wrangler secret put ARCANUM_ANTHROPIC_KEY`  ← paste your `sk-ant-…` key at the prompt (on the `arcanum` worker)
+> 3. `npx wrangler deploy --dry-run`  ← optional, validates config
+> 4. `npx wrangler deploy`  ← uploads worker.js + index.html together
+> 5. Point your domain at the `arcanum` worker in the dashboard; verify the advisor replies.
+> 6. Once verified, retire the Netlify site. (Optional: change `API_URL` in index.html to this worker's origin to fully drop the old proxy — do it deliberately and re-test the advisor.)
+> Note: deploy with `wrangler deploy`, **not** dashboard paste (Static Assets need wrangler).
 
 ---
 

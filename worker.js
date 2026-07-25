@@ -1,16 +1,30 @@
 /* ════════════════════════════════════════════════════════════════════════
-   ARCANUM — Jebadias API proxy (Cloudflare Worker)
-   Its only job: hold the Anthropic API key server-side and forward chat
-   requests to the Anthropic API. The key never touches the browser or repo.
+   ARCANUM — combined Worker (frontend + Jebadias API proxy)
 
-   SETUP (one time):
-   1. Cloudflare dashboard → Workers & Pages → your `arcanum-api-proxy` worker
-      → Edit code → paste this whole file → Deploy.
-   2. Same worker → Settings → Variables and Secrets → add a SECRET:
-        Name:  ARCANUM_ANTHROPIC_KEY
-        Value: your Anthropic key (starts with sk-ant-...)
-      Save, then Deploy again so the secret is picked up.
-   That's it. The app already points at this worker's URL.
+   This one Worker does two jobs:
+     1. Serves the static app (index.html) via Cloudflare Workers Static Assets.
+     2. Proxies chat requests to the Anthropic API, holding the API key
+        server-side so it never reaches the browser or the repo.
+
+   It is BACKWARD COMPATIBLE with the old proxy-only deploy:
+     • POST  → proxied to Anthropic (identical behaviour to before).
+     • OPTIONS → CORS preflight.
+     • anything else → served from the static assets (env.ASSETS), or, if
+       there is no assets binding (bare proxy deploy), the old 405 response.
+
+   ── DEPLOY (single-Worker mode, replaces Netlify) ────────────────────────
+   1. Install wrangler once:      npm install -D wrangler@latest
+   2. Set the secret on THIS worker (interactive prompt, value never logged):
+        npx wrangler secret put ARCANUM_ANTHROPIC_KEY
+   3. Deploy (uploads worker.js + index.html together):
+        npx wrangler deploy
+   4. In the Cloudflare dashboard, point your domain at the `arcanum` worker.
+   5. Verify the advisor replies, then you can retire the Netlify site.
+      (index.html's API_URL can stay as-is — the old proxy still works — or be
+       switched to this worker's origin once you've verified it. See progress.md.)
+
+   NOTE: because this uses Static Assets, deploy with `wrangler deploy`, not by
+   pasting into the dashboard editor (dashboard paste can't attach assets).
    ════════════════════════════════════════════════════════════════════════ */
 
 const ALLOWED_ORIGINS = [
@@ -47,49 +61,53 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
-    if (request.method !== "POST") {
-      return json({ error: "Method not allowed. Use POST." }, 405, origin);
+    // ── API: proxy chat POSTs to Anthropic ──────────────────────────────
+    if (request.method === "POST") {
+      if (!env.ARCANUM_ANTHROPIC_KEY) {
+        return json({ error: "Server missing ARCANUM_ANTHROPIC_KEY secret." }, 500, origin);
+      }
+
+      let payload;
+      try {
+        payload = await request.json();
+      } catch (e) {
+        return json({ error: "Invalid JSON body." }, 400, origin);
+      }
+
+      const body = {
+        model: payload.model || "claude-sonnet-5",
+        max_tokens: payload.max_tokens || 1000,
+        messages: payload.messages || [],
+      };
+      if (payload.system) body.system = payload.system;
+      if (payload.temperature != null) body.temperature = payload.temperature;
+
+      try {
+        const upstream = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": env.ARCANUM_ANTHROPIC_KEY,
+            "anthropic-version": "2023-06-01"
+          },
+          body: JSON.stringify(body)
+        });
+
+        const data = await upstream.json();
+        // Pass the Anthropic status straight through so the client sees real
+        // errors (401/400/429/…) instead of an opaque failure, plus CORS.
+        return json(data, upstream.status, origin);
+      } catch (e) {
+        return json({ error: "Upstream request failed.", detail: String(e) }, 502, origin);
+      }
     }
 
-    if (!env.ARCANUM_ANTHROPIC_KEY) {
-      return json({ error: "Server missing ARCANUM_ANTHROPIC_KEY secret." }, 500, origin);
+    // ── Frontend: serve the static app (single-Worker mode) ──────────────
+    if (env.ASSETS) {
+      return env.ASSETS.fetch(request);
     }
 
-    // Parse the client body
-    let payload;
-    try {
-      payload = await request.json();
-    } catch (e) {
-      return json({ error: "Invalid JSON body." }, 400, origin);
-    }
-
-    // Build the Anthropic request, with sane defaults if fields are missing
-    const body = {
-      model: payload.model || "claude-sonnet-5",
-      max_tokens: payload.max_tokens || 1000,
-      messages: payload.messages || [],
-    };
-    if (payload.system) body.system = payload.system;
-    if (payload.temperature != null) body.temperature = payload.temperature;
-
-    try {
-      const upstream = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": env.ARCANUM_ANTHROPIC_KEY,
-          "anthropic-version": "2023-06-01"
-        },
-        body: JSON.stringify(body)
-      });
-
-      const data = await upstream.json();
-
-      // Pass the Anthropic status straight through (so the client sees real
-      // errors like 401/400 instead of an opaque failure), plus CORS headers.
-      return json(data, upstream.status, origin);
-    } catch (e) {
-      return json({ error: "Upstream request failed.", detail: String(e) }, 502, origin);
-    }
+    // Bare proxy deploy with no assets binding → old behaviour.
+    return json({ error: "Method not allowed. Use POST." }, 405, origin);
   }
 };
