@@ -48,6 +48,15 @@ These need your accounts / dashboards / deploy access. Claude will prep the code
 - ⏳ _Not yet real-device tested — B3 is verified by cascade logic; Privi should eyeball on an actual phone (the browser here has a min-width and can't emulate <600px)._
 - ⏸ **B5 (dead duplicate light-theme CSS) — intentionally DEFERRED.** The two light-theme blocks are large and **interleaved with non-light rules**, so a safe delete needs a line-by-line diff I can't fully visually verify here. It's harmless dead weight (the later copy just wins). Not worth a regression risk on a competition build for invisible byte savings — revisit once there's a build/verify step, or when doing the Cloudflare migration.
 
+### Session 3 (2026-07-25) — product changes you requested
+- ✅ **Default mode is now Planar.** New visitors start in the calm Planar skin (`siteMode` default `'game'`→`'standard'`). Game mode is now opt-in gamification via Settings. Existing users keep whatever they had. _(Theme still defaults to dark — Planar+dark; tell me if you'd rather new users land on the cream light theme.)_
+- ✅ **Streaks removed.** Deleted the home streak display, `tickStreak()` + its caller, and the "Day streak" stat in Insights. No nudgy streak counter anywhere.
+- ✅ **Planar light is now warm cream** (not pure white): `--bg #f5f0e8`, warm off-white cards, warm neutral borders, warm espresso primary button, warm shadows/gradients. Softer, still business-chic.
+- ✅ **Game-mode readability lift.** Brightened the shared dark text tokens and bumped serif body sizes (`.ec-desc`, `.feat-desc`, taglines, FAQ, etc.) in `[data-mode="game"]` only. Pixel fonts + layout untouched.
+- ✅ **Comprehensive, replayable onboarding.** Rebuilt the first-run tour into 11 plain-language slides covering every feature AND every Settings section (Account/sync, Appearance, Accessibility, Data export/backup, Replay). Progress dots now generate dynamically; replay resets cleanly; card scrolls on small screens. Replayable from Settings → Accessibility → Replay intro tour.
+- ✅ Verified: JS parses, 0 dangling handlers, no streak refs, default=standard, 11 tour steps, API_URL/model/catalog intact. Onboarding flow tested end-to-end in-browser (dots, Back/Next, "Begin ✦", Settings slide).
+- ❓ **Mobile (B3):** the confirmed root cause (Planar `!important` font scaling) is fixed and verified by cascade logic, but this environment's viewport is locked at 1440px so I could NOT capture a real phone screenshot. **Please eyeball on an actual phone.** If other mobile issues remain (overflow, overlays, ported game sections), send me what you see and I'll fix them specifically.
+
 ---
 
 ## 🛠 IMPROVEMENTS — what I (Claude) want to fix, based on the audit

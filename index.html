@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function(){
 :root{
   --bg:#07070f;--card:#0e0e1a;--card2:#0a0a14;
   --border:#1e1e2e;--border2:#2a2a3e;
-  --text:#e8e0d4;--text2:#9a9ab2;--text3:#7c7e97;
+  --text:#ece5da;--text2:#aeaec6;--text3:#8e90aa;
   --accent:#b85c18;--accent2:#ca6e28;--gold:#9e6e14;
   --green:#16903e;--px:'Press Start 2P',monospace;--brand-font:'Dancing Script',cursive;--chic:'Cormorant Garamond',serif;
   --radius:2px;--max:1100px;--pad:clamp(16px,4vw,40px);
@@ -1239,11 +1239,11 @@ html[data-mode="standard"]{
   --text:#eef1f6; --text2:#b0b8c6; --text3:#828d9e;
   --accent:#e0894a; --accent2:#eea366; --gold:#d7b471;
 }
-/* -- Palette: Planar LIGHT (clean cool off-white) -- */
+/* -- Palette: Planar LIGHT (warm cream — softer than pure white) -- */
 html[data-mode="standard"][data-theme="light"]{
-  --bg:#f7f8fa; --card:#ffffff; --card2:#eef1f5;
-  --border:#e4e7ec; --border2:#d2d8e0;
-  --text:#131722; --text2:#434b59; --text3:#68727f;
+  --bg:#f5f0e8; --card:#fdfbf6; --card2:#efe8da;
+  --border:#e6ddcd; --border2:#d7ccb8;
+  --text:#1a1208; --text2:#544636; --text3:#7a6a52;
   --accent:#b0561a; --accent2:#c4681f; --gold:#9a6b1a;
 }
 /* keep hardcoded warm light surfaces cohesive with the cool palette */
@@ -1258,10 +1258,10 @@ html[data-mode="standard"][data-theme="light"] .persona-section,
 html[data-mode="standard"][data-theme="light"] .chat-win,
 html[data-mode="standard"][data-theme="light"] .persona-btn{
   background:var(--card) !important; border-color:var(--border) !important;
-  box-shadow:0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+  box-shadow:0 1px 2px rgba(90,70,40,.05), 0 1px 3px rgba(90,70,40,.07);
 }
 html[data-mode="standard"][data-theme="light"] .review-item{ background:var(--card2) !important; border-color:var(--border) !important; }
-html[data-mode="standard"][data-theme="light"] .nav{ background:rgba(247,248,250,.85) !important; border-bottom-color:var(--border) !important; }
+html[data-mode="standard"][data-theme="light"] .nav{ background:rgba(245,240,232,.85) !important; border-bottom-color:var(--border) !important; }
 /* neutralize remaining warm "parchment" surfaces so Planar light stays cool + cohesive */
 html[data-mode="standard"][data-theme="light"] .home-what,
 html[data-mode="standard"][data-theme="light"] .stats-bar,
@@ -1270,7 +1270,7 @@ html[data-mode="standard"][data-theme="light"] .bubble-jeb,
 html[data-mode="standard"][data-theme="light"] .nav-theme-btn{ background:var(--card2) !important; border-color:var(--border) !important; }
 html[data-mode="standard"][data-theme="light"] .jeb-spot,
 html[data-mode="standard"][data-theme="light"] .about-callout,
-html[data-mode="standard"][data-theme="light"] .chronicle-banner{ background:linear-gradient(135deg,#eef1f5,#ffffff) !important; border-color:var(--border) !important; }
+html[data-mode="standard"][data-theme="light"] .chronicle-banner{ background:linear-gradient(135deg,#efe8da,#fdfbf6) !important; border-color:var(--border) !important; }
 html[data-mode="standard"][data-theme="light"] .mobile-drawer,
 html[data-mode="standard"][data-theme="light"] .codex-rule,
 html[data-mode="standard"][data-theme="light"] .chat-input,
@@ -1296,14 +1296,27 @@ html[data-mode="standard"] .home-title span{ color:var(--text) !important; }
 /* -- Confident primary buttons -- */
 html[data-mode="standard"] .btn-primary{ background:var(--accent); color:#17110a; }
 html[data-mode="standard"] .btn-primary:hover{ background:var(--accent2); color:#17110a; }
-html[data-mode="standard"][data-theme="light"] .btn-primary{ background:#131722; color:#fff; }
-html[data-mode="standard"][data-theme="light"] .btn-primary:hover{ background:#2a3140; color:#fff; }
+html[data-mode="standard"][data-theme="light"] .btn-primary{ background:#2a1e10; color:#fff; }
+html[data-mode="standard"][data-theme="light"] .btn-primary:hover{ background:#3a2b18; color:#fff; }
 
 /* -- Crisper card hover in light -- */
 html[data-mode="standard"][data-theme="light"] .feat-card:hover,
 html[data-mode="standard"][data-theme="light"] .ec-card:hover{
-  box-shadow:0 8px 24px rgba(16,24,40,.10); border-color:var(--border2);
+  box-shadow:0 8px 24px rgba(90,70,40,.14); border-color:var(--border2);
 }
+
+/* onboarding tour: keep the (now longer, more comprehensive) card scrollable on small screens */
+#onboarding-overlay .ob-card{ max-height:92vh; overflow-y:auto; }
+
+/* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
+[data-mode="game"] .home-tagline{ font-size:16px; }
+[data-mode="game"] .home-what-text{ font-size:15px; }
+[data-mode="game"] .feat-desc{ font-size:14px; }
+[data-mode="game"] .page-banner-sub{ font-size:15px; }
+[data-mode="game"] .how-item-desc{ font-size:14px; }
+[data-mode="game"] .ec-desc{ font-size:13.5px; line-height:1.6; }
+[data-mode="game"] .faq-a p{ font-size:14px; }
+[data-mode="game"] .ob-body{ font-size:14.5px; }
 
 /* ── MOBILE: Planar font scaling — fixes the !important breakpoint bug ──
    Comes after the fixed-px !important rules (~lines 1198-1213) and is
@@ -1399,7 +1412,6 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
         <button onclick="openQuiz()" style="background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">✦ Find my starting path</button>
         <button onclick="openExplore()" style="background:transparent;border:1px solid var(--border);color:var(--text2);padding:13px 22px;border-radius:10px;font-size:14px;cursor:pointer">✧ Explore</button>
       </div>
-      <div id="home-streak" style="margin-top:14px;font-size:13px;color:var(--accent);font-weight:600"></div>
     </div>
     <div id="ecotd-wrap" style="display:none;max-width:520px;margin:30px auto 0;padding:0 var(--pad)"></div>
     <div id="recent-wrap" style="display:none;max-width:var(--max);margin:30px auto 0;padding:0 var(--pad)"></div>
@@ -5232,45 +5244,63 @@ body { background-color: var(--bg); background-image: none; }
 
 <div id="onboarding-overlay" style="display:none">
   <div class="ob-card">
-    <div class="ob-dots">
-      <div class="ob-dot active"></div>
-      <div class="ob-dot"></div>
-      <div class="ob-dot"></div>
-      <div class="ob-dot"></div>
-      <div class="ob-dot"></div>
-      <div class="ob-dot"></div>
-    </div>
+    <div class="ob-dots"></div>
     <div class="ob-steps">
       <div class="ob-step active">
-        <div class="ob-icon">🏪</div>
-        <div class="ob-title">BROWSE THE MARKETPLACE</div>
-        <p class="ob-body">A catalog of <strong>3,208 real extracurriculars</strong>, each rated 0–5 by students who actually did them across four dimensions: <strong style="color:var(--accent)">Essence</strong> (personal meaning), <strong style="color:var(--accent)">Branches</strong> (difficulty), <strong style="color:var(--accent)">Bones</strong> (time commitment), and <strong style="color:var(--accent)">Mushrooms</strong> (growth). Filter by category, rarity, impact (local → global), time, and cost. Tap any card for a full detail page — radar chart, step-by-step how-to, and what admissions readers actually look for.</p>
+        <div class="ob-icon">👋</div>
+        <div class="ob-title">WELCOME TO ARCANUM</div>
+        <p class="ob-body">Arcanum helps you plan your extracurriculars with three tools: a searchable <strong style="color:var(--accent)">catalog</strong> of 3,208 real activities, an <strong style="color:var(--accent)">AI advisor</strong> that builds you a plan, and a <strong style="color:var(--accent)">tracker</strong> that follows you all the way to application season. It's free, and everything saves right in your browser — <strong>no account required</strong>. Here's a quick tour (about a minute).</p>
       </div>
       <div class="ob-step">
-        <div class="ob-icon">📖</div>
-        <div class="ob-title">SAVE &amp; TRACK</div>
-        <p class="ob-body">Tap <strong style="color:var(--accent)">+ Save</strong> on any EC to add it to your <strong style="color:var(--accent)">Spellbook</strong> — your shortlist. When you commit to actually doing one, <strong style="color:var(--accent)">cast</strong> it into your <strong style="color:var(--accent)">Grimoire</strong>, your tracker, where you log status, milestones, and deadlines. Both save to your device automatically — <strong>no account, no sign-up</strong>. Everything stays private in your browser.</p>
+        <div class="ob-icon">🔎</div>
+        <div class="ob-title">THE MARKETPLACE</div>
+        <p class="ob-body">Browse <strong>3,208 activities</strong>, each scored 0–5 on four things that actually matter: <strong style="color:var(--accent)">Essence</strong> (how meaningful), <strong style="color:var(--accent)">Branches</strong> (how hard), <strong style="color:var(--accent)">Bones</strong> (how much time), and <strong style="color:var(--accent)">Mushrooms</strong> (how competitive). Filter by category, real-world impact (local → global), rarity, time, and cost. Click any card for a full detail page — a ratings chart, a step-by-step how-to, and what admissions readers look for.</p>
+      </div>
+      <div class="ob-step">
+        <div class="ob-icon">🔍</div>
+        <div class="ob-title">FIND YOUR FIT</div>
+        <p class="ob-body">Use the <strong style="color:var(--accent)">search bar</strong> (it forgives typos), hit <strong style="color:var(--accent)">Surprise</strong> for a random pick, or check the <strong>Activity of the Day</strong> on the home page. Not sure where to start? Take the short <strong style="color:var(--accent)">intake quiz</strong> and get matched to activities that fit your goals and interests.</p>
+      </div>
+      <div class="ob-step">
+        <div class="ob-icon">📌</div>
+        <div class="ob-title">SAVE, THEN TRACK</div>
+        <p class="ob-body">Tap <strong style="color:var(--accent)">Save</strong> on any activity to add it to your <strong style="color:var(--accent)">Saved</strong> shortlist. When you commit to actually doing one, move it to your <strong style="color:var(--accent)">Tracker</strong>, where you log status, milestones, and deadlines. It all saves to your device automatically and stays private.</p>
       </div>
       <div class="ob-step">
         <div class="ob-icon">🔮</div>
-        <div class="ob-title">ASK THE ADVISOR</div>
-        <p class="ob-body"><strong style="color:var(--accent)">Jebadias</strong> is your AI advisor. Tell him your grade, goals, and interests and he builds a roadmap for your exact situation. In his chat, use <strong>Load Grimoire</strong> / <strong>Load Spellbook</strong> to hand him your whole portfolio for specific, honest feedback. He has nine "eras" you unlock by talking with him — they change his personality and the stories he tells, never the quality of his advice.</p>
+        <div class="ob-title">THE ADVISOR</div>
+        <p class="ob-body">Meet your <strong style="color:var(--accent)">AI advisor</strong>. Tell it your grade, goals, and interests, and it builds a roadmap for your exact situation. Inside the chat you can <strong>load your Saved list or Tracker</strong> straight in, so it can give specific, honest feedback on your whole profile — not generic advice.</p>
       </div>
       <div class="ob-step">
-        <div class="ob-icon">🗺️</div>
-        <div class="ob-title">EXPLORE THE WORLD</div>
-        <p class="ob-body">Arcanum is wrapped in a world — the island of <strong style="color:var(--accent)">Arcana</strong>. Open the <strong>Arcana map</strong> and click locations to uncover their stories and discover the eight chapters of <strong style="color:var(--accent)">The Chronicle</strong>, the hidden life story of your advisor. Some places aren't labeled. Some respond to persistence. It's all optional — pure exploration, with no effect on the planning tool itself.</p>
+        <div class="ob-icon">🧭</div>
+        <div class="ob-title">THE PLANNER</div>
+        <p class="ob-body">Once you've committed to a few activities, the <strong style="color:var(--accent)">Planner</strong> synthesizes them into one master strategic plan: how they fit together into a story, what to prioritize, and what's missing. It unlocks automatically after you start filling your Tracker.</p>
+      </div>
+      <div class="ob-step">
+        <div class="ob-icon">📄</div>
+        <div class="ob-title">EXPORT WHEN YOU APPLY</div>
+        <p class="ob-body">When it's application time, export your Tracker straight into <strong style="color:var(--accent)">Common App activities format</strong>, and print your master plan as a clean PDF. Share a read-only link to your list with a parent or counselor, too. The busywork is handled.</p>
+      </div>
+      <div class="ob-step">
+        <div class="ob-icon">✍️</div>
+        <div class="ob-title">CONTRIBUTE AN ACTIVITY</div>
+        <p class="ob-body">Built or found a great activity that isn't listed? <strong style="color:var(--accent)">Submit it</strong> so other students can discover it. Submissions are quickly reviewed, then added to the catalog for everyone.</p>
+      </div>
+      <div class="ob-step">
+        <div class="ob-icon">🎮</div>
+        <div class="ob-title">OPTIONAL: GAME MODE</div>
+        <p class="ob-body">Arcanum has a hidden <strong style="color:var(--accent)">fantasy layer</strong> — lore, a world map to explore, and game-style names — turned <strong>off by default</strong>. If you like a little adventure, flip on <strong style="color:var(--accent)">Game mode</strong> in Settings. It changes only the look and adds optional extras; every planning feature stays exactly the same.</p>
       </div>
       <div class="ob-step">
         <div class="ob-icon">⚙️</div>
-        <div class="ob-title">PREFER IT PLAIN?</div>
-        <p class="ob-body">Not into the fantasy? Open <strong style="color:var(--accent)">Settings</strong> (the Chamber) and switch off <strong style="color:var(--accent)">Game mode</strong> — right under the dark-mode toggle. <strong>Planar mode</strong> strips the lore, map, and arcade styling into a clean, minimal app with plain page names (Marketplace, Advisor, Tracker…). Every feature stays; only the look changes. Switch back anytime.</p>
-        <p class="ob-hint">Tip: hover any item in the top menu to see what it does. Full walkthrough on the <span onclick="closeOnboarding();nav('home')" style="color:var(--accent);cursor:pointer;text-decoration:underline">Home page</span> or in <span onclick="closeOnboarding();nav('faq')" style="color:var(--accent);cursor:pointer;text-decoration:underline">The Guide</span>.</p>
+        <div class="ob-title">EVERYTHING IN SETTINGS</div>
+        <p class="ob-body" style="text-align:left">Worth knowing what's in <strong style="color:var(--accent)">Settings</strong>:</p>
+        <p class="ob-body" style="text-align:left;margin-top:6px">• <strong>Account</strong> — optional free sign-in to sync across phone &amp; laptop.<br>• <strong>Appearance</strong> — Dark / Light theme, and the Game-mode toggle.<br>• <strong>Accessibility</strong> — Read aloud, Larger text, High contrast, and Disable animation.<br>• <strong>Your data</strong> — export your Saved list, Tracker, submissions, or a full backup, and wipe everything if you ever want to.<br>• <strong>Replay this tour</strong> anytime from the Accessibility section.</p>
       </div>
       <div class="ob-step">
         <div class="ob-icon">✦</div>
-        <div class="ob-title">SAVE YOUR PROGRESS</div>
-        <p class="ob-body">Everything saves to your device on its own — but if you want it to follow you between your phone and laptop, make a free account. Hit <strong style="color:var(--accent)">Sign in</strong> up in the top-right corner, choose <strong>Create one</strong>, and that's it: your Spellbook, Grimoire, and progress all sync to the cloud. Totally optional — the whole thing works without it.</p>
+        <div class="ob-title">YOU'RE ALL SET</div>
+        <p class="ob-body">That's the whole tool. A good first move: browse the <strong style="color:var(--accent)">Marketplace</strong> or ask the <strong style="color:var(--accent)">Advisor</strong> what to do first. You can replay this walkthrough anytime from <strong>Settings → Accessibility → Replay intro tour</strong>. Welcome aboard.</p>
       </div>
     </div>
     <div class="ob-btns">
@@ -9212,7 +9242,7 @@ function applyTheme(t) {
    The skin itself is CSS ([data-mode] on <html>); this JS handles the
    page-name renames and nav hiding that CSS can't do well.
    =================================================================== */
-let siteMode = localStorage.getItem('arc-mode') || 'game';
+let siteMode = localStorage.getItem('arc-mode') || 'standard';
 
 // page id -> { game label, standard label }. null standard label = hidden.
 const NAV_LABELS = {
@@ -10581,8 +10611,6 @@ var bigText = localStorage.getItem('arc-bigtext')==='1';
 function applyBigText(){ try{ document.body.style.zoom = bigText ? '1.15' : ''; }catch(e){} var t=document.getElementById('bigtext-toggle'); if(t) t.classList.toggle('on', bigText); }
 function toggleBigText(){ bigText=!bigText; localStorage.setItem('arc-bigtext', bigText?'1':'0'); applyBigText(); }
 
-/* ── UPGRADE: Activity streak ────────────────────────────────────────── */
-function tickStreak(){ try{ var today=new Date().toISOString().slice(0,10), last=localStorage.getItem('arc-streak-last'), n=parseInt(localStorage.getItem('arc-streak')||'0',10)||0; if(last!==today){ var y=new Date(Date.now()-86400000).toISOString().slice(0,10); n=(last===y)?n+1:1; localStorage.setItem('arc-streak',String(n)); localStorage.setItem('arc-streak-last',today); } var d=document.getElementById('home-streak'); if(d) d.textContent = n>1 ? ('🔥 '+n+'-day streak') : ''; return n; }catch(e){ return 0; } }
 
 /* ── UPGRADE: Portfolio export ───────────────────────────────────────── */
 function exportGrimoire(){
@@ -10635,14 +10663,13 @@ function openInsights(){
   var ov=document.getElementById('insights-overlay'); if(!ov) return;
   var sb=(typeof spellbook!=='undefined'?spellbook:[]), gr=(typeof grimoire!=='undefined'?grimoire:[]);
   var frags=(typeof uniqueFragmentCount==='function')?uniqueFragmentCount():0;
-  var streak=parseInt(localStorage.getItem('arc-streak')||'0',10)||0;
   var done=sb.filter(function(e){return e.status==='done';}).length;
   var cats={}; sb.concat(gr).forEach(function(e){ if(e&&e.cat) cats[e.cat]=(cats[e.cat]||0)+1; });
   var catArr=Object.keys(cats).map(function(k){return [k,cats[k]];}).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
   var max=catArr.length?catArr[0][1]:1;
   var stat=function(n,l){ return '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 8px;text-align:center"><div style="font-size:24px;font-weight:700;color:var(--accent)">'+n+'</div><div style="font-size:11px;color:var(--text3);margin-top:3px">'+l+'</div></div>'; };
   var html='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:10px;margin-bottom:24px">'
-    +stat(sb.length,'Committed')+stat(done,'Completed')+stat(gr.length,'Saved')+stat(frags,'Fragments')+stat(streak,'Day streak')+'</div>';
+    +stat(sb.length,'Committed')+stat(done,'Completed')+stat(gr.length,'Saved')+stat(frags,'Fragments')+'</div>';
   if(catArr.length){ html+='<div style="font-family:var(--px);font-size:8px;color:var(--accent);letter-spacing:1px;margin-bottom:12px">YOUR CATEGORY BALANCE</div>'
     +catArr.map(function(c){ var pct=Math.round(c[1]/max*100); return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:3px"><span>'+escH(c[0])+'</span><span>'+c[1]+'</span></div><div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--accent)"></div></div></div>'; }).join('')
     +'<p style="font-size:12px;color:var(--text3);margin-top:14px">A heavily lopsided balance can read as one-note to admissions — a spike with one or two contrasting threads is often stronger.</p>'; }
@@ -11149,7 +11176,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof checkSharedHash==='function') checkSharedHash();
   if (typeof renderEcOfDay==='function') renderEcOfDay();
   if (typeof initShortcuts==='function') initShortcuts();
-  if (typeof tickStreak==='function') tickStreak();
   if (typeof renderRecent==='function') renderRecent();
   if (typeof initQuillPreview==='function') initQuillPreview();
   if (typeof checkBadges==='function') checkBadges();
@@ -11799,8 +11825,29 @@ var OB_TOTAL = 3;
 
 function initOnboarding() {
   try { if (localStorage.getItem('arc-onboarded')) return; } catch(e) {}
+  startOnboarding();
+}
+
+function startOnboarding() {
   var steps = document.querySelectorAll('.ob-step');
-  if (steps.length) OB_TOTAL = steps.length;
+  OB_TOTAL = steps.length || 1;
+  obCurrentStep = 0;
+  // reset to first slide
+  steps.forEach(function(s, i){ s.classList.toggle('active', i === 0); });
+  // (re)build progress dots to match the number of steps
+  var dotsWrap = document.querySelector('.ob-dots');
+  if (dotsWrap) {
+    dotsWrap.innerHTML = '';
+    for (var i = 0; i < OB_TOTAL; i++) {
+      var d = document.createElement('div');
+      d.className = 'ob-dot' + (i === 0 ? ' active' : '');
+      dotsWrap.appendChild(d);
+    }
+  }
+  var back = document.getElementById('ob-back');
+  var next = document.getElementById('ob-next');
+  if (back) back.style.visibility = 'hidden';
+  if (next) next.textContent = OB_TOTAL > 1 ? 'Next →' : 'Begin ✦';
   var ov = document.getElementById('onboarding-overlay');
   if (ov) ov.style.display = 'flex';
 }
