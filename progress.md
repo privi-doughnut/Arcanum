@@ -10,8 +10,8 @@
 Ordered roughly by priority. _(The bug patch + readability + Planar redesign from this session are DONE — see below.)_
 
 1. **Your review of the Planar redesign** — eyeball both themes + a real phone, then tell me what to tweak. This is the main open loop.
-2. **Cloudflare migration — CODE PREPPED ✅ + widget built ✅, YOU DEPLOY.** `worker.js`, `wrangler.jsonc`, `.assetsignore` ready. Follow the "CLOUDFLARE MIGRATION — detailed instructions" box below. Nothing is live until you deploy.
-3. **B5 — remove the dead duplicate light-theme CSS block.** DEFERRED for safety (see Done/notes); best done alongside the migration when we can fully verify. *(Needs your OK — deletes a big interleaved block.)*
+2. **✅ DEPLOYED & LIVE on Cloudflare (2026-07-26).** Single Worker `arcanum-api-proxy` serves the app + advisor + live-users widget, verified end-to-end. Remaining: **add a custom domain** (dashboard → worker → Settings → Domains & Routes) and **retire Netlify** once you're happy.
+3. **B5 — remove the dead duplicate light-theme CSS block.** DEFERRED for safety (see Done/notes); best done now that we're deployed and can verify. *(Needs your OK — deletes a big interleaved block.)*
 5. **Game-mode tiny fonts (R3)** — nav 5.5px / essence label 5px are near-illegible. Left alone for now (layout risk + it's the arcade aesthetic; the "Larger text" a11y zoom covers accessibility). Revisit if you want.
 6. **Marketplace "Load more" perf** — append only the new batch instead of rebuilding all shown cards. Nice-to-have.
 7. **~~Surface real `sendMsg()` errors~~ — DONE this session (S2).**
@@ -72,6 +72,14 @@ These need your accounts / dashboards / deploy access. Claude will prep the code
   - `wrangler.jsonc`: added the `Stats` DO binding + `new_sqlite_classes` migration. Worker name set to `arcanum-api-proxy` to reuse your existing worker (keeps API_URL + secret).
 - ✅ **Detailed Cloudflare deploy instructions** written above (Workers Builds Git-connect + manual wrangler paths, custom domain, retiring Netlify).
 - ✅ Verified: worker.js (ESM) parses, index.html parses, wrangler.jsonc valid JSON, 0 dangling handlers. Widget rendered in-browser (both modes/themes) and confirmed it hides gracefully when the endpoint is absent.
+
+### Session 6 (2026-07-26) — DEPLOYED to Cloudflare (single Worker, live)
+Merged everything to `main`, connected the repo to the Worker (Workers Builds), and got it live. Three deploy-time fixes were needed and made:
+- **`public/` restructure** — dry-run caught that `assets.directory:"./"` would have served `.git` (140+ files) + all docs publicly; `.assetsignore` wasn't reliably excluding them. Moved index.html to `public/`, pointed assets there → wrangler reads exactly 1 asset. Added `netlify.toml` (publish=public) so Netlify kept working; removed `.assetsignore`.
+- **`package.json`** — Cloudflare's builder ran `npm run build` and failed (no package.json). Added a minimal one with a no-op build + wrangler devDep. App still has no real build step.
+- **`run_worker_first: true`** — Static Assets served asset-first, so POST `/` (the advisor) was 405'd by the asset layer before reaching the proxy. Ran the Worker first (it delegates GET to `env.ASSETS`).
+- **Verified live via curl:** GET `/` → the app HTML (Planar default + widget markers); POST `/api/presence` → `{"live":1,"total":1}` (DO works); POST `/` → HTTP 200 with a real `claude-sonnet-5` reply (advisor + secret work). 🎉
+- **Left for Privi:** add a custom domain to the worker; retire the Netlify site once satisfied.
 
 ### 🚀 CLOUDFLARE MIGRATION — step-by-step (Privi)
 
