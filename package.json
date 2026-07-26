@@ -1,0 +1,13 @@
+{
+  "name": "arcanum",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Arcanum is a single static HTML file. This package.json exists ONLY so Cloudflare Workers Builds has a no-op build step and wrangler for deploy — the app itself has no build step, framework, or dependencies.",
+  "scripts": {
+    "build": "echo \"No build step — Arcanum is a single static HTML file.\"",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.114.0"
+  }
+}
