@@ -197,13 +197,15 @@ Per your note: significant, high-quality steps only — no oversaturation.
 
 - ✅ **Impact / usage widget — SHIPPED & LIVE.** Home strip: live now · total explorers · 3,208 activities (counts anonymous users, Durable Object backend).
 
-**Requested — to roadmap (both are meaningful Advisor upgrades, worth doing well):**
+**Requested — ✅ BOTH SHIPPED (2026-07-26)** as one cohesive "Personalize Jeb" panel (🧠 button on the Advisor toolbar → modal with two sections). Both inject into `buildJebSystem()` (game + Planar paths), stored on-device, fully editable/clearable, verified in both modes/themes.
 
-1. **Import an outside AI chat into Jebadias.** Let a student paste (or upload) a conversation they had with another model — ChatGPT, Gemini, etc. — so Jeb instantly gets up to speed on their situation instead of re-interviewing them. *Sketch:* a "Catch Jeb up" button on the Advisor page → paste box (or `.txt`/`.json` upload) → the text is summarized/condensed (via the Worker) into a compact context block that's prepended to `buildJebSystem()` for that session, and optionally saved. Keep it to a size cap so it doesn't blow the token budget. High value: removes the cold-start friction that makes new users bounce.
+1. ✅ **Import an outside AI chat ("Catch Jeb up").** Paste a ChatGPT/Gemini/other conversation → stored in `arc-jeb-context` (capped at 8,000 chars with a live counter) → injected as a "catch-up context" block so Jeb gets up to speed without re-interviewing.
+2. ✅ **Jeb memory (persistent profile).** "What Jeb should remember about you" → `arc-jeb-memory` → injected as an "about this student" block on every chat/persona. Viewable, editable, clearable.
 
-2. **Jeb cross-chat memory (like Claude's "who I am / how I like replies").** A persistent, user-controlled profile Jeb remembers across every conversation and persona: name, grade, goals, constraints, tone preferences ("be blunt," "keep it short"). *Sketch:* a small "What Jeb should remember about you" editor in Settings (and/or an inline "remember this" action in chat) → stored in an `arc-jeb-memory` key (and synced to the user's Supabase row when signed in) → injected into `buildJebSystem()` on every chat. Must be **viewable, editable, and clearable** by the student (transparency + trust). This is the natural companion to #1 and would make Jeb feel genuinely personal. Likely the single highest-impact Advisor upgrade on the list.
-
-*(These two pair together — import = one-time catch-up, memory = ongoing context — and both reinforce the Advisor rather than adding new app surface. Deliberately not proposing more.)*
+**Follow-ups for these (nice-to-have, not built):**
+- **Cross-device sync** — currently on-device only; wire `arc-jeb-memory`/`arc-jeb-context` into the Supabase `user_state` sync so it follows signed-in users across devices.
+- **Summarize-on-import** — optionally run a long pasted chat through the Worker to condense it before storing (higher fidelity than a raw char cap).
+- **Settings entry point** — add a link from the Chamber for discoverability (currently reachable from the Advisor page).
 
 ---
 

@@ -1318,6 +1318,20 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
 @keyframes impactPulse{ 0%{box-shadow:0 0 0 0 rgba(34,165,101,.5);} 70%{box-shadow:0 0 0 7px rgba(34,165,101,0);} 100%{box-shadow:0 0 0 0 rgba(34,165,101,0);} }
 [data-mode="standard"] .impact-num{ font-family:var(--chic); }
 
+/* Personalize-Jeb modal — token-based, works in both modes & themes */
+.jebmem-card{ position:relative; background:var(--card); border:1px solid var(--border2); border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:26px 26px 22px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
+.jebmem-close{ position:absolute; top:14px; right:14px; background:none; border:1px solid var(--border); color:var(--text2); width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:13px; }
+.jebmem-close:hover{ border-color:var(--accent); color:var(--accent); }
+.jebmem-title{ font-family:var(--px); font-size:14px; color:var(--accent); margin-bottom:6px; }
+[data-mode="standard"] .jebmem-title{ font-family:var(--chic); font-size:24px; font-weight:700; }
+.jebmem-sub{ font-size:12.5px; color:var(--text3); margin-bottom:18px; line-height:1.5; }
+.jebmem-lbl{ display:block; font-size:13px; font-weight:600; color:var(--text); margin:16px 0 4px; }
+.jebmem-hint{ font-size:11.5px; color:var(--text3); line-height:1.55; margin-bottom:8px; }
+.jebmem-ta{ width:100%; box-sizing:border-box; background:var(--card2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Lora',Georgia,serif; font-size:14px; line-height:1.6; padding:12px 14px; resize:vertical; outline:none; transition:border-color .15s; }
+.jebmem-ta:focus{ border-color:var(--accent); }
+.jebmem-count{ font-size:11px; color:var(--text3); margin-top:5px; min-height:14px; text-align:right; }
+.jebmem-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
 [data-mode="game"] .home-what-text{ font-size:15px; }
@@ -1957,11 +1971,35 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
       <div style="padding:8px 0 4px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-ghost" onclick="shareWithJebadias('grimoire')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📜 Load Grimoire</button>
         <button class="btn btn-ghost" data-std="📖 Load Saved" onclick="shareWithJebadias('spellbook')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📖 Load Spellbook</button>
+        <button class="btn btn-ghost" data-std="🧠 Personalize the Advisor" onclick="openJebMem()" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">🧠 Personalize Jeb</button>
       </div>
       <div class="chat-input-row">
         <textarea class="chat-input" id="chat-input" placeholder="Speak your truth to Jebadias…" onkeydown="chatKey(event)"></textarea>
         <button class="btn btn-primary" onclick="sendMsg()">SEND ▶</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PERSONALIZE JEB — memory + catch-up import ── -->
+<div id="jebmem-overlay" style="display:none;position:fixed;inset:0;z-index:10008;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:20px">
+  <div class="jebmem-card">
+    <button class="jebmem-close" onclick="closeJebMem()" aria-label="Close">✕</button>
+    <div class="jebmem-title" data-std="Personalize your Advisor">Personalize Jebadias</div>
+    <p class="jebmem-sub">Stored privately on your device — edit or clear it anytime.</p>
+
+    <label class="jebmem-lbl" for="jebmem-memory" data-std="What the Advisor should remember about you">What Jebadias should remember about you</label>
+    <p class="jebmem-hint">Who you are, your grade, goals, constraints, and how you like replies (e.g. “be blunt”, “keep it short”). Applied to every conversation.</p>
+    <textarea id="jebmem-memory" class="jebmem-ta" rows="4" placeholder="e.g. I'm a sophomore aiming for competitive CS programs. Limited time on weekdays. Be direct and skip the fluff."></textarea>
+
+    <label class="jebmem-lbl" for="jebmem-context" data-std="Catch the Advisor up — paste a chat from another AI">Catch Jebadias up — paste a chat from another AI</label>
+    <p class="jebmem-hint">Had a useful conversation with ChatGPT, Gemini, or another advisor? Paste it here so Jeb gets up to speed — no need to re-explain everything.</p>
+    <textarea id="jebmem-context" class="jebmem-ta" rows="6" oninput="jebMemCount()" placeholder="Paste your conversation here…"></textarea>
+    <div class="jebmem-count" id="jebmem-count"></div>
+
+    <div class="jebmem-actions">
+      <button class="btn btn-ghost" onclick="clearJebMem()" style="border-color:var(--border2);color:var(--text2)">Clear all</button>
+      <button class="btn btn-primary" onclick="saveJebMem()">Save</button>
     </div>
   </div>
 </div>
@@ -9950,9 +9988,58 @@ const JEB_ADVICE_CORE = `CORE ADVISORY RULES — apply identically in every pers
 const JEB_STANDARD_SYSTEM = `You are the Advisor — a clear, friendly, modern AI assistant that helps high-school students plan extracurriculars and college applications. Give specific, accurate, genuinely useful guidance. No fantasy, no lore, no characters, no roleplay, no persona — just a helpful expert. Ground advice in the student's situation, ask one clarifying question only when it materially changes your answer, and prefer concrete next steps. Keep responses under 200 words unless asked for more.`;
 
 function buildJebSystem(){
-  if (typeof isGameMode === 'function' && !isGameMode()) return JEB_STANDARD_SYSTEM;
-  const voice = (JEB_PERSONAS[currentPersona] && JEB_PERSONAS[currentPersona].system) || (typeof JEB_SYSTEM!=='undefined'? JEB_SYSTEM : '');
-  return JEB_ADVICE_CORE + '\n\nPERSONA VOICE & LORE (changes tone and references ONLY — never advice quality):\n' + voice;
+  var base;
+  if (typeof isGameMode === 'function' && !isGameMode()) {
+    base = JEB_STANDARD_SYSTEM;
+  } else {
+    const voice = (JEB_PERSONAS[currentPersona] && JEB_PERSONAS[currentPersona].system) || (typeof JEB_SYSTEM!=='undefined'? JEB_SYSTEM : '');
+    base = JEB_ADVICE_CORE + '\n\nPERSONA VOICE & LORE (changes tone and references ONLY — never advice quality):\n' + voice;
+  }
+  return base + jebPersonalization();
+}
+
+/* ── PERSONALIZE JEB — persistent memory + imported "catch-up" context ──────
+   Both are stored on-device (arc-jeb-memory / arc-jeb-context), fully editable
+   and clearable by the student, and injected into every advisor system prompt. */
+var JEBMEM_CAP = 8000; // max chars of catch-up context injected (token safety)
+function jebPersonalization(){
+  var out = '';
+  try {
+    var mem = (localStorage.getItem('arc-jeb-memory')  || '').trim();
+    var ctx = (localStorage.getItem('arc-jeb-context') || '').trim();
+    if (mem) out += '\n\n── ABOUT THIS STUDENT (they told you this directly — honor these facts and their stated response preferences) ──\n' + mem;
+    if (ctx) out += '\n\n── CATCH-UP CONTEXT (from a conversation the student had with another AI/advisor; read it to get up to speed on their situation; do not quote it back verbatim) ──\n' + ctx.slice(0, JEBMEM_CAP);
+  } catch(e) {}
+  return out;
+}
+function openJebMem(){
+  var m = document.getElementById('jebmem-memory'), c = document.getElementById('jebmem-context');
+  try { if(m) m.value = localStorage.getItem('arc-jeb-memory')||''; if(c) c.value = localStorage.getItem('arc-jeb-context')||''; } catch(e){}
+  jebMemCount();
+  var ov = document.getElementById('jebmem-overlay'); if(ov) ov.style.display = 'flex';
+}
+function closeJebMem(){ var ov = document.getElementById('jebmem-overlay'); if(ov) ov.style.display = 'none'; }
+function jebMemCount(){
+  var c = document.getElementById('jebmem-context'), el = document.getElementById('jebmem-count'); if(!c||!el) return;
+  var n = c.value.length;
+  el.textContent = n > JEBMEM_CAP ? ('⚠ ' + n.toLocaleString() + ' characters — only the first ' + JEBMEM_CAP.toLocaleString() + ' will be used') : (n ? n.toLocaleString() + ' characters' : '');
+  el.style.color = n > JEBMEM_CAP ? '#c0743a' : 'var(--text3)';
+}
+function saveJebMem(){
+  var m = document.getElementById('jebmem-memory'), c = document.getElementById('jebmem-context');
+  try {
+    localStorage.setItem('arc-jeb-memory',  ((m&&m.value)||'').trim());
+    localStorage.setItem('arc-jeb-context', ((c&&c.value)||'').trim().slice(0, JEBMEM_CAP));
+  } catch(e){}
+  closeJebMem();
+  if (typeof showNotif==='function') showNotif((typeof isGameMode==='function'&&!isGameMode()) ? 'Saved — the Advisor will remember this.' : 'Saved — Jebadias will remember this.');
+}
+function clearJebMem(){
+  var m = document.getElementById('jebmem-memory'), c = document.getElementById('jebmem-context');
+  if(m) m.value=''; if(c) c.value='';
+  try { localStorage.removeItem('arc-jeb-memory'); localStorage.removeItem('arc-jeb-context'); } catch(e){}
+  jebMemCount();
+  if (typeof showNotif==='function') showNotif('Cleared.');
 }
 
 /* ── THE SECOND SEA — Phase 2 plan generator ─────────────────────────── */
