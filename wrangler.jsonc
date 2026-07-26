@@ -10,7 +10,11 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    // Run worker.js BEFORE the asset layer so POST / (the advisor) and
+    // POST /api/presence reach the Worker instead of being 405'd by assets.
+    // The Worker serves GET requests via env.ASSETS.fetch itself.
+    "run_worker_first": true
   },
   // Usage widget: one global Durable Object tracks live + total visitors.
   "durable_objects": {
