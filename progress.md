@@ -11,7 +11,7 @@ Ordered roughly by priority. _(The bug patch + readability + Planar redesign fro
 
 1. **Your review of the Planar redesign** — eyeball both themes + a real phone, then tell me what to tweak. This is the main open loop.
 2. **✅ DEPLOYED & LIVE on Cloudflare (2026-07-26).** Single Worker `arcanum-api-proxy` serves the app + advisor + live-users widget, verified end-to-end. Remaining: **add a custom domain** (dashboard → worker → Settings → Domains & Routes) and **retire Netlify** once you're happy.
-3. **B5 — remove the dead duplicate light-theme CSS block.** DEFERRED for safety (see Done/notes); best done now that we're deployed and can verify. *(Needs your OK — deletes a big interleaved block.)*
+3. **✅ B5 — dead duplicate light-theme CSS removed** (2026-07-26). 137 lines of a verbatim-duplicate `[data-theme="light"]` block deleted from the body `<style>`; the head copy governs. Verified diff-identical before removal and visually unchanged in game+light and Planar+light after.
 5. **Game-mode tiny fonts (R3)** — nav 5.5px / essence label 5px are near-illegible. Left alone for now (layout risk + it's the arcade aesthetic; the "Larger text" a11y zoom covers accessibility). Revisit if you want.
 6. **Marketplace "Load more" perf** — append only the new batch instead of rebuilding all shown cards. Nice-to-have.
 7. **~~Surface real `sendMsg()` errors~~ — DONE this session (S2).**
@@ -45,7 +45,7 @@ These need your accounts / dashboards / deploy access. Claude will prep the code
 - ✅ **B4 — accessibility settings consolidated.** Merged the two duplicate ACCESSIBILITY sections into one: Read aloud · Larger text (whole-app zoom) · High contrast (the robust `data-contrast` one) · Disable animation · Replay tour. Removed the two weaker redundant toggles ("Larger text in EC cards", "High contrast labels") and their now-dead functions (`toggleLargeText`, `toggleHighContrast`). No user DATA keys touched. Verified: 1 section, no dup ids, 0 dangling handlers.
 - ✅ Verified after all edits: JS parses, **0 dangling handlers**, API_URL ×1, model ×6, catalog intact, no duplicate ids.
 - ⏳ _Not yet real-device tested — B3 is verified by cascade logic; Privi should eyeball on an actual phone (the browser here has a min-width and can't emulate <600px)._
-- ⏸ **B5 (dead duplicate light-theme CSS) — intentionally DEFERRED.** The two light-theme blocks are large and **interleaved with non-light rules**, so a safe delete needs a line-by-line diff I can't fully visually verify here. It's harmless dead weight (the later copy just wins). Not worth a regression risk on a competition build for invisible byte savings — revisit once there's a build/verify step, or when doing the Cloudflare migration.
+- ✅ **B5 (dead duplicate light-theme CSS) — DONE (2026-07-26).** Confirmed the body-`<style>` `[data-theme="light"]` block (lines 2477–2610) was a verbatim duplicate of the head block (576–709) via `diff` (identical), then deleted it + its comment header (137 lines). Head copy governs; verified visually unchanged in game+light and Planar+light, JS/handlers/critical-values intact.
 
 ### Session 3 (2026-07-25) — product changes you requested
 - ✅ **Default mode is now Planar.** New visitors start in the calm Planar skin (`siteMode` default `'game'`→`'standard'`). Game mode is now opt-in gamification via Settings. Existing users keep whatever they had. _(Theme still defaults to dark — Planar+dark; tell me if you'd rather new users land on the cream light theme.)_
@@ -193,13 +193,17 @@ Grouped **critical → important → nice-to-have**. Bug IDs referenced in the a
 
 ## ✨ FEATURE IDEAS — additions worth considering (kept few + high-quality on purpose)
 
-Per your note: I'd rather pitch **one meaningful thing** than fifteen small ones. Ranked by impact-for-a-judge.
+Per your note: significant, high-quality steps only — no oversaturation.
 
-1. **Impact / usage widget (the one you asked for).** A small, tasteful bar showing **live users now** + **total users all-time**, counting anonymous visitors too. This *is* a feature and a strong "impact" signal for CAC. Design in the section below. **My recommendation: build this one well.**
+- ✅ **Impact / usage widget — SHIPPED & LIVE.** Home strip: live now · total explorers · 3,208 activities (counts anonymous users, Durable Object backend).
 
-2. **A single "Impact" strip on the home page** that folds the usage widget in with the numbers you already have (3,208 ECs, plans generated, ECs saved) — one cohesive proof-of-traction band instead of scattered stats. High judge value, low clutter, reuses existing data.
+**Requested — to roadmap (both are meaningful Advisor upgrades, worth doing well):**
 
-*(Deliberately NOT proposing more than this. The app is already feature-dense; these two reinforce each other rather than adding surface area.)*
+1. **Import an outside AI chat into Jebadias.** Let a student paste (or upload) a conversation they had with another model — ChatGPT, Gemini, etc. — so Jeb instantly gets up to speed on their situation instead of re-interviewing them. *Sketch:* a "Catch Jeb up" button on the Advisor page → paste box (or `.txt`/`.json` upload) → the text is summarized/condensed (via the Worker) into a compact context block that's prepended to `buildJebSystem()` for that session, and optionally saved. Keep it to a size cap so it doesn't blow the token budget. High value: removes the cold-start friction that makes new users bounce.
+
+2. **Jeb cross-chat memory (like Claude's "who I am / how I like replies").** A persistent, user-controlled profile Jeb remembers across every conversation and persona: name, grade, goals, constraints, tone preferences ("be blunt," "keep it short"). *Sketch:* a small "What Jeb should remember about you" editor in Settings (and/or an inline "remember this" action in chat) → stored in an `arc-jeb-memory` key (and synced to the user's Supabase row when signed in) → injected into `buildJebSystem()` on every chat. Must be **viewable, editable, and clearable** by the student (transparency + trust). This is the natural companion to #1 and would make Jeb feel genuinely personal. Likely the single highest-impact Advisor upgrade on the list.
+
+*(These two pair together — import = one-time catch-up, memory = ongoing context — and both reinforce the Advisor rather than adding new app surface. Deliberately not proposing more.)*
 
 ---
 
