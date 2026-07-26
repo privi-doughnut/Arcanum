@@ -1,0 +1,4 @@
+# Keeps the Netlify site working now that index.html lives in public/.
+# (Netlify is being retired once the Cloudflare Worker is confirmed live.)
+[build]
+  publish = "public"

@@ -1,14 +1,14 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  // Must match your EXISTING Worker's name so it reuses the same URL + secret
-  // (confirm in the Cloudflare dashboard). This keeps index.html's API_URL valid.
+  // Must match your EXISTING Worker's name so it reuses the same URL + secret.
   "name": "arcanum-api-proxy",
   "main": "worker.js",
   "compatibility_date": "2026-07-01",
-  // Serve the static app AND run the Worker (advisor proxy + usage stats).
+  // Only ./public is served publicly (it contains just index.html), so the repo
+  // source, git history, and docs can never be exposed as static assets.
   // GET requests are served from assets; POST falls through to worker.js.
   "assets": {
-    "directory": "./",
+    "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application"
   },
