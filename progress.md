@@ -10,9 +10,8 @@
 Ordered roughly by priority. _(The bug patch + readability + Planar redesign from this session are DONE — see below.)_
 
 1. **Your review of the Planar redesign** — eyeball both themes + a real phone, then tell me what to tweak. This is the main open loop.
-2. **Cloudflare single-Worker migration — CODE IS PREPPED ✅, YOU DEPLOY.** `worker.js`, `wrangler.jsonc`, and `.assetsignore` are ready (see Done + deploy steps below). Nothing is live until you run `wrangler deploy`. Steps are in the "Deploy the single Worker" box below.
-3. **Live + total users widget** — design below under "Only Privi can do" (needs a Worker/KV backend + deploy). Claude writes the Worker + client widget once you approve the approach. (Pairs naturally with the migration.)
-4. **B5 — remove the dead duplicate light-theme CSS block.** DEFERRED for safety (see Done/notes); best done alongside the migration when we can fully verify. *(Needs your OK — deletes a big interleaved block.)*
+2. **Cloudflare migration — CODE PREPPED ✅ + widget built ✅, YOU DEPLOY.** `worker.js`, `wrangler.jsonc`, `.assetsignore` ready. Follow the "CLOUDFLARE MIGRATION — detailed instructions" box below. Nothing is live until you deploy.
+3. **B5 — remove the dead duplicate light-theme CSS block.** DEFERRED for safety (see Done/notes); best done alongside the migration when we can fully verify. *(Needs your OK — deletes a big interleaved block.)*
 5. **Game-mode tiny fonts (R3)** — nav 5.5px / essence label 5px are near-illegible. Left alone for now (layout risk + it's the arcade aesthetic; the "Larger text" a11y zoom covers accessibility). Revisit if you want.
 6. **Marketplace "Load more" perf** — append only the new batch instead of rebuilding all shown cards. Nice-to-have.
 7. **~~Surface real `sendMsg()` errors~~ — DONE this session (S2).**
@@ -65,14 +64,46 @@ These need your accounts / dashboards / deploy access. Claude will prep the code
   - **`.assetsignore` added — SECURITY FIX.** The old config (`directory: "./"`, no ignore) would have **publicly served `CLAUDE.md`, `progress.md`, `claude-code-brief.md`, `worker.js`, `arcanum-data.js`** if deployed. `.assetsignore` now keeps everything but `index.html` private.
   - `API_URL` in index.html is **left untouched** (still the old proxy URL) so nothing breaks pre- or post-deploy; switch it to the new worker's origin only after you've verified.
 
-> **📦 Deploy the single Worker (Privi):**
-> 1. `npm install -D wrangler@latest`
-> 2. `npx wrangler secret put ARCANUM_ANTHROPIC_KEY`  ← paste your `sk-ant-…` key at the prompt (on the `arcanum` worker)
-> 3. `npx wrangler deploy --dry-run`  ← optional, validates config
-> 4. `npx wrangler deploy`  ← uploads worker.js + index.html together
-> 5. Point your domain at the `arcanum` worker in the dashboard; verify the advisor replies.
-> 6. Once verified, retire the Netlify site. (Optional: change `API_URL` in index.html to this worker's origin to fully drop the old proxy — do it deliberately and re-test the advisor.)
-> Note: deploy with `wrangler deploy`, **not** dashboard paste (Static Assets need wrangler).
+### Session 5 (2026-07-25) — live/total users widget + migration instructions
+- ✅ **Impact widget shipped (live + total visitors, anonymous included).** Home page, under the hero CTAs: a clean strip showing **Live now · Total explorers · 3,208 Activities**, with a pulsing green live dot. Adapts to both modes and both themes via tokens (verified game/dark + Planar/cream). Numbers use the chic serif in Planar.
+  - **Backend:** a single global `Stats` **Durable Object** (SQLite) in worker.js. `seen` table = all-time unique visitors (total); `live` table = visitors pinged within 45s (pruned each heartbeat). Atomic, accurate, and — unlike KV — no write-quota problem. Route: `POST /api/presence {vid}` → `{live,total}`.
+  - **Client:** each browser gets an anonymous `arc-visitor-id` (localStorage) and pings every 25s. Counts logged-out users. **Fails silently** (widget hidden) when the endpoint isn't deployed — so it's invisible on Netlify and lights up automatically once on the Worker. Live floored at 1 (you're always counted).
+  - **Chose DO over KV deliberately:** a 25s heartbeat per user would blow KV's free-tier write quota in hours; the DO handles heartbeats cheaply and gives real-time-accurate live counts.
+  - `wrangler.jsonc`: added the `Stats` DO binding + `new_sqlite_classes` migration. Worker name set to `arcanum-api-proxy` to reuse your existing worker (keeps API_URL + secret).
+- ✅ **Detailed Cloudflare deploy instructions** written above (Workers Builds Git-connect + manual wrangler paths, custom domain, retiring Netlify).
+- ✅ Verified: worker.js (ESM) parses, index.html parses, wrangler.jsonc valid JSON, 0 dangling handlers. Widget rendered in-browser (both modes/themes) and confirmed it hides gracefully when the endpoint is absent.
+
+### 🚀 CLOUDFLARE MIGRATION — detailed instructions (Privi)
+
+**My take on your plan:** connecting the repo to your existing Worker is exactly right — but the feature is called **Workers Builds** (Git-connected Workers), *not* Cloudflare Pages. Pages is for pure static/Functions sites; we built a **Worker that serves static assets + proxies the advisor + runs the stats Durable Object**, so it must deploy as a **Worker**. Good news: `wrangler.jsonc` is set to reuse your existing worker name **`arcanum-api-proxy`**, so:
+- `API_URL` in index.html **stays exactly as-is** (no edit to the sacred value).
+- Your `ARCANUM_ANTHROPIC_KEY` secret is **already on that worker** — nothing to re-add.
+- The advisor and the `/api/presence` stats endpoint end up **same-origin** = one true Worker.
+
+> ⚠️ First: confirm your Worker's exact name in the dashboard (Workers & Pages → your worker). If it isn't literally `arcanum-api-proxy`, change `"name"` in `wrangler.jsonc` to match before deploying.
+
+**Path A — GitHub auto-deploy (Workers Builds, recommended — mirrors how Netlify worked):**
+1. Cloudflare dashboard → **Workers & Pages → `arcanum-api-proxy` → Settings → Build** (a.k.a. *Builds* / *Git integration*).
+2. **Connect** your `privi-doughnut/Arcanum` GitHub repo, branch `main`.
+3. Build command: leave empty (no build step). Deploy command: `npx wrangler deploy`. Root directory: `/`.
+4. Save. Cloudflare now redeploys the Worker on every push to `main` — same workflow you had with Netlify, just pointed at the Worker.
+5. First build creates the `Stats` Durable Object automatically (from the `migrations` in `wrangler.jsonc`). The secret is already set, so nothing else to configure.
+
+**Path B — one-off manual deploy (or to test first):**
+1. `npm install -D wrangler@latest`
+2. `npx wrangler deploy --dry-run`  ← validates config without deploying
+3. `npx wrangler deploy`  ← uploads worker.js + index.html + creates the DO
+(If it's a brand-new worker name, also run `npx wrangler secret put ARCANUM_ANTHROPIC_KEY` once.)
+
+**After the first deploy (either path):**
+6. Visit `https://arcanum-api-proxy.its-the-prithivi-show.workers.dev` — the **app itself** should load (not the old "Method not allowed" text), the **advisor** should reply, and the **home impact widget** should appear with live/total counts.
+7. **Custom domain:** dashboard → your worker → **Settings → Domains & Routes → Add custom domain** (e.g. `arcanum-ec.com` or a subdomain). This is what you hand to judges.
+8. **Retire Netlify** once the Worker URL/custom domain is confirmed working.
+
+**Notes**
+- Deploy via wrangler / Workers Builds, **never** the dashboard code editor — Static Assets + DO migrations need wrangler.
+- `.assetsignore` keeps `CLAUDE.md`, `progress.md`, etc. private — don't remove it.
+- The widget stays hidden until `/api/presence` responds, so it's invisible on Netlify and lights up automatically once you're on the Worker.
 
 ---
 

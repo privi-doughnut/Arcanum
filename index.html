@@ -1308,6 +1308,16 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
 /* onboarding tour: keep the (now longer, more comprehensive) card scrollable on small screens */
 #onboarding-overlay .ob-card{ max-height:92vh; overflow-y:auto; }
 
+/* live/total usage widget — adapts to both modes & themes via tokens */
+.impact-strip{ display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; max-width:520px; margin:26px auto 0; padding:14px 18px; background:var(--card2); border:1px solid var(--border); border-radius:14px; }
+.impact-stat{ display:flex; flex-direction:column; align-items:center; min-width:90px; padding:0 8px; }
+.impact-num{ display:inline-flex; align-items:center; gap:7px; font-size:22px; font-weight:700; color:var(--text); line-height:1.1; }
+.impact-lbl{ font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--text3); margin-top:5px; }
+.impact-div{ width:1px; align-self:stretch; background:var(--border); margin:4px 0; }
+.impact-live-dot{ width:8px; height:8px; border-radius:50%; background:#22a565; box-shadow:0 0 0 0 rgba(34,165,101,.5); animation:impactPulse 2s infinite; }
+@keyframes impactPulse{ 0%{box-shadow:0 0 0 0 rgba(34,165,101,.5);} 70%{box-shadow:0 0 0 7px rgba(34,165,101,0);} 100%{box-shadow:0 0 0 0 rgba(34,165,101,0);} }
+[data-mode="standard"] .impact-num{ font-family:var(--chic); }
+
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
 [data-mode="game"] .home-what-text{ font-size:15px; }
@@ -1411,6 +1421,14 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px">
         <button onclick="openQuiz()" style="background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">✦ Find my starting path</button>
         <button onclick="openExplore()" style="background:transparent;border:1px solid var(--border);color:var(--text2);padding:13px 22px;border-radius:10px;font-size:14px;cursor:pointer">✧ Explore</button>
+      </div>
+      <!-- live/total usage impact strip (hidden until the stats endpoint responds) -->
+      <div id="impact-strip" class="impact-strip" style="display:none">
+        <div class="impact-stat"><span class="impact-num"><span class="impact-live-dot"></span><span id="impact-live">—</span></span><span class="impact-lbl">Live now</span></div>
+        <div class="impact-div"></div>
+        <div class="impact-stat"><span class="impact-num" id="impact-total">—</span><span class="impact-lbl">Total explorers</span></div>
+        <div class="impact-div"></div>
+        <div class="impact-stat"><span class="impact-num">3,208</span><span class="impact-lbl">Activities</span></div>
       </div>
     </div>
     <div id="ecotd-wrap" style="display:none;max-width:520px;margin:30px auto 0;padding:0 var(--pad)"></div>
@@ -11178,8 +11196,43 @@ document.addEventListener('click', e => {
   }
 });
 
+/* ── Usage widget: live + total visitors (counts anonymous, no account needed) ──
+   Pings the combined Worker's /api/presence every 25s while the tab is open.
+   Fails silently (widget stays hidden) if the endpoint isn't deployed yet
+   — e.g. while still hosted on Netlify. Activates automatically post-migration. */
+function arcVisitorId(){
+  try{
+    var v = localStorage.getItem('arc-visitor-id');
+    if(!v){ v = Date.now().toString(36) + Math.random().toString(36).slice(2,10); localStorage.setItem('arc-visitor-id', v); }
+    return v;
+  }catch(e){ return ''; }
+}
+var _arcUsageTimer = null;
+async function arcPingUsage(){
+  try{
+    var res = await fetch('/api/presence', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ vid: arcVisitorId() })
+    });
+    if(!res.ok) return;
+    var d = await res.json();
+    if(typeof d.total !== 'number') return;
+    var liveEl = document.getElementById('impact-live');
+    var totalEl = document.getElementById('impact-total');
+    var strip = document.getElementById('impact-strip');
+    if(liveEl)  liveEl.textContent  = Math.max(d.live||0, 1).toLocaleString();
+    if(totalEl) totalEl.textContent = Math.max(d.total||0, 1).toLocaleString();
+    if(strip) strip.style.display = 'flex';
+  }catch(e){ /* endpoint not reachable yet — leave the widget hidden */ }
+}
+function startUsageWidget(){
+  arcPingUsage();
+  if(_arcUsageTimer) clearInterval(_arcUsageTimer);
+  _arcUsageTimer = setInterval(arcPingUsage, 25000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  
+
   applyTheme(currentTheme);
   applyMode(siteMode);
   initNavPills();
@@ -11197,7 +11250,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof checkBadges==='function') checkBadges();
   initOnboarding();
   checkECDeepLink();
-  
+  if (typeof startUsageWidget==='function') startUsageWidget();
+
   updateGC();
   
   nav('home');

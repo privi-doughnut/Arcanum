@@ -1,13 +1,24 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "arcanum",
+  // Must match your EXISTING Worker's name so it reuses the same URL + secret
+  // (confirm in the Cloudflare dashboard). This keeps index.html's API_URL valid.
+  "name": "arcanum-api-proxy",
   "main": "worker.js",
   "compatibility_date": "2026-07-01",
-  // Serve the static app AND run the Worker (for the POST /advisor proxy).
+  // Serve the static app AND run the Worker (advisor proxy + usage stats).
   // GET requests are served from assets; POST falls through to worker.js.
   "assets": {
     "directory": "./",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application"
-  }
+  },
+  // Usage widget: one global Durable Object tracks live + total visitors.
+  "durable_objects": {
+    "bindings": [
+      { "name": "STATS", "class_name": "Stats" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["Stats"] }
+  ]
 }

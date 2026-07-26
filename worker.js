@@ -1,31 +1,31 @@
 /* ════════════════════════════════════════════════════════════════════════
-   ARCANUM — combined Worker (frontend + Jebadias API proxy)
+   ARCANUM — combined Worker (frontend + Jebadias proxy + usage stats)
 
-   This one Worker does two jobs:
-     1. Serves the static app (index.html) via Cloudflare Workers Static Assets.
-     2. Proxies chat requests to the Anthropic API, holding the API key
-        server-side so it never reaches the browser or the repo.
+   Three jobs in one Worker:
+     1. Serves the static app (index.html) via Workers Static Assets.
+     2. Proxies chat requests to the Anthropic API (key stays server-side).
+     3. Tracks usage — live visitors now + total unique visitors all-time —
+        in a single Durable Object (`Stats`), counting anonymous users too.
 
-   It is BACKWARD COMPATIBLE with the old proxy-only deploy:
-     • POST  → proxied to Anthropic (identical behaviour to before).
-     • OPTIONS → CORS preflight.
-     • anything else → served from the static assets (env.ASSETS), or, if
-       there is no assets binding (bare proxy deploy), the old 405 response.
+   Routing:
+     • OPTIONS                 → CORS preflight
+     • POST /api/presence      → usage heartbeat, returns { live, total }
+     • POST (anything else)     → proxied to Anthropic (unchanged advisor behaviour)
+     • everything else          → static app via env.ASSETS
+     (If there is no ASSETS binding — a bare proxy deploy — non-POST returns 405.)
 
    ── DEPLOY (single-Worker mode, replaces Netlify) ────────────────────────
-   1. Install wrangler once:      npm install -D wrangler@latest
-   2. Set the secret on THIS worker (interactive prompt, value never logged):
-        npx wrangler secret put ARCANUM_ANTHROPIC_KEY
-   3. Deploy (uploads worker.js + index.html together):
-        npx wrangler deploy
-   4. In the Cloudflare dashboard, point your domain at the `arcanum` worker.
-   5. Verify the advisor replies, then you can retire the Netlify site.
-      (index.html's API_URL can stay as-is — the old proxy still works — or be
-       switched to this worker's origin once you've verified it. See progress.md.)
+   1. npm install -D wrangler@latest
+   2. npx wrangler secret put ARCANUM_ANTHROPIC_KEY   ← paste your sk-ant-… key
+   3. npx wrangler deploy      (creates the Stats Durable Object automatically)
+   4. Point your domain at the `arcanum` worker; verify the advisor + widget.
+   See progress.md for the full checklist and the GitHub-connected auto-deploy setup.
 
-   NOTE: because this uses Static Assets, deploy with `wrangler deploy`, not by
-   pasting into the dashboard editor (dashboard paste can't attach assets).
+   NOTE: deploy with `wrangler deploy` (or Workers Builds from GitHub), NOT the
+   dashboard code editor — Static Assets and DO migrations need wrangler.
    ════════════════════════════════════════════════════════════════════════ */
+
+import { DurableObject } from "cloudflare:workers";
 
 const ALLOWED_ORIGINS = [
   "https://arcanum-ec.netlify.app",
@@ -33,9 +33,10 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5500"
 ];
 
+// A visitor counts as "live" for this long after their last heartbeat.
+const LIVE_WINDOW_MS = 45000;
+
 function corsHeaders(origin) {
-  // Echo the request origin if it's known; otherwise allow all (the key is
-  // server-side, so a permissive proxy is safe — anyone could POST anyway).
   const allow = ALLOWED_ORIGINS.includes(origin) ? origin : "*";
   return {
     "Access-Control-Allow-Origin": allow,
@@ -52,16 +53,67 @@ function json(body, status, origin) {
   });
 }
 
+/* ── Usage stats: one global Durable Object counts live + total visitors ──
+   `seen` = every unique visitor id ever (all-time total, anonymous included).
+   `live` = visitor ids seen within the last LIVE_WINDOW_MS (pruned each ping).
+   All writes are synchronous SQL in a single RPC call → atomic, no races,
+   and no KV write-quota problem (heartbeats would blow KV's free tier). */
+export class Stats extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    ctx.blockConcurrencyWhile(async () => {
+      this.ctx.storage.sql.exec(
+        "CREATE TABLE IF NOT EXISTS seen (vid TEXT PRIMARY KEY, first_seen INTEGER)"
+      );
+      this.ctx.storage.sql.exec(
+        "CREATE TABLE IF NOT EXISTS live (vid TEXT PRIMARY KEY, last_seen INTEGER)"
+      );
+    });
+  }
+
+  // RPC: register a heartbeat for `vid` and return the current counts.
+  ping(vid) {
+    const now = Date.now();
+    const sql = this.ctx.storage.sql;
+    if (vid) {
+      sql.exec("INSERT OR IGNORE INTO seen (vid, first_seen) VALUES (?, ?)", vid, now);
+      sql.exec("INSERT OR REPLACE INTO live (vid, last_seen) VALUES (?, ?)", vid, now);
+    }
+    sql.exec("DELETE FROM live WHERE last_seen < ?", now - LIVE_WINDOW_MS);
+    const total = sql.exec("SELECT COUNT(*) AS n FROM seen").one().n;
+    const live = sql.exec("SELECT COUNT(*) AS n FROM live").one().n;
+    return { live, total };
+  }
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
+    const url = new URL(request.url);
 
     // CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
-    // ── API: proxy chat POSTs to Anthropic ──────────────────────────────
+    // ── Usage stats heartbeat ────────────────────────────────────────────
+    if (url.pathname === "/api/presence" && request.method === "POST") {
+      if (!env.STATS) return json({ live: 0, total: 0 }, 200, origin);
+      let vid = "";
+      try {
+        const b = await request.json();
+        vid = String((b && b.vid) || "").slice(0, 64);
+      } catch (e) { /* ignore bad body — still return counts */ }
+      try {
+        const stub = env.STATS.getByName("global");
+        const res = await stub.ping(vid);
+        return json(res, 200, origin);
+      } catch (e) {
+        return json({ live: 0, total: 0, error: "stats error" }, 200, origin);
+      }
+    }
+
+    // ── Advisor proxy: forward chat POSTs to Anthropic ───────────────────
     if (request.method === "POST") {
       if (!env.ARCANUM_ANTHROPIC_KEY) {
         return json({ error: "Server missing ARCANUM_ANTHROPIC_KEY secret." }, 500, origin);
@@ -92,17 +144,14 @@ export default {
           },
           body: JSON.stringify(body)
         });
-
         const data = await upstream.json();
-        // Pass the Anthropic status straight through so the client sees real
-        // errors (401/400/429/…) instead of an opaque failure, plus CORS.
         return json(data, upstream.status, origin);
       } catch (e) {
         return json({ error: "Upstream request failed.", detail: String(e) }, 502, origin);
       }
     }
 
-    // ── Frontend: serve the static app (single-Worker mode) ──────────────
+    // ── Frontend: serve the static app ───────────────────────────────────
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
     }
