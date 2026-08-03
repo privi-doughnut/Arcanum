@@ -9604,7 +9604,7 @@ function openEC(ec) {
     ${ec.format?`<div class="ec-fact"><div class="ec-fact-label">FORMAT</div><div class="ec-fact-val">${ec.format}</div></div>`:''}
     ${ec.eligibility?`<div class="ec-fact"><div class="ec-fact-label">ELIGIBILITY</div><div class="ec-fact-val">${ec.eligibility}</div></div>`:''}
     ${ec.deadline?`<div class="ec-fact"><div class="ec-fact-label">DEADLINE</div><div class="ec-fact-val">${ec.deadline}</div></div>`:''}
-    ${ec.link?`<div class="ec-fact" style="grid-column:1/-1"><div class="ec-fact-label">OFFICIAL LINK</div><div class="ec-fact-val"><a href="${ec.link}" target="_blank" rel="noopener" style="color:var(--accent)">${ec.link}</a></div></div>`:''}
+    ${(ec.link&&safeURL(ec.link))?`<div class="ec-fact" style="grid-column:1/-1"><div class="ec-fact-label">OFFICIAL LINK</div><div class="ec-fact-val"><a href="${safeURL(ec.link)}" target="_blank" rel="noopener" style="color:var(--accent)">${escH(ec.link)}</a></div></div>`:''}
   `;
   setTimeout(()=>renderReviews(ec.id),50);
   setTimeout(()=>renderSimilar(ec),60);
@@ -9616,7 +9616,7 @@ function openEC(ec) {
     var awrap=document.getElementById('ec-apply-wrap'), ael=document.getElementById('ec-detail-apply');
     if(!ael||!awrap)return;
     var ahtml='';
-    if(ec.link)        ahtml+='<p><strong>Official site:</strong> <a href="'+ec.link+'" target="_blank" rel="noopener" style="color:var(--accent)">'+ec.link+'</a></p>';
+    if(ec.link&&safeURL(ec.link)) ahtml+='<p><strong>Official site:</strong> <a href="'+safeURL(ec.link)+'" target="_blank" rel="noopener" style="color:var(--accent)">'+escH(ec.link)+'</a></p>';
     if(ec.deadline)    ahtml+='<p><strong>Typical deadline:</strong> '+ec.deadline+'</p>';
     if(ec.prereqs)     ahtml+='<p><strong>Prerequisites:</strong> '+ec.prereqs+'</p>';
     if(ec.eligibility) ahtml+='<p><strong>Eligibility:</strong> '+ec.eligibility+'</p>';
@@ -9809,7 +9809,7 @@ function renderSpellbook() {
       + '</div>'
       + '<input placeholder="Tags (comma-separated)" value="'+((ec.tags||'').replace(/"/g,'&quot;'))+'" onchange="updateField(\''+ec.id+'\',\'tags\',this.value)" style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 10px;font-size:12px;margin-bottom:8px">'
       + '<input placeholder="Personal link (your doc, application page...)" value="'+((ec.userLink||'').replace(/"/g,'&quot;'))+'" onchange="updateField(\''+ec.id+'\',\'userLink\',this.value)" style="width:100%;box-sizing:border-box;background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 10px;font-size:12px;margin-bottom:14px">'
-      + (ec.userLink?('<a href="'+escH(ec.userLink)+'" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);display:inline-block;margin:-8px 0 12px">↗ Open your link</a>'):'')
+      + ((ec.userLink&&safeURL(ec.userLink))?('<a href="'+safeURL(ec.userLink)+'" target="_blank" rel="noopener" style="font-size:11px;color:var(--accent);display:inline-block;margin:-8px 0 12px">↗ Open your link</a>'):'')
       + '<div style="font-family:var(--px);font-size:5px;color:var(--accent);margin-bottom:8px">MILESTONES</div>'
       + '<div class="spell-milestones" id="sm-'+ec.id+'">'+mHtml+'</div>'
       + '<button class="btn btn-ghost" onclick="addMilestone(\''+ec.id+'\')" style="margin-top:8px;font-size:9px;padding:6px 10px">+ Milestone</button>'
@@ -10279,6 +10279,17 @@ function ssMarkdown(md){
 
 /* ── shared small HTML escaper ──────────────────────────────────────── */
 function escH(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// Sanitize a user-supplied URL for use in href/style: allow only http(s) and
+// relative/protocol-relative; block javascript:, data:, etc.; encode quotes/angles
+// so it can't break out of the attribute. Returns '' if unsafe.
+function safeURL(u){
+  u = (u==null?'':String(u)).trim();
+  if(!u) return '';
+  var enc = function(x){ return x.replace(/"/g,'%22').replace(/'/g,'%27').replace(/</g,'%3C').replace(/>/g,'%3E').replace(/\)/g,'%29'); };
+  if(/^(https?:)?\/\//i.test(u) || /^\/[^\/]/.test(u)) return enc(u);      // http(s) or root-relative
+  if(/^[\w.-]+\.[a-z]{2,}(\/|\?|#|$)/i.test(u)) return 'https://'+enc(u);   // bare domain -> https
+  return ''; // reject javascript:, data:, mailto:, etc. for link fields
+}
 
 /* ── Quill live preview (#6) ────────────────────────────────────────── */
 function updateQuillPreview(){
@@ -10287,7 +10298,7 @@ function updateQuillPreview(){
   var name=g('list-name'), cat=g('list-cat'), impact=g('list-impact')||'Local',
       desc=g('list-desc'), time=g('list-time'), cost=g('list-cost'), img=g('list-img');
   el.innerHTML =
-    (img?'<div style="height:120px;background:#0003 url('+escH(img)+') center/cover;border-radius:9px 9px 0 0"></div>':'')+
+    ((img&&safeURL(img))?'<div style="height:120px;background:#0003 url(&quot;'+safeURL(img)+'&quot;) center/cover;border-radius:9px 9px 0 0"></div>':'')+
     '<div style="padding:16px">'+
       '<div style="font-family:var(--px);font-size:8px;line-height:1.7;color:var(--text)">'+escH(name||'Your EC name')+'</div>'+
       '<div style="font-size:11px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:8px 0">'+escH(cat||'Category')+' · '+escH(impact)+'</div>'+
