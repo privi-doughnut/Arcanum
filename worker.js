@@ -33,8 +33,22 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5500"
 ];
 
+// Models the proxy is allowed to bill against. Anything else is forced to this
+// default, so no caller can request a pricier model and run up the bill.
+const ALLOWED_MODELS = ["claude-sonnet-5"];
+const DEFAULT_MODEL = "claude-sonnet-5";
+
 // A visitor counts as "live" for this long after their last heartbeat.
 const LIVE_WINDOW_MS = 45000;
+
+// True if the request is cross-origin from a browser we don't allow.
+// Same-origin (the app itself) and allow-listed origins pass; requests with no
+// Origin header (server-to-server/curl) pass here but are still rate-limited.
+function blockedOrigin(origin, url) {
+  if (!origin) return false;
+  if (origin === url.origin) return false;
+  return !ALLOWED_ORIGINS.includes(origin);
+}
 
 function corsHeaders(origin) {
   const allow = ALLOWED_ORIGINS.includes(origin) ? origin : "*";
@@ -113,6 +127,7 @@ export default {
 
     // ── Usage stats heartbeat ────────────────────────────────────────────
     if (url.pathname === "/api/presence" && request.method === "POST") {
+      if (blockedOrigin(origin, url)) return json({ live: 0, total: 0 }, 403, origin);
       if (!env.STATS) return json({ live: 0, total: 0 }, 200, origin);
       let vid = "";
       try {
@@ -132,6 +147,11 @@ export default {
     if (request.method === "POST") {
       if (!env.ARCANUM_ANTHROPIC_KEY) {
         return json({ error: "Server missing ARCANUM_ANTHROPIC_KEY secret." }, 500, origin);
+      }
+
+      // Reject cross-origin browser abuse (using the proxy as a free Claude endpoint).
+      if (blockedOrigin(origin, url)) {
+        return json({ error: { type: "forbidden", message: "Requests must come from Arcanum." } }, 403, origin);
       }
 
       // Rate limit per client IP (flood / bill-abuse protection). Fail open on limiter error.
@@ -161,7 +181,7 @@ export default {
       const sys = typeof payload.system === "string" ? payload.system.slice(0, 20000) : payload.system;
 
       const body = {
-        model: payload.model || "claude-sonnet-5",
+        model: ALLOWED_MODELS.includes(payload.model) ? payload.model : DEFAULT_MODEL,
         max_tokens: Math.min(payload.max_tokens || 1000, 1500),
         messages: msgs,
       };
