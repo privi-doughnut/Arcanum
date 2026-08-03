@@ -1,0 +1,20 @@
+# Arcanum
+
+> A free extracurricular marketplace and planning tool for high school students. It helps students find, plan, and track the activities that strengthen a college application.
+
+Arcanum is a single web app with three core tools:
+
+- **The Marketplace** — a searchable, filterable catalog of 3,208 real extracurricular activities, each rated 0–5 on four dimensions: Essence (personal meaning), Branches (difficulty), Bones (time commitment), and Mushrooms (competitiveness). Filterable by 40 categories, real-world impact (local → global), rarity, time, and cost. Each activity has a detail page with a ratings chart, a step-by-step how-to, and what admissions readers look for.
+- **The Advisor** — an AI advisor that interviews the student about their grade, goals, and interests and builds a personalized extracurricular roadmap. Students can import a conversation from another AI to catch it up, and give it persistent memory about themselves.
+- **The Tracker** — students commit to activities and track status, milestones, and deadlines, then export their list directly into Common App activities format, or print a master plan.
+
+## Key facts
+
+- Free, and no account required (optional accounts sync progress across devices).
+- Built solo by a high school student; it is a submission for the 2026 Congressional App Challenge.
+- Two visual modes: a clean, professional "Planar" mode (the default) and an optional fantasy-themed "Game" mode. Both expose identical functionality.
+- A fully client-side single-page web app served from one Cloudflare Worker (which also proxies the AI advisor and tracks anonymous usage).
+
+## Getting started
+
+Browse the Marketplace to explore activities, ask the Advisor what to do first, or take the short intake quiz to get matched to activities that fit your goals.

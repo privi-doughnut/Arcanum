@@ -5,7 +5,21 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMDcwNzBmIi8+PHJlY3QgeD0iMiIgeT0iMyIgd2lkdGg9IjI4IiBoZWlnaHQ9IjUiIGZpbGw9IiNiNzVjMjMiLz48cmVjdCB4PSIyIiB5PSIxMSIgd2lkdGg9IjI4IiBoZWlnaHQ9IjUiIGZpbGw9IiNiNzVjMjMiLz48cmVjdCB4PSIyIiB5PSIxOSIgd2lkdGg9IjE5IiBoZWlnaHQ9IjUiIGZpbGw9IiNiNzVjMjMiLz48cmVjdCB4PSIxMCIgeT0iMjUiIHdpZHRoPSIxMSIgaGVpZ2h0PSI1IiBmaWxsPSIjYjc1YzIzIi8+PC9zdmc+">
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcanum — EC Marketplace</title>
+<title>Arcanum — The Extracurricular Marketplace</title>
+<meta name="description" content="Arcanum is a free extracurricular marketplace and planning tool for high school students: a searchable catalog of 3,208 real activities rated on meaning, difficulty, time, and competitiveness, an AI advisor that builds a personalized plan, and a tracker that exports to Common App format.">
+<meta name="robots" content="index, follow">
+<meta name="keywords" content="extracurriculars, high school, college applications, Common App, activities, EC planning, AI advisor">
+<!-- Open Graph / social + LLM preview -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Arcanum">
+<meta property="og:title" content="Arcanum — The Extracurricular Marketplace">
+<meta property="og:description" content="A free tool for high schoolers to find, plan, and track extracurriculars: 3,208 rated activities, an AI advisor, and a Common App export.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Arcanum — The Extracurricular Marketplace">
+<meta name="twitter:description" content="3,208 rated extracurriculars, an AI advisor, and a tracker that exports to Common App — free, for high school students.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Arcanum","applicationCategory":"EducationApplication","operatingSystem":"Web","description":"A free extracurricular marketplace and planning tool for high school students: a searchable catalog of 3,208 rated activities, an AI advisor that builds a personalized plan, and a tracker that exports to Common App format.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
 <script>
 // Arrow touch reset (mobile — fades back in 500ms)
 document.addEventListener('DOMContentLoaded', function(){
@@ -206,12 +220,15 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 .mkt-search:focus{border-color:var(--accent);}
 .mkt-search::placeholder{color:var(--text3);}
 .mkt-filters{display:flex;flex-wrap:wrap;gap:6px;}
-.filter-chip{font-family:var(--px);font-size:6.5px;padding:6px 10px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;}
+.filter-chip{font-family:var(--px);font-size:8.5px;padding:7px 12px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;}
 .filter-chip-lg{font-size:10px!important;padding:8px 14px!important;letter-spacing:.02em;}
 .filter-chip:hover,.filter-chip.active{border-color:var(--accent);color:var(--accent);}
 .sort-chips{display:flex;flex-wrap:wrap;gap:6px;}
 .filter-row{display:flex;flex-wrap:wrap;gap:6px;padding:2px 0;}
-.sort-chip{font-family:var(--px);font-size:5px;padding:5px 9px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;}
+.sort-chip{font-family:var(--px);font-size:7.5px;padding:6px 11px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;}
+/* Planar mode: filter/sort chips in clean sans, a touch larger for readability */
+[data-mode="standard"] .filter-chip{font-size:13px;padding:7px 13px;}
+[data-mode="standard"] .sort-chip{font-size:12px;padding:6px 12px;}
 .sort-chip:hover,.sort-chip.active{border-color:var(--gold);color:var(--gold);}
 .ec-grid{max-width:var(--max);margin:0 auto;padding:0 var(--pad) 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
 .ec-card{background:var(--card);border:1px solid var(--border);padding:0;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;overflow:hidden;position:relative;}
@@ -1246,6 +1263,9 @@ html[data-mode="standard"][data-theme="light"]{
   --text:#1a1208; --text2:#544636; --text3:#7a6a52;
   --accent:#b0561a; --accent2:#c4681f; --gold:#9a6b1a;
 }
+/* High-contrast toggle must win in Planar too (Planar palette overrides base data-contrast) */
+html[data-mode="standard"][data-contrast="high"]{ --text2:#e8ecf2; --text3:#c8d0da; --border:#5a6473; }
+html[data-mode="standard"][data-theme="light"][data-contrast="high"]{ --text2:#2a2118; --text3:#4a3d2c; --border:#b0a487; }
 /* keep hardcoded warm light surfaces cohesive with the cool palette */
 html[data-mode="standard"][data-theme="light"] .ec-card,
 html[data-mode="standard"][data-theme="light"] .feat-card,
@@ -1855,18 +1875,18 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
       <span class="filter-chip" data-val="Veterinary" onclick="setFilter(this,'Veterinary')">🐾 Veterinary</span>
     </div>
     <div class="sort-chips" id="mkt-sort">
-      <span class="sort-chip active" onclick="setSort(this,'default')">★ Featured</span>
-      <span class="sort-chip" onclick="setSort(this,'foryou')">✦ For You</span>
-      <span class="sort-chip" onclick="setSort(this,'impact')">🌍 Highest Impact</span>
-      <span class="sort-chip" onclick="setSort(this,'easy')">🌱 Easiest</span>
-      <span class="sort-chip" onclick="setSort(this,'hard')">🔥 Hardest</span>
-      <span class="sort-chip" onclick="setSort(this,'free')">💸 Free Only</span>
-      <span class="sort-chip" onclick="setSort(this,'competitive')">🍄 Least Competitive</span>
-      <span class="sort-chip" onclick="setSort(this,'timelow')">🦴 Low Time</span>
-      <span class="sort-chip" onclick="setSort(this,'rarity')">💎 Legendary First</span>
+      <span class="sort-chip active" title="Our curated default ordering" onclick="setSort(this,'default')">★ Featured</span>
+      <span class="sort-chip" title="Ranked by the categories you've saved and tracked" onclick="setSort(this,'foryou')">✦ For You</span>
+      <span class="sort-chip" title="Sort by real-world reach, from local up to global" onclick="setSort(this,'impact')">🌍 Highest Impact</span>
+      <span class="sort-chip" title="Lowest difficulty first — good starting points" onclick="setSort(this,'easy')">🌱 Easiest</span>
+      <span class="sort-chip" title="Highest difficulty first — the most demanding activities" onclick="setSort(this,'hard')">🔥 Hardest</span>
+      <span class="sort-chip" title="Show only activities that cost nothing" onclick="setSort(this,'free')">💸 Free Only</span>
+      <span class="sort-chip" title="Easiest to get into first (lowest competitiveness)" onclick="setSort(this,'competitive')">🍄 Least Competitive</span>
+      <span class="sort-chip" title="Lowest time commitment first" onclick="setSort(this,'timelow')">🦴 Low Time</span>
+      <span class="sort-chip" title="Rarest, most prestigious activities first" onclick="setSort(this,'rarity')">💎 Legendary First</span>
     </div>
     <div style="margin-top:8px">
-      <div style="font-family:var(--px);font-size:6px;color:var(--text3);letter-spacing:.08em;margin-bottom:5px">IMPACT</div>
+      <div title="How far an activity's reach extends — from your school or town up to the whole world" style="font-family:var(--px);font-size:9px;color:var(--text3);letter-spacing:.08em;margin-bottom:5px;cursor:help">IMPACT</div>
       <div class="filter-row" id="mkt-impact-filters">
         <span class="filter-chip filter-chip-lg active" data-val="all" onclick="setImpactFilter(this,'all')">All</span>
         <span class="filter-chip filter-chip-lg" data-val="Local" onclick="setImpactFilter(this,'Local')">🏘 Local</span>
@@ -1877,13 +1897,13 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
       </div>
     </div>
     <div style="margin-top:8px">
-      <div style="font-family:var(--px);font-size:6px;color:var(--text3);letter-spacing:.08em;margin-bottom:5px">RARITY</div>
+      <div title="How selective or prestigious an activity is — from Common to Legendary" style="font-family:var(--px);font-size:9px;color:var(--text3);letter-spacing:.08em;margin-bottom:5px;cursor:help">RARITY</div>
       <div class="filter-row" id="mkt-rarity-filters">
         <span class="filter-chip filter-chip-lg active" data-val="all" onclick="setRarityFilter(this,'all')">All</span>
-        <span class="filter-chip filter-chip-lg" data-val="Common" onclick="setRarityFilter(this,'Common')">○ Common</span>
-        <span class="filter-chip filter-chip-lg" data-val="Rare" onclick="setRarityFilter(this,'Rare')">◇ Rare</span>
-        <span class="filter-chip filter-chip-lg" data-val="Epic" onclick="setRarityFilter(this,'Epic')">◆ Epic</span>
-        <span class="filter-chip filter-chip-lg" data-val="Legendary" onclick="setRarityFilter(this,'Legendary')">★ Legendary</span>
+        <span class="filter-chip filter-chip-lg" data-val="Common" title="Widely available — most students can do these" onclick="setRarityFilter(this,'Common')">○ Common</span>
+        <span class="filter-chip filter-chip-lg" data-val="Rare" title="Somewhat selective or uncommon" onclick="setRarityFilter(this,'Rare')">◇ Rare</span>
+        <span class="filter-chip filter-chip-lg" data-val="Epic" title="Highly selective or high-effort" onclick="setRarityFilter(this,'Epic')">◆ Epic</span>
+        <span class="filter-chip filter-chip-lg" data-val="Legendary" title="The most prestigious, hardest-to-earn activities" onclick="setRarityFilter(this,'Legendary')">★ Legendary</span>
       </div>
     </div>
   </div>
@@ -1996,6 +2016,7 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
     <p class="jebmem-hint">Had a useful conversation with ChatGPT, Gemini, or another advisor? Paste it here so Jeb gets up to speed — no need to re-explain everything.</p>
     <textarea id="jebmem-context" class="jebmem-ta" rows="6" oninput="jebMemCount()" placeholder="Paste your conversation here…"></textarea>
     <div class="jebmem-count" id="jebmem-count"></div>
+    <button id="jebmem-condense" class="btn btn-ghost" onclick="condenseJebContext()" title="Summarize a long pasted chat into a compact brief" style="margin-top:8px;font-size:12px;border-color:var(--accent);color:var(--accent)">✦ Condense with AI</button>
 
     <div class="jebmem-actions">
       <button class="btn btn-ghost" onclick="clearJebMem()" style="border-color:var(--border2);color:var(--text2)">Clear all</button>
@@ -2005,25 +2026,25 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
 </div>
 
 <!-- ── GRIMOIRE ───────────────────────────────── -->
-<div id="page-grimoire" class="page">
+<div id="page-spellbook" class="page">
   <div class="page-banner"><div class="page-banner-title" data-std="Saved ECs">Your Spellbook</div><p class="page-banner-sub" data-std="Your saved list of extracurriculars. Add activities here, then move them to your Tracker when you commit to one.">Your saved EC collection. Browse the Marketplace and add spells here. When you're ready, cast them into your Grimoire to start tracking.</p></div>
   <div class="grim-wrap">
     <div class="grim-actions">
-      <button class="btn btn-primary" onclick="castGrimoire()" id="cast-btn">✦ Cast Spellbook → Move to Grimoire</button>
-      <button class="btn btn-ghost" onclick="nav('marketplace')">+ Browse More Spells</button>
-      <button class="btn btn-ghost" data-std="📤 Share this list with the Advisor" onclick="shareWithJebadias('grimoire')" style="border-color:var(--accent);color:var(--accent)">🧙 Share Grimoire with Jebadias</button>
+      <button class="btn btn-primary" onclick="castGrimoire()" id="cast-btn" data-std="✦ Commit selected → Tracker">✦ Cast Spellbook → Move to Grimoire</button>
+      <button class="btn btn-ghost" onclick="nav('marketplace')" data-std="+ Browse more activities">+ Browse More Spells</button>
+      <button class="btn btn-ghost" data-std="📤 Share this list with the Advisor" onclick="shareWithJebadias('grimoire')" style="border-color:var(--accent);color:var(--accent)">🧙 Share Spellbook with Jebadias</button>
     </div>
     <div class="grim-list" id="grim-list"></div>
-    <div class="grim-empty" id="grim-empty" data-std="Your Tracker is empty. Browse the Marketplace and add ECs, then mark the ones you commit to." style="display:none">Your Grimoire is empty.<br><br>Browse the Marketplace and add ECs<br>to begin building your collection.</div>
+    <div class="grim-empty" id="grim-empty" data-std="Your Saved list is empty. Browse the Marketplace and add activities you're interested in." style="display:none">Your Spellbook is empty.<br><br>Browse the Marketplace and add spells<br>to begin building your collection.</div>
   </div>
 </div>
 
 <!-- ── SPELLBOOK ──────────────────────────────── -->
-<div id="page-spellbook" class="page">
-  <div class="page-banner"><div class="page-banner-title" data-std="Tracker">Your Grimoire</div><p class="page-banner-sub" data-std="Your active tracker. Move saved activities here to log status, milestones, and progress on each one.">Your active EC journal and tracker. Cast spells from your Spellbook into your Spellbook to log status, milestones, and progress toward each activity.</p></div>
+<div id="page-grimoire" class="page">
+  <div class="page-banner"><div class="page-banner-title" data-std="Tracker">Your Grimoire</div><p class="page-banner-sub" data-std="Your active tracker. Move saved activities here to log status, milestones, and progress on each one.">Your active EC journal and tracker. Cast spells from your Spellbook into your Grimoire to log status, milestones, and progress toward each activity.</p></div>
   <div class="spell-wrap">
     <div style="padding:12px 0 6px;display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn btn-ghost" data-std="📤 Share this list with the Advisor" onclick="shareWithJebadias('spellbook')" style="border-color:var(--accent);color:var(--accent)">🧙 Share Spellbook with Jebadias</button>
+      <button class="btn btn-ghost" data-std="📤 Share this list with the Advisor" onclick="shareWithJebadias('spellbook')" style="border-color:var(--accent);color:var(--accent)">🧙 Share Grimoire with Jebadias</button>
       <button class="btn btn-ghost" data-std="✦ Open the Planner" onclick="enterPhaseTwo(true)" style="border-color:var(--gold,#c79a3a);color:var(--gold,#c79a3a)">✦ Begin the Ascension</button>
       <button class="btn btn-ghost" onclick="openTimeline()">📅 Timeline</button>
       <button class="btn btn-ghost" onclick="openCommonApp()" style="border-color:var(--accent);color:var(--accent)">📋 Common App Export</button>
@@ -2040,7 +2061,7 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
       <span id="tracker-load" style="font-size:12px;color:var(--text3);white-space:nowrap"></span>
     </div>
     <div class="spell-list" id="spell-list"></div>
-    <div class="spell-empty" id="spell-empty" style="display:none">Your Spellbook is empty.<br><br>Add ECs to your Grimoire,<br>then cast them here to begin tracking.</div>
+    <div class="spell-empty" id="spell-empty" data-std="Your Tracker is empty. Save some activities first, then commit them here to track status, milestones, and deadlines." style="display:none">Your Grimoire is empty.<br><br>Add spells to your Spellbook,<br>then cast them here to begin tracking.</div>
   </div>
 </div>
 
@@ -4918,9 +4939,17 @@ body { background-color: var(--bg); background-image: none; }
     </div>
 
     <div class="setting-group">
+      <div class="setting-label">ADVISOR</div>
+      <div class="setting-row">
+        <span class="setting-name">Personalize <span data-std="the Advisor">Jebadias</span><br><span style="font-size:11px;color:var(--text3);font-weight:400">Tell the advisor who you are (remembered across chats), and paste a chat from another AI to catch it up.</span></span>
+        <button class="btn btn-ghost" onclick="openJebMem()" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">Open</button>
+      </div>
+    </div>
+
+    <div class="setting-group">
       <div class="setting-label">DATA</div>
       <div class="setting-row">
-        <span class="setting-name">Spellbook</span>
+        <span class="setting-name" data-std="Saved">Spellbook</span>
         <span style="display:flex;align-items:center;gap:10px">
           <span id="settings-grim-count" style="font-size:12px;color:var(--text3)">0 ECs</span>
           <button class="btn btn-ghost" onclick="clearGrimoire()" style="font-size:11px;padding:5px 12px">Clear</button>
@@ -4962,7 +4991,7 @@ body { background-color: var(--bg); background-image: none; }
         <div class="toggle" id="readaloud-toggle" onclick="toggleReadAloud()"></div>
       </div>
       <div class="setting-row">
-        <span class="setting-name">Larger text<br><span style="font-size:11px;color:var(--text3);font-weight:400">Scales the whole app up by 15%.</span></span>
+        <span class="setting-name">Even larger text<br><span style="font-size:11px;color:var(--text3);font-weight:400">The app already uses a comfortable large size — turn this on to scale everything up further.</span></span>
         <div class="toggle" id="bigtext-toggle" onclick="toggleBigText()"></div>
       </div>
       <div class="setting-row">
@@ -5378,7 +5407,7 @@ body { background-color: var(--bg); background-image: none; }
   <button onclick="closeAuth()" aria-label="Close" style="position:fixed;top:18px;right:20px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:18px;width:40px;height:40px;border-radius:50%;cursor:pointer;z-index:2">✕</button>
   <div style="min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:54px 20px;box-sizing:border-box">
     <div style="font-family:'Press Start 2P',monospace;font-size:clamp(17px,4.2vw,30px);color:var(--accent);line-height:1.4;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px">Arcanum</div>
-    <p id="auth-sub" style="font-size:13px;color:var(--text3);margin:0 0 26px;text-align:center;max-width:340px;line-height:1.6">Make a free account so your Spellbook, Grimoire, and progress follow you everywhere.</p>
+    <p id="auth-sub" style="font-size:13px;color:var(--text3);margin:0 0 26px;text-align:center;max-width:340px;line-height:1.6">Make a free account so your Saved list, Tracker, and progress follow you everywhere.</p>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:18px;max-width:430px;width:100%;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
       <div id="auth-title" style="font-family:var(--px);font-size:14px;color:var(--accent);margin-bottom:18px;letter-spacing:1px">CREATE ACCOUNT</div>
       <div id="auth-signup-fields">
@@ -5466,7 +5495,12 @@ body { background-color: var(--bg); background-image: none; }
 
 <script>
 
-const API_URL = 'https://arcanum-api-proxy.its-the-prithivi-show.workers.dev';
+// Same-origin: the app is served by the combined Worker, which also proxies the
+// advisor at POST /. Using the current origin makes this survive Worker renames
+// and custom domains. (Falls back to the workers.dev URL if opened off-origin.)
+const API_URL = (location.protocol === 'http:' || location.protocol === 'https:')
+  ? location.origin
+  : 'https://arcanum.its-the-prithivi-show.workers.dev';
 let currentPage = 'home';
 let grimoire = JSON.parse(localStorage.getItem('arc-grimoire') || '[]');
 let spellbook = JSON.parse(localStorage.getItem('arc-spellbook') || '[]');
@@ -9113,8 +9147,8 @@ function nav(id) {
   window._currentCobblePage = id;
   
   if (id === 'marketplace') setTimeout(renderMarketplace, 50);
-  if (id === 'grimoire') setTimeout(renderGrimoire, 50);
-  if (id === 'spellbook') setTimeout(renderSpellbook, 50);
+  if (id === 'grimoire') setTimeout(renderSpellbook, 50);  // page-grimoire = the Tracker
+  if (id === 'spellbook') setTimeout(renderGrimoire, 50);  // page-spellbook = Saved
   if (id === 'jebadias') setTimeout(initJeb, 80);
   if (id === 'home' && typeof renderRecent==='function') renderRecent();
   if (id === 'home' && typeof renderEcOfDay==='function') renderEcOfDay();
@@ -9180,6 +9214,9 @@ const NAV_LABELS = {
 };
 
 function isGameMode(){ return siteMode === 'game'; }
+// Mode-aware names for the two lists (labels are inverted vs. the variable names).
+function trackerLabel(){ return isGameMode() ? 'Grimoire' : 'Tracker'; }  // the committed tracker (var: spellbook)
+function savedLabel(){ return isGameMode() ? 'Spellbook' : 'Saved'; }      // the shortlist (var: grimoire)
 
 function initNavPills(){
   var pill = document.getElementById('nav-pill');
@@ -9189,12 +9226,22 @@ function initNavPills(){
       var t = el.getAttribute('data-pill'); if (!t) return;
       pill.textContent = t;
       var r = el.getBoundingClientRect();
-      pill.style.left = (r.left + r.width/2) + 'px';
-      pill.style.top  = (r.bottom + 8) + 'px';
+      // The pill lives inside the zoomed <body>, so divide viewport coords by the
+      // zoom factor to place it directly under the hovered item (no offset).
+      var z = parseFloat(document.body.style.zoom) || 1;
+      pill.style.left = ((r.left + r.width/2) / z) + 'px';
+      pill.style.top  = ((r.bottom + 8) / z) + 'px';
       pill.classList.add('show');
     });
     el.addEventListener('mouseleave', function(){ pill.classList.remove('show'); });
   });
+  // Hide the scroll pill the moment the user starts scrolling.
+  window.addEventListener('scroll', function(){
+    var sp = document.getElementById('scroll-pill');
+    if (sp && (window.scrollY||window.pageYOffset||0) > 30 && sp.classList.contains('visible')){
+      sp.classList.remove('visible'); sp.classList.add('hidden');
+    }
+  }, {passive:true});
 }
 
 function navIdFromOnclick(el){
@@ -9240,9 +9287,11 @@ function applyMode(mode){
     el.innerHTML = game ? el.getAttribute('data-game-cache') : el.getAttribute('data-std');
   });
 
-  // mode-aware search placeholder (game keeps "spells"; Planar reads plain)
+  // mode-aware placeholders (game keeps its voice; Planar reads plain)
   const mks = document.getElementById('mkt-search');
   if (mks) mks.placeholder = game ? 'Search spells...' : 'Search activities...';
+  const cin = document.getElementById('chat-input');
+  if (cin) cin.placeholder = game ? 'Speak your truth to Jebadias…' : 'Message the Advisor…';
 
   // settings UI reflectors
   const tog = document.getElementById('mode-toggle');
@@ -9702,8 +9751,8 @@ function castGrimoire() {
   saveGrimoire();
   saveSpellbook();
   renderGrimoire();
-  showNotif('Casting complete! Check your Grimoire. 📖');
-  setTimeout(() => nav('spellbook'), 1200);
+  showNotif(isGameMode() ? 'Casting complete! Check your Grimoire. 📖' : 'Added! Check your Tracker. 📖');
+  setTimeout(() => nav('grimoire'), 1200);  // show the Tracker after committing
 }
 function clearGrimoire() {
   if (!confirm('Clear your entire Grimoire?')) return;
@@ -10031,6 +10080,7 @@ function saveJebMem(){
     localStorage.setItem('arc-jeb-memory',  ((m&&m.value)||'').trim());
     localStorage.setItem('arc-jeb-context', ((c&&c.value)||'').trim().slice(0, JEBMEM_CAP));
   } catch(e){}
+  try { if (window.ARC_CLOUD && ARC_CLOUD.isReady && ARC_CLOUD.isReady()) ARC_CLOUD.syncNow(); } catch(e){}
   closeJebMem();
   if (typeof showNotif==='function') showNotif((typeof isGameMode==='function'&&!isGameMode()) ? 'Saved — the Advisor will remember this.' : 'Saved — Jebadias will remember this.');
 }
@@ -10040,6 +10090,29 @@ function clearJebMem(){
   try { localStorage.removeItem('arc-jeb-memory'); localStorage.removeItem('arc-jeb-context'); } catch(e){}
   jebMemCount();
   if (typeof showNotif==='function') showNotif('Cleared.');
+}
+async function condenseJebContext(){
+  var c = document.getElementById('jebmem-context'), btn = document.getElementById('jebmem-condense');
+  if (!c) return;
+  var text = (c.value||'').trim();
+  if (text.length < 200){ if (typeof showNotif==='function') showNotif('Paste a longer conversation first.'); return; }
+  var orig = btn ? btn.textContent : '';
+  if (btn){ btn.disabled = true; btn.textContent = 'Condensing…'; }
+  try {
+    var res = await fetch(API_URL, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-5', max_tokens:400,
+        system:"You condense a conversation a student had with another AI into a compact brief for their extracurricular advisor. Output ONLY the brief: 4-8 short bullet points capturing the student's situation, grade, goals, interests, constraints, and any decisions or advice already given. Factual, no preamble, under 180 words.",
+        messages:[{ role:'user', content:'Conversation to condense:\n\n' + text.slice(0,12000) }]
+      })
+    });
+    var data = await res.json().catch(function(){ return {}; });
+    if (!res.ok || data.error){ if (typeof showNotif==='function') showNotif('Could not condense right now — try again in a moment.'); return; }
+    var summary = (data.content||[]).map(function(x){ return x.text||''; }).join('').trim();
+    if (summary){ c.value = summary; jebMemCount(); if (typeof showNotif==='function') showNotif('Condensed — review it, then Save.'); }
+  } catch(e){ if (typeof showNotif==='function') showNotif('Could not condense right now — check your connection.'); }
+  finally { if (btn){ btn.disabled = false; btn.textContent = orig || '✦ Condense with AI'; } }
 }
 
 /* ── THE SECOND SEA — Phase 2 plan generator ─────────────────────────── */
@@ -10119,7 +10192,7 @@ function renderPhaseTwo(){
       +'</div><div style="height:6px;background:'+CT+';border-radius:3px;overflow:hidden;margin-bottom:22px"><div style="height:100%;width:'+pct+'%;background:'+CG+'"></div></div>';
   }
   var wrap=document.getElementById('p2-cards'); if(!wrap) return;
-  if(!sb.length){ wrap.innerHTML='<div style="background:'+CCE+';border:1px dashed '+CDASH+';border-radius:12px;padding:28px;text-align:center;color:'+CEMP+'">Your Grimoire is empty. Return, add ECs to your Spellbook, then come back — they\'ll appear here as cards you can open.</div>'; return; }
+  if(!sb.length){ wrap.innerHTML='<div style="background:'+CCE+';border:1px dashed '+CDASH+';border-radius:12px;padding:28px;text-align:center;color:'+CEMP+'">Your '+trackerLabel()+' is empty. Add ECs to your '+savedLabel()+', then come back — they\'ll appear here as cards you can open.</div>'; return; }
   wrap.innerHTML='<div style="font-family:var(--px);font-size:8px;color:'+CG+';letter-spacing:1px;margin-bottom:12px">YOUR COMMITTED ECS — tap any card</div>'
     +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">'
     +sb.map(function(e){
@@ -10364,7 +10437,7 @@ function renderRecommendations(){
     .slice(0,6).map(function(o){return o.ec;});
   if(!recs.length){ wrap.style.display='none'; return; }
   wrap.style.display='block';
-  wrap.innerHTML='<div style="font-family:var(--px);font-size:8px;color:var(--accent);letter-spacing:1px;margin:4px 0 12px">✦ JEBADIAS RECOMMENDS — based on your Grimoire</div>'
+  wrap.innerHTML='<div style="font-family:var(--px);font-size:8px;color:var(--accent);letter-spacing:1px;margin:4px 0 12px">'+(isGameMode()?'✦ JEBADIAS RECOMMENDS — based on your Grimoire':'✦ THE ADVISOR RECOMMENDS — based on your Tracker')+'</div>'
     +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px">'
     +recs.map(function(s){ return '<div onclick="openECById(\''+s.id+'\')" style="cursor:pointer;border:1px solid var(--border);border-radius:9px;padding:12px;background:var(--card)"><div style="font-size:18px">'+(s.icon||'📌')+'</div><div style="font-size:12px;color:var(--text);font-weight:600;margin-top:5px;line-height:1.3">'+escH(s.name)+'</div><div style="font-size:10px;color:var(--accent);margin-top:4px">'+escH(s.rarity||'Common')+' · '+escH(s.cat||'')+'</div></div>'; }).join('')
     +'</div>';
@@ -10511,7 +10584,7 @@ function renderQuizResults(){
   var recs=quizRecs(); window._quizRecs=recs;
   var html='<div class="quiz-progress-wrap"><div class="quiz-progress" style="width:100%"></div></div>';
   html+='<div class="quiz-q">Jebadias has read your answers.</div>';
-  html+='<p style="color:var(--text2);font-size:14px;line-height:1.6;margin-bottom:18px">A starter set drawn from your interests. Add them to your Grimoire and refine from there.</p>';
+  html+='<p style="color:var(--text2);font-size:14px;line-height:1.6;margin-bottom:18px">A starter set drawn from your interests. Add them to your '+trackerLabel()+' and refine from there.</p>';
   if(!recs.length){ html+='<p style="color:var(--text3)">No clear matches yet — explore The Stacks and Jebadias will learn as you save.</p>'; }
   else { html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px">'
     +recs.map(function(s){ return '<div onclick="closeQuiz();openECById(\''+s.id+'\')" style="cursor:pointer;border:1px solid var(--border);border-radius:9px;padding:12px;background:var(--card)"><div style="font-size:18px">'+(s.icon||'📌')+'</div><div style="font-size:12px;color:var(--text);font-weight:600;margin-top:5px;line-height:1.3">'+escH(s.name)+'</div><div style="font-size:10px;color:var(--accent);margin-top:4px">'+escH(s.rarity||'Common')+' · '+escH(s.cat||'')+'</div></div>'; }).join('')+'</div>'; }
@@ -10526,8 +10599,8 @@ function addQuizRecsToGrimoire(){
   var existing={}; grimoire.forEach(function(e){ if(e&&e.id) existing[e.id]=1; });
   var added=0; recs.forEach(function(e){ if(!existing[e.id]){ grimoire.push(Object.assign({},e)); added++; } });
   if(typeof saveGrimoire==='function') saveGrimoire();
-  if(typeof showNotif==='function') showNotif(added+' added to your Grimoire. ✦');
-  closeQuiz(); if(typeof nav==='function') nav('grimoire');
+  if(typeof showNotif==='function') showNotif(added+' added to your '+savedLabel()+'. ✦');
+  closeQuiz(); if(typeof nav==='function') nav('spellbook');
 }
 
 /* ── READ-ALOUD (hover-to-speak) ─────────────────────────────────────── */
@@ -10575,7 +10648,7 @@ function initShortcuts(){ document.addEventListener('keydown', function(e){
 
 /* ── UPGRADE: Larger-text accessibility ──────────────────────────────── */
 var bigText = localStorage.getItem('arc-bigtext')==='1';
-function applyBigText(){ try{ document.body.style.zoom = bigText ? '1.15' : ''; }catch(e){} var t=document.getElementById('bigtext-toggle'); if(t) t.classList.toggle('on', bigText); }
+function applyBigText(){ try{ document.body.style.zoom = bigText ? '1.28' : '1.12'; }catch(e){} var t=document.getElementById('bigtext-toggle'); if(t) t.classList.toggle('on', bigText); }
 function toggleBigText(){ bigText=!bigText; localStorage.setItem('arc-bigtext', bigText?'1':'0'); applyBigText(); }
 
 
@@ -11081,6 +11154,11 @@ function showPill(pageId) {
   if (!msg) return;
   const pill = document.getElementById('scroll-pill');
   if (!pill) return;
+  // Smart scroll: don't nag when the page already fits, or the user has scrolled.
+  var scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  if (scrollable < 140 || (window.scrollY || window.pageYOffset || 0) > 40) {
+    pill.classList.remove('visible'); pill.classList.add('hidden'); return;
+  }
   pill.textContent = msg;
   pill.classList.remove('hidden');
   pill.classList.add('visible');
@@ -12025,6 +12103,8 @@ window.ARC_CLOUD = (function(){
   function snapshot(){
     var o = {};
     KEYS.forEach(function(k){ o[k[1]] = readLocal(k[0], k[2]); });
+    try { o.jebMemory = localStorage.getItem('arc-jeb-memory') || ''; o.jebContext = localStorage.getItem('arc-jeb-context') || ''; }
+    catch(e){ o.jebMemory = ''; o.jebContext = ''; }
     return o;
   }
   function unionById(a, b){
@@ -12049,7 +12129,9 @@ window.ARC_CLOUD = (function(){
             grimoire:  unionById(local.grimoire,  cloud.grimoire),
             fragments: unionVals(local.fragments, cloud.fragments),
             badges:    unionVals(local.badges,    cloud.badges),
-            pcounts:   maxCounts(local.pcounts,   cloud.pcounts)
+            pcounts:   maxCounts(local.pcounts,   cloud.pcounts),
+            jebMemory: local.jebMemory || cloud.jeb_memory || '',
+            jebContext: local.jebContext || cloud.jeb_context || ''
           };
         } else {
           merged = local; // first login: upload what's here
@@ -12065,6 +12147,8 @@ window.ARC_CLOUD = (function(){
       localStorage.setItem('arc-fragments', JSON.stringify(m.fragments));
       localStorage.setItem('arc-badges',    JSON.stringify(m.badges));
       localStorage.setItem('arc-pcounts',   JSON.stringify(m.pcounts));
+      if (typeof m.jebMemory  === 'string') localStorage.setItem('arc-jeb-memory',  m.jebMemory);
+      if (typeof m.jebContext === 'string') localStorage.setItem('arc-jeb-context', m.jebContext);
     } catch(e){}
     // refresh in-memory globals + UI
     try { if (typeof spellbook!=='undefined') spellbook = m.spellbook; } catch(e){}
@@ -12084,12 +12168,19 @@ window.ARC_CLOUD = (function(){
   function push(state){
     if (!ready || !session) return Promise.resolve();
     var s = state || snapshot();
-    var row = { user_id: session.user.id, spellbook:s.spellbook, grimoire:s.grimoire,
+    var core = { user_id: session.user.id, spellbook:s.spellbook, grimoire:s.grimoire,
                 fragments:s.fragments, badges:s.badges, pcounts:s.pcounts, updated_at:new Date().toISOString() };
+    var full = Object.assign({}, core, { jeb_memory: (s.jebMemory||''), jeb_context: (s.jebContext||'') });
     lastSnapshot = JSON.stringify(s);
     setSyncStatus('Saving…');
-    return client.from('user_state').upsert(row, { onConflict:'user_id' })
-      .then(function(){ setSyncStatus('Synced'); })
+    return client.from('user_state').upsert(full, { onConflict:'user_id' })
+      .then(function(res){
+        if (res && res.error) {
+          // jeb_memory/jeb_context columns not added yet — sync the core fields so nothing breaks
+          return client.from('user_state').upsert(core, { onConflict:'user_id' }).then(function(){ setSyncStatus('Synced'); });
+        }
+        setSyncStatus('Synced');
+      })
       .catch(function(){ setSyncStatus('Offline'); });
   }
   function autoPush(){
@@ -12171,7 +12262,7 @@ function reflectAuthMode(){
   var s=document.getElementById('auth-submit'); if(s) s.textContent = up?'Create account':'Sign in';
   var tt=document.getElementById('auth-toggle-text'); if(tt) tt.textContent = up?'Already have an account?':'New here?';
   var tl=document.getElementById('auth-toggle-link'); if(tl) tl.textContent = up?'Sign in':'Create one';
-  var sub=document.getElementById('auth-sub'); if(sub) sub.textContent = up?'Make a free account so your Spellbook, Grimoire, and progress follow you everywhere.':'Welcome back — sign in to sync your progress across devices.';
+  var sub=document.getElementById('auth-sub'); if(sub) sub.textContent = up ? (isGameMode()?'Make a free account so your Spellbook, Grimoire, and progress follow you everywhere.':'Make a free account so your Saved list, Tracker, and progress follow you everywhere.') : 'Welcome back — sign in to sync your progress across devices.';
   var m=document.getElementById('auth-msg'); if(m) m.textContent='';
 }
 function openAuth(){ _authMode='up'; var o=document.getElementById('auth-overlay'); if(o) o.style.display='block'; document.body.style.overflow='hidden'; reflectAuthMode(); }

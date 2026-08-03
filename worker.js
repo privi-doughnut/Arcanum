@@ -86,6 +86,21 @@ export class Stats extends DurableObject {
   }
 }
 
+/* ── Rate limiter: one DO per client IP, fixed-window minute + hour caps.
+   Protects the Anthropic bill from flooding without hurting real users. */
+export class RateLimiter extends DurableObject {
+  async hit() {
+    const now = Date.now();
+    const st = this.ctx.storage;
+    let d = (await st.get("w")) || { minStart: now, min: 0, hrStart: now, hr: 0 };
+    if (now - d.minStart >= 60000)   { d.minStart = now; d.min = 0; }
+    if (now - d.hrStart  >= 3600000) { d.hrStart  = now; d.hr  = 0; }
+    d.min++; d.hr++;
+    await st.put("w", d);
+    return { allowed: d.min <= 15 && d.hr <= 120, min: d.min, hr: d.hr };
+  }
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -119,6 +134,17 @@ export default {
         return json({ error: "Server missing ARCANUM_ANTHROPIC_KEY secret." }, 500, origin);
       }
 
+      // Rate limit per client IP (flood / bill-abuse protection). Fail open on limiter error.
+      if (env.RATELIMIT) {
+        try {
+          const ip = request.headers.get("cf-connecting-ip") || "anon";
+          const rl = await env.RATELIMIT.getByName(ip).hit();
+          if (!rl.allowed) {
+            return json({ error: { type: "rate_limited", message: "You're sending messages too quickly. Please wait a minute and try again." } }, 429, origin);
+          }
+        } catch (e) { /* fail open */ }
+      }
+
       let payload;
       try {
         payload = await request.json();
@@ -126,12 +152,20 @@ export default {
         return json({ error: "Invalid JSON body." }, 400, origin);
       }
 
+      // Input caps — keep any single request bounded and cheap.
+      let msgs = Array.isArray(payload.messages) ? payload.messages : [];
+      if (msgs.length > 40) msgs = msgs.slice(-40);
+      msgs = msgs.map(function (m) {
+        return { role: m.role, content: typeof m.content === "string" ? m.content.slice(0, 8000) : m.content };
+      });
+      const sys = typeof payload.system === "string" ? payload.system.slice(0, 20000) : payload.system;
+
       const body = {
         model: payload.model || "claude-sonnet-5",
-        max_tokens: payload.max_tokens || 1000,
-        messages: payload.messages || [],
+        max_tokens: Math.min(payload.max_tokens || 1000, 1500),
+        messages: msgs,
       };
-      if (payload.system) body.system = payload.system;
+      if (sys) body.system = sys;
       if (payload.temperature != null) body.temperature = payload.temperature;
 
       try {
