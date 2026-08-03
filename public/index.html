@@ -1374,46 +1374,64 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   .btn:active, .filter-chip:active, .sort-chip:active, .grimoire-btn:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: none; }
 }
 
-/* ══ PLANAR EDITORIAL HERO — asymmetric, type-forward, no 3D/blur ═════════════
-   Desktop: brand + CTAs (left) vs a live-stats panel (right). Scoped to Planar;
-   game mode keeps its centred pixel hero. Depth via 1px borders, motion via
-   transform/opacity only, reduced-motion falls back to a crossfade. */
-[data-mode="standard"] .home-logo-icon{ display:none; }               /* pixel mark off in the chic hero */
-[data-mode="standard"] .home-logo-wordmark{ font-size:clamp(52px,9vw,94px) !important; line-height:.94; }
-[data-mode="standard"] .home-logo-sub{ max-width:44ch; }
+/* ══ PLANAR EDITORIAL HERO — value-prop headline + a living catalog wall ═════
+   Leads with the message (the brand mark lives in the nav). The right column is
+   a slow, fade-masked, hover-pausable wall of REAL catalog activities. Scoped to
+   Planar; game keeps its centred pixel hero. Depth = 1px borders; motion =
+   transform/opacity; continuous drift pauses on hover, stops under reduced-motion. */
+[data-mode="standard"] .home-logo-icon,
+[data-mode="standard"] .home-logo-wordmark,
+[data-mode="standard"] .home-logo-sub,
+[data-mode="standard"] .home-logo-rule{ display:none; }
+[data-mode="standard"] .hero-eyebrow{ font-size:12px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+[data-mode="standard"] .hero-head{ font-family:var(--chic); font-weight:700; color:var(--text); font-size:clamp(34px,5vw,58px); line-height:1.04; letter-spacing:-.01em; margin:0 0 20px; text-wrap:balance; }
+[data-mode="standard"] .hero-head em{ font-style:normal; color:var(--accent); }
+[data-mode="standard"] .hero-subhead{ font-size:clamp(15px,1.3vw,17px); line-height:1.6; color:var(--text2); max-width:50ch; margin:0 0 28px; }
 [data-mode="standard"] .impact-num{ font-variant-numeric:tabular-nums; }
+[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ justify-content:flex-start !important; }
 
-@media (min-width:860px){
-  /* left content flows naturally; the stat panel floats top-right (avoids grid row-stretch) */
+/* the living catalog wall */
+.hero-wall{ display:none; gap:14px; }
+.hw-col{ overflow:hidden; flex:1; -webkit-mask-image:linear-gradient(180deg,transparent,#000 13%,#000 87%,transparent); mask-image:linear-gradient(180deg,transparent,#000 13%,#000 87%,transparent); }
+.hw-track{ display:flex; flex-direction:column; gap:13px; will-change:transform; }
+.hw-up{ animation:hwScroll 54s linear infinite; }
+.hw-down{ animation:hwScroll 62s linear infinite reverse; }
+.hero-wall:hover .hw-track{ animation-play-state:paused; }
+@keyframes hwScroll{ from{ transform:translateY(0); } to{ transform:translateY(-50%); } }
+.hw-card{ display:flex; gap:11px; align-items:center; background:var(--card); border:1px solid var(--border); border-radius:13px; padding:12px 14px; box-shadow:0 1px 2px rgba(60,44,24,.05); }
+.hw-ic{ font-size:21px; flex:none; line-height:1; }
+.hw-b{ min-width:0; }
+.hw-name{ display:block; font-size:13px; font-weight:600; color:var(--text); line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hw-cat{ display:block; font-size:11px; color:var(--text3); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+@media (min-width:900px){
   [data-mode="standard"] .home-logo-inner{
-    display:block; width:100%;
-    position:relative; text-align:left; max-width:var(--max); margin:0 auto; padding:30px 300px 26px 0;
+    display:block; width:100%; position:relative; text-align:left;
+    max-width:var(--max); margin:0 auto; padding:6px 496px 20px 0; min-height:clamp(430px,56vh,560px);
   }
   [data-mode="standard"] .home-logo-inner > *{ margin-left:0; margin-right:0; }
-  [data-mode="standard"] .home-logo-inner > .home-logo-wordmark{ margin-bottom:14px; }
-  [data-mode="standard"] .home-logo-inner > .home-logo-sub{ margin:0 0 20px; }
-  [data-mode="standard"] .home-logo-inner > .home-logo-rule{ margin:0 0 30px; }
-  [data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ justify-content:flex-start !important; }
-  [data-mode="standard"] .home-logo-inner > #impact-strip{
-    position:absolute; top:44px; right:0; width:268px; margin:0;
-    flex-direction:column; align-items:stretch; gap:0; max-width:none;
-  }
-  [data-mode="standard"] .home-logo-inner > #impact-strip .impact-stat{
-    flex-direction:row; align-items:baseline; justify-content:space-between; min-width:0; padding:14px 2px;
-  }
-  [data-mode="standard"] .home-logo-inner > #impact-strip .impact-div{ width:100%; height:1px; margin:0; }
-  [data-mode="standard"] .home-logo-inner > #impact-strip .impact-lbl{ margin-top:0; }
+  [data-mode="standard"] #impact-strip{ margin:22px 0 0 !important; justify-content:flex-start; max-width:none; }
+  [data-mode="standard"] .hero-wall{ display:flex; position:absolute; top:0; right:0; width:468px; height:100%; }
+}
+@media (max-width:899px){
+  [data-mode="standard"] .hero-lede{ text-align:center; }
+  [data-mode="standard"] .hero-subhead{ margin-left:auto; margin-right:auto; }
 }
 
+/* entrance (one-shot; reduced-motion crossfade) */
 @keyframes heroRise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
-[data-mode="standard"] .home-logo-inner > *{ animation:heroRise .55s cubic-bezier(.2,.7,.3,1) both; }
-[data-mode="standard"] .home-logo-wordmark{ animation-delay:.04s; }
-[data-mode="standard"] .home-logo-sub{ animation-delay:.10s; }
-[data-mode="standard"] .home-logo-rule{ animation-delay:.15s; }
-[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ animation-delay:.20s; }
-[data-mode="standard"] .home-logo-inner > #impact-strip{ animation-delay:.26s; }
+[data-mode="standard"] .hero-eyebrow,
+[data-mode="standard"] .hero-head,
+[data-mode="standard"] .hero-subhead,
+[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"],
+[data-mode="standard"] #impact-strip{ animation:heroRise .6s cubic-bezier(.2,.7,.3,1) both; }
+[data-mode="standard"] .hero-head{ animation-delay:.06s; }
+[data-mode="standard"] .hero-subhead{ animation-delay:.12s; }
+[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ animation-delay:.18s; }
+[data-mode="standard"] #impact-strip{ animation-delay:.24s; }
 @media (prefers-reduced-motion: reduce){
   @keyframes heroRise{ from{ opacity:0; } to{ opacity:1; } }
+  .hw-up, .hw-down{ animation:none; }
 }
 
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
@@ -1516,6 +1534,11 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div class="home-logo-wordmark">Arcanum</div>
       <div class="home-logo-sub">· The Extracurricular Marketplace ·</div>
       <div class="home-logo-rule"></div>
+      <div class="std-only hero-lede">
+        <div class="hero-eyebrow">3,208 real activities · rated by students who did them</div>
+        <h1 class="hero-head">The right extracurriculars, <em>minus the guessing.</em></h1>
+        <p class="hero-subhead">Browse a catalog rated by students who actually did them, get a personalized plan from an AI advisor, and track every step — free.</p>
+      </div>
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px">
         <button onclick="openQuiz()" style="background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">✦ Find my starting path</button>
         <button onclick="openExplore()" style="background:transparent;border:1px solid var(--border);color:var(--text2);padding:13px 22px;border-radius:10px;font-size:14px;cursor:pointer">✧ Explore</button>
@@ -1528,6 +1551,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         <div class="impact-div"></div>
         <div class="impact-stat"><span class="impact-num">3,208</span><span class="impact-lbl">Activities</span></div>
       </div>
+      <div class="std-only hero-wall" id="hero-wall" aria-hidden="true"></div>
     </div>
     <div id="ecotd-wrap" style="display:none;max-width:520px;margin:30px auto 0;padding:0 var(--pad)"></div>
     <div id="recent-wrap" style="display:none;max-width:var(--max);margin:30px auto 0;padding:0 var(--pad)"></div>
@@ -11333,6 +11357,24 @@ function startUsageWidget(){
   _arcUsageTimer = setInterval(arcPingUsage, 25000);
 }
 
+/* Planar landing hero: build the drifting "catalog wall" from REAL activities. */
+function renderHeroWall(){
+  var wall = document.getElementById('hero-wall');
+  if(!wall || wall.dataset.built || typeof ECS==='undefined' || !ECS.length) return;
+  var pool = [], step = Math.max(1, Math.floor(ECS.length/48));
+  for(var i=3; i<ECS.length && pool.length<32; i+=step){ var e=ECS[i]; if(e && e.name) pool.push(e); }
+  function card(e){
+    return '<div class="hw-card"><span class="hw-ic">'+(e.icon||'📌')+'</span><span class="hw-b">'
+      + '<span class="hw-name">'+escH(e.name)+'</span>'
+      + '<span class="hw-cat">'+escH(e.cat||'')+' · '+escH(e.impact||'Local')+'</span></span></div>';
+  }
+  var a = pool.slice(0,16).map(card).join(''), b = pool.slice(16,32).map(card).join('');
+  wall.innerHTML =
+    '<div class="hw-col"><div class="hw-track hw-up">'+a+a+'</div></div>'+
+    '<div class="hw-col"><div class="hw-track hw-down">'+b+b+'</div></div>';
+  wall.dataset.built = '1';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   applyTheme(currentTheme);
@@ -11353,6 +11395,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initOnboarding();
   checkECDeepLink();
   if (typeof startUsageWidget==='function') startUsageWidget();
+  if (typeof renderHeroWall==='function') renderHeroWall();
 
   updateGC();
   
