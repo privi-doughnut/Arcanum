@@ -1434,6 +1434,26 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   .hw-up, .hw-down{ animation:none; }
 }
 
+/* ══ PLANAR MARKETPLACE — refined catalog cards + prominent search ═══════════ */
+/* search is the primary action on a catalog — make it prominent */
+[data-mode="standard"] .mkt-search{ font-size:16px; padding:15px 18px; border-radius:12px; }
+[data-mode="standard"] .mkt-search:focus{ box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent); }
+/* refined EC cards */
+[data-mode="standard"] .ec-card{ border-radius:14px; transition:transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s ease, border-color .18s ease; }
+[data-mode="standard"] .ec-card:hover{ transform:translateY(-3px); border-color:var(--border2); box-shadow:0 10px 30px rgba(0,0,0,.28); }
+[data-mode="standard"][data-theme="light"] .ec-card:hover{ box-shadow:0 10px 30px rgba(60,44,24,.13); }
+[data-mode="standard"] .ec-card-top{ padding:16px 18px 0; }
+[data-mode="standard"] .ec-card-body{ padding:12px 18px 16px; gap:7px; }
+[data-mode="standard"] .ec-name{ font-family:var(--chic) !important; font-size:19px !important; font-weight:700; line-height:1.2; letter-spacing:-.01em; }
+[data-mode="standard"] .ec-cat{ font-size:10.5px; letter-spacing:.08em; }
+[data-mode="standard"] .ec-desc{ font-size:13px !important; line-height:1.6 !important; }
+[data-mode="standard"] .ec-impact{ border-radius:6px; }
+/* rarity: quiet outlined pill differentiated by colour, not a loud fill */
+[data-mode="standard"] .ec-badge{ background:transparent !important; border:1px solid var(--border); border-radius:20px; font-size:10px !important; font-weight:600; letter-spacing:.04em; padding:3px 10px; color:var(--text3) !important; }
+[data-mode="standard"] .ec-badge.rare{ color:#3b82a6 !important; border-color:#3b82a655; }
+[data-mode="standard"] .ec-badge.epic{ color:#8a63cc !important; border-color:#8a63cc55; }
+[data-mode="standard"] .ec-badge.legendary{ color:var(--accent) !important; border-color:color-mix(in srgb,var(--accent) 45%,transparent); }
+
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
 [data-mode="game"] .home-what-text{ font-size:15px; }
