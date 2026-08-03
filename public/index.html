@@ -361,8 +361,8 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 .map-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);}
 .legend-dot{width:10px;height:10px;border-radius:1px;}
-.map-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border:1px solid var(--gold);padding:24px;max-width:380px;width:90%;z-index:300;transition:transform .2s;}
-.map-popup.show{transform:translate(-50%,-50%) scale(1);}
+.map-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);opacity:0;pointer-events:none;background:var(--card);border:1px solid var(--gold);padding:24px;max-width:380px;width:90%;z-index:300;transition:transform .2s cubic-bezier(.2,.7,.3,1),opacity .2s ease;}
+.map-popup.show{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto;}
 .map-popup-title{font-family:var(--px);font-size:9px;color:var(--accent);margin-bottom:8px;}
 .map-popup-text{font-size:13px;color:var(--text2);line-height:1.7;}
 .map-popup-close{position:absolute;top:10px;right:10px;background:none;border:1px solid var(--border);color:var(--text2);width:24px;height:24px;cursor:pointer;font-size:12px;}
@@ -780,8 +780,8 @@ body { background-color: var(--bg); background-image: none; }
 
 
 /* EDIT EC MODAL */
-.edit-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border:1px solid var(--border2);padding:24px;max-width:480px;width:92%;z-index:500;transition:transform .2s;box-shadow:0 16px 48px rgba(0,0,0,.5);}
-.edit-modal.show{transform:translate(-50%,-50%) scale(1);}
+.edit-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);opacity:0;pointer-events:none;background:var(--card);border:1px solid var(--border2);padding:24px;max-width:480px;width:92%;z-index:500;transition:transform .2s cubic-bezier(.2,.7,.3,1),opacity .2s ease;box-shadow:0 16px 48px rgba(0,0,0,.5);}
+.edit-modal.show{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto;}
 .edit-modal-title{font-family:var(--px);font-size:8px;color:var(--accent);margin-bottom:16px;}
 .edit-modal-close{position:absolute;top:10px;right:10px;background:none;border:1px solid var(--border);color:var(--text2);width:26px;height:26px;cursor:pointer;font-size:12px;}
 
@@ -1351,6 +1351,28 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
 .jebmem-ta:focus{ border-color:var(--accent); }
 .jebmem-count{ font-size:11px; color:var(--text3); margin-top:5px; min-height:14px; text-align:right; }
 .jebmem-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+
+/* ══ CRAFT LAYER — interactive states + micro-typography (both modes) ══════
+   §4 cohesive hover/focus/active on every control; §6 balanced headings. */
+.btn, .filter-chip, .sort-chip, .grimoire-btn, .persona-btn, .quiz-opt, .toggle, .nav-theme-btn {
+  transition: transform .13s cubic-bezier(.2,.7,.3,1), background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+/* §4 click elasticity — a subtle mechanical press */
+.btn:active, .filter-chip:active, .sort-chip:active, .grimoire-btn:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: scale(.97); }
+/* §4 tailored dual-ring focus, brand-tinted, replaces the generic outline */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+/* §6 orphan prevention — no lone trailing word on headings */
+h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
+.home-logo-wordmark, .ob-title, .jebmem-title, .feat-title, .how-item-title { text-wrap: balance; }
+/* §1 accessibility — press feedback becomes a crossfade under reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .btn:active, .filter-chip:active, .sort-chip:active, .grimoire-btn:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: none; }
+}
 
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
@@ -2585,8 +2607,8 @@ body { background-color: var(--bg); background-image: none; }
 
 
 /* EDIT EC MODAL */
-.edit-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border:1px solid var(--border2);padding:24px;max-width:480px;width:92%;z-index:500;transition:transform .2s;box-shadow:0 16px 48px rgba(0,0,0,.5);}
-.edit-modal.show{transform:translate(-50%,-50%) scale(1);}
+.edit-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);opacity:0;pointer-events:none;background:var(--card);border:1px solid var(--border2);padding:24px;max-width:480px;width:92%;z-index:500;transition:transform .2s cubic-bezier(.2,.7,.3,1),opacity .2s ease;box-shadow:0 16px 48px rgba(0,0,0,.5);}
+.edit-modal.show{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto;}
 .edit-modal-title{font-family:var(--px);font-size:8px;color:var(--accent);margin-bottom:16px;}
 .edit-modal-close{position:absolute;top:10px;right:10px;background:none;border:1px solid var(--border);color:var(--text2);width:26px;height:26px;cursor:pointer;font-size:12px;}
 
