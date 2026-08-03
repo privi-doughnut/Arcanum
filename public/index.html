@@ -1374,6 +1374,48 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   .btn:active, .filter-chip:active, .sort-chip:active, .grimoire-btn:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: none; }
 }
 
+/* ══ PLANAR EDITORIAL HERO — asymmetric, type-forward, no 3D/blur ═════════════
+   Desktop: brand + CTAs (left) vs a live-stats panel (right). Scoped to Planar;
+   game mode keeps its centred pixel hero. Depth via 1px borders, motion via
+   transform/opacity only, reduced-motion falls back to a crossfade. */
+[data-mode="standard"] .home-logo-icon{ display:none; }               /* pixel mark off in the chic hero */
+[data-mode="standard"] .home-logo-wordmark{ font-size:clamp(52px,9vw,94px) !important; line-height:.94; }
+[data-mode="standard"] .home-logo-sub{ max-width:44ch; }
+[data-mode="standard"] .impact-num{ font-variant-numeric:tabular-nums; }
+
+@media (min-width:860px){
+  /* left content flows naturally; the stat panel floats top-right (avoids grid row-stretch) */
+  [data-mode="standard"] .home-logo-inner{
+    display:block; width:100%;
+    position:relative; text-align:left; max-width:var(--max); margin:0 auto; padding:30px 300px 26px 0;
+  }
+  [data-mode="standard"] .home-logo-inner > *{ margin-left:0; margin-right:0; }
+  [data-mode="standard"] .home-logo-inner > .home-logo-wordmark{ margin-bottom:14px; }
+  [data-mode="standard"] .home-logo-inner > .home-logo-sub{ margin:0 0 20px; }
+  [data-mode="standard"] .home-logo-inner > .home-logo-rule{ margin:0 0 30px; }
+  [data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ justify-content:flex-start !important; }
+  [data-mode="standard"] .home-logo-inner > #impact-strip{
+    position:absolute; top:44px; right:0; width:268px; margin:0;
+    flex-direction:column; align-items:stretch; gap:0; max-width:none;
+  }
+  [data-mode="standard"] .home-logo-inner > #impact-strip .impact-stat{
+    flex-direction:row; align-items:baseline; justify-content:space-between; min-width:0; padding:14px 2px;
+  }
+  [data-mode="standard"] .home-logo-inner > #impact-strip .impact-div{ width:100%; height:1px; margin:0; }
+  [data-mode="standard"] .home-logo-inner > #impact-strip .impact-lbl{ margin-top:0; }
+}
+
+@keyframes heroRise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+[data-mode="standard"] .home-logo-inner > *{ animation:heroRise .55s cubic-bezier(.2,.7,.3,1) both; }
+[data-mode="standard"] .home-logo-wordmark{ animation-delay:.04s; }
+[data-mode="standard"] .home-logo-sub{ animation-delay:.10s; }
+[data-mode="standard"] .home-logo-rule{ animation-delay:.15s; }
+[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ animation-delay:.20s; }
+[data-mode="standard"] .home-logo-inner > #impact-strip{ animation-delay:.26s; }
+@media (prefers-reduced-motion: reduce){
+  @keyframes heroRise{ from{ opacity:0; } to{ opacity:1; } }
+}
+
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
 [data-mode="game"] .home-what-text{ font-size:15px; }
