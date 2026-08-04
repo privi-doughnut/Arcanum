@@ -1501,6 +1501,17 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="standard"] .chat-input:focus{ box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent); }
 [data-mode="standard"] .chat-input-row .btn{ border-radius:12px; padding-left:20px; padding-right:20px; }
 
+/* ══ PLANAR EC DETAIL — editorial title + readable facts/ratings ═════════════ */
+[data-mode="standard"] .ec-detail-left{ border-radius:16px; padding:26px; }
+[data-mode="standard"] .ec-detail-title{ font-family:var(--chic) !important; font-size:27px !important; font-weight:700; line-height:1.15; letter-spacing:-.01em; }
+[data-mode="standard"] .ec-detail-cat{ font-size:11px; letter-spacing:.08em; }
+[data-mode="standard"] .ec-detail-branches-label,
+[data-mode="standard"] .rating-label-txt{ font-size:11px !important; letter-spacing:.04em; min-width:84px; }
+[data-mode="standard"] .rating-num{ font-size:12px !important; }
+[data-mode="standard"] .ec-fact{ border-radius:11px; padding:14px 16px; }
+[data-mode="standard"] .ec-fact-label{ font-size:10px !important; letter-spacing:.08em; text-transform:uppercase; }
+[data-mode="standard"] .ec-fact-val{ font-size:14px; }
+
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
 [data-mode="game"] .home-what-text{ font-size:15px; }
@@ -2069,7 +2080,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 <div id="page-ec-detail" class="page">
   <div class="page-banner">
     <div class="page-banner-title" style="display:flex;align-items:center;gap:6px;cursor:default">
-      <span onclick="nav('marketplace')" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;color:var(--text2)">Browse Spells</span>
+      <span onclick="nav('marketplace')" data-std="Browse activities" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;color:var(--text2)">Browse Spells</span>
       <span style="opacity:.4">›</span>
       <span id="ec-crumb" style="color:var(--accent)"></span>
     </div>
@@ -9742,7 +9753,7 @@ function openEC(ec) {
   
   const inGrim = grimoire.some(g=>g.id===ec.id);
   const btn = document.getElementById('ec-add-btn');
-  btn.textContent = inGrim ? '✓ In Your Spellbook' : '+ Add to Spellbook';
+  btn.textContent = inGrim ? '✓ In Your '+savedLabel() : '+ Add to '+savedLabel();
   btn.style.opacity = inGrim ? '0.6' : '1';
 
   const imgWrap = document.getElementById('ec-detail-img-wrap');
