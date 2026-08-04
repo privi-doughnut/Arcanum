@@ -426,7 +426,8 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 /* ── SCROLL PILL ─────────────────────────────── */
 .scroll-pill{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(0);background:rgba(10,10,20,.9);backdrop-filter:blur(8px);border:1px solid var(--accent);color:#e8e0d4;font-family:var(--px);font-size:6px;letter-spacing:2px;padding:8px 20px;z-index:50;pointer-events:none;opacity:0;transition:opacity .4s,transform .4s;white-space:nowrap;}
 
-.scroll-pill.visible{opacity:1;animation:pillFloat 2.8s ease-in-out infinite;}
+.scroll-pill.visible{opacity:1;animation:pillFloat 2.8s ease-in-out infinite;pointer-events:auto;cursor:pointer;}
+.scroll-pill.visible:hover{border-color:var(--accent);filter:brightness(1.18);}
 .scroll-pill.hidden{opacity:0;transform:translateX(-50%) translateY(10px);}
 @keyframes pillFloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-4px);}}
 
@@ -1526,6 +1527,24 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="standard"] .about-callout-icon{ font-size:11px !important; letter-spacing:.1em; color:var(--accent) !important; }
 [data-mode="standard"] .about-callout-text{ font-family:var(--chic) !important; font-size:clamp(19px,2vw,23px) !important; font-style:italic; color:var(--text) !important; }
 
+/* ══ GAME ARCADE TICKER — real catalog activities scrolling (retro marquee) ══ */
+.hero-ticker{ display:none; }
+[data-mode="game"] .hero-ticker{ display:block; overflow:hidden; width:100%; max-width:var(--max); margin:28px auto 0; border-top:2px solid var(--border2); border-bottom:2px solid var(--border2); padding:9px 0; -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); }
+.ht-track{ display:inline-flex; white-space:nowrap; animation:htScroll 46s linear infinite; will-change:transform; }
+.hero-ticker:hover .ht-track{ animation-play-state:paused; }
+@keyframes htScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+.ht-item{ font-family:var(--px); font-size:8px; color:var(--text2); padding:0 24px; letter-spacing:1px; }
+.ht-item .ht-star{ color:var(--accent); margin-right:9px; }
+@media (prefers-reduced-motion:reduce){ .ht-track{ animation:none; } }
+
+/* ══ PLANAR long-tail — forms, settings, codex (readable labels, softer inputs) ══ */
+[data-mode="standard"] .form-label{ font-size:11px !important; letter-spacing:.08em; font-weight:600; }
+[data-mode="standard"] .form-input, [data-mode="standard"] .form-textarea{ border-radius:11px; padding:13px 15px; }
+[data-mode="standard"] .form-input:focus, [data-mode="standard"] .form-textarea:focus{ box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 13%,transparent) !important; }
+[data-mode="standard"] .setting-group{ border-radius:14px; }
+[data-mode="standard"] .setting-label{ font-size:11px !important; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); }
+[data-mode="standard"] .setting-name{ font-size:14px; }
+
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
 [data-mode="game"] .home-what-text{ font-size:15px; }
@@ -1645,6 +1664,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       </div>
       <div class="std-only hero-wall" id="hero-wall" aria-hidden="true"></div>
     </div>
+    <div class="mode-hide hero-ticker" id="hero-ticker" aria-hidden="true"></div>
     <div id="ecotd-wrap" style="display:none;max-width:520px;margin:30px auto 0;padding:0 var(--pad)"></div>
     <div id="recent-wrap" style="display:none;max-width:var(--max);margin:30px auto 0;padding:0 var(--pad)"></div>
   </div>
@@ -5671,7 +5691,7 @@ body { background-color: var(--bg); background-image: none; }
 </div>
 
 <!-- Scroll pill -->
-<div class="scroll-pill hidden" id="scroll-pill"></div>
+<div class="scroll-pill hidden" id="scroll-pill" onclick="window.scrollBy({top:Math.round(window.innerHeight*0.82),behavior:'smooth'})" title="Scroll down"></div>
 
 <script>
 
@@ -11465,6 +11485,12 @@ function renderHeroWall(){
     '<div class="hw-col"><div class="hw-track hw-up">'+a+a+'</div></div>'+
     '<div class="hw-col"><div class="hw-track hw-down">'+b+b+'</div></div>';
   wall.dataset.built = '1';
+  var ticker = document.getElementById('hero-ticker');
+  if(ticker && !ticker.dataset.built){
+    var t = pool.slice(0,22).map(function(e){ return '<span class="ht-item"><span class="ht-star">▸</span>'+escH(e.name)+'</span>'; }).join('');
+    ticker.innerHTML = '<div class="ht-track">'+t+t+'</div>';
+    ticker.dataset.built = '1';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
