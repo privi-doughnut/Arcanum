@@ -1454,6 +1454,34 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="standard"] .ec-badge.epic{ color:#8a63cc !important; border-color:#8a63cc55; }
 [data-mode="standard"] .ec-badge.legendary{ color:var(--accent) !important; border-color:color-mix(in srgb,var(--accent) 45%,transparent); }
 
+/* ══ GAME-MODE HERO — retro arcade / pixel-art (distinct from Planar) ═════════
+   Pixel Art + hard offset shadows: chunky arcade buttons with a mechanical
+   press, a pixel HUD scoreboard, a blinking cursor, a subtle CRT scan. */
+[data-mode="game"] .home-logo-inner button{
+  font-family:var(--px) !important; font-size:8px !important; letter-spacing:1px !important; line-height:1.7 !important;
+  border:3px solid #17110a !important; border-radius:0 !important;
+  box-shadow:5px 5px 0 #17110a !important; padding:14px 20px !important;
+  transition:none !important; image-rendering:pixelated;
+}
+[data-mode="game"] .home-logo-inner button:hover{ box-shadow:6px 6px 0 #17110a !important; }
+[data-mode="game"] .home-logo-inner button:active{ transform:translate(5px,5px) !important; box-shadow:0 0 0 #17110a !important; }
+/* impact strip → pixel HUD scoreboard */
+[data-mode="game"] #impact-strip{
+  border:3px solid var(--border2) !important; border-radius:0 !important;
+  box-shadow:5px 5px 0 rgba(0,0,0,.45) !important; background:rgba(8,8,16,.72) !important; padding:15px 20px !important;
+}
+[data-mode="game"] #impact-strip .impact-num{ font-family:var(--px) !important; font-size:13px !important; }
+[data-mode="game"] #impact-strip .impact-lbl{ font-family:var(--px) !important; font-size:5.5px !important; letter-spacing:1px; }
+[data-mode="game"] #impact-strip .impact-div{ background:var(--border2) !important; }
+/* blinking pixel cursor after the tagline (retro terminal) */
+[data-mode="game"] .home-logo-sub::after{ content:"▮"; margin-left:6px; color:var(--accent); animation:pxBlink 1.06s steps(1) infinite; }
+@keyframes pxBlink{ 50%{ opacity:0; } }
+/* subtle CRT scanlines over the hero area (kept faint for readability) */
+[data-mode="game"] .home-logo-wrap{ position:relative; }
+[data-mode="game"] .home-logo-wrap::after{ content:''; position:absolute; inset:0; pointer-events:none; z-index:1; background:repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px); }
+[data-mode="game"] .home-logo-inner{ position:relative; z-index:2; }
+@media (prefers-reduced-motion: reduce){ [data-mode="game"] .home-logo-sub::after{ animation:none; } }
+
 /* ── GAME MODE: gentle readability lift for serif body text (pixel fonts + layout untouched) ── */
 [data-mode="game"] .home-tagline{ font-size:16px; }
 [data-mode="game"] .home-what-text{ font-size:15px; }
