@@ -38,6 +38,15 @@ const ALLOWED_ORIGINS = [
 const ALLOWED_MODELS = ["claude-sonnet-5"];
 const DEFAULT_MODEL = "claude-sonnet-5";
 
+// Safe security response headers (no CSP here — a strict CSP on an inline-script
+// app needs careful testing; tracked in progress.md).
+const SEC_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "X-Frame-Options": "DENY",
+  "Permissions-Policy": "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+};
+
 // A visitor counts as "live" for this long after their last heartbeat.
 const LIVE_WINDOW_MS = 45000;
 
@@ -63,7 +72,7 @@ function corsHeaders(origin) {
 function json(body, status, origin) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) }
+    headers: { "Content-Type": "application/json", ...SEC_HEADERS, ...corsHeaders(origin) }
   });
 }
 
@@ -205,9 +214,12 @@ export default {
       }
     }
 
-    // ── Frontend: serve the static app ───────────────────────────────────
+    // ── Frontend: serve the static app (+ security headers) ──────────────
     if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
+      const res = await env.ASSETS.fetch(request);
+      const h = new Headers(res.headers);
+      for (const k in SEC_HEADERS) h.set(k, SEC_HEADERS[k]);
+      return new Response(res.body, { status: res.status, statusText: res.statusText, headers: h });
     }
 
     // Bare proxy deploy with no assets binding → old behaviour.
