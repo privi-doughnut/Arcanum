@@ -83,6 +83,8 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 .nav-link{font-family:var(--px);font-size:5.5px;color:var(--text2);cursor:pointer;padding:6px 10px;position:relative;transition:color .15s;white-space:nowrap;border-bottom:2px solid transparent;}
 .nav-link:hover{color:var(--text);}
 .nav-link.active{color:var(--accent);border-bottom-color:var(--accent);}
+/* game-mode nav: slightly larger pixel labels for readability (padding trimmed so 14 items still fit) */
+[data-mode="game"] .nav-link{font-size:6.5px;padding:6px 8px;}
 /* Tooltip */
 .nav-link::after{content:attr(data-tip);position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border2);color:var(--text2);font-family:'Lora',serif;font-size:11px;font-weight:500;padding:5px 10px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:200;}
 .nav-link:hover::after{opacity:1;}
@@ -137,7 +139,7 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 .home-what-label{font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px;}
 .home-what-text{font-size:14px;color:var(--text2);line-height:1.75;max-width:800px;}
 .home-features{max-width:var(--max);margin:0 auto;padding:48px var(--pad) 40px;}
-.home-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:28px;}
+.home-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,280px));justify-content:center;gap:16px;margin-top:28px;}
 .feat-card{background:var(--card);border:1px solid var(--border);padding:22px 18px;cursor:pointer;transition:all .2s;}
 .feat-card:hover{border-color:var(--accent);transform:translateY(-2px);}
 .feat-icon{font-size:26px;margin-bottom:10px;}
@@ -166,7 +168,7 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 .stat-lbl{font-family:var(--px);font-size:5px;color:var(--text3);}
 
 /* Featured ECs */
-.feat-ec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.feat-ec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,320px));justify-content:center;gap:14px;}
 .feat-ec-card{background:var(--card);border:1px solid var(--border);padding:20px;cursor:pointer;transition:all .2s;}
 .feat-ec-card:hover{border-color:var(--accent);transform:translateY(-2px);}
 .ec-badge{font-family:var(--px);font-size:5px;padding:4px 8px;display:inline-block;margin-bottom:10px;}
@@ -1411,7 +1413,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     max-width:var(--max); margin:0 auto; padding:6px 496px 20px 0; min-height:clamp(430px,56vh,560px);
   }
   [data-mode="standard"] .home-logo-inner > *{ margin-left:0; margin-right:0; }
-  [data-mode="standard"] #impact-strip{ margin:22px 0 0 !important; justify-content:flex-start; max-width:none; }
+  [data-mode="standard"] #impact-strip{ margin:22px 0 0 !important; justify-content:flex-start; gap:22px; width:-moz-fit-content; width:fit-content; max-width:100%; }
   [data-mode="standard"] .hero-wall{ display:flex; position:absolute; top:0; right:0; width:468px; height:100%; }
 }
 @media (max-width:899px){
@@ -1474,14 +1476,10 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="game"] #impact-strip .impact-num{ font-family:var(--px) !important; font-size:13px !important; }
 [data-mode="game"] #impact-strip .impact-lbl{ font-family:var(--px) !important; font-size:5.5px !important; letter-spacing:1px; }
 [data-mode="game"] #impact-strip .impact-div{ background:var(--border2) !important; }
-/* blinking pixel cursor after the tagline (retro terminal) */
-[data-mode="game"] .home-logo-sub::after{ content:"▮"; margin-left:6px; color:var(--accent); animation:pxBlink 1.06s steps(1) infinite; }
-@keyframes pxBlink{ 50%{ opacity:0; } }
 /* subtle CRT scanlines over the hero area (kept faint for readability) */
 [data-mode="game"] .home-logo-wrap{ position:relative; }
 [data-mode="game"] .home-logo-wrap::after{ content:''; position:absolute; inset:0; pointer-events:none; z-index:1; background:repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px); }
 [data-mode="game"] .home-logo-inner{ position:relative; z-index:2; }
-@media (prefers-reduced-motion: reduce){ [data-mode="game"] .home-logo-sub::after{ animation:none; } }
 
 /* ══ PLANAR ADVISOR — refined conversational UI ══════════════════════════════ */
 [data-mode="standard"] .jeb-hdr{ border-radius:14px; text-align:center; padding:20px 16px; }
@@ -1530,10 +1528,10 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 /* ══ GAME ARCADE TICKER — real catalog activities scrolling (retro marquee) ══ */
 .hero-ticker{ display:none; }
 [data-mode="game"] .hero-ticker{ display:block; overflow:hidden; width:100%; max-width:var(--max); margin:28px auto 0; border-top:2px solid var(--border2); border-bottom:2px solid var(--border2); padding:9px 0; -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent); }
-.ht-track{ display:inline-flex; white-space:nowrap; animation:htScroll 46s linear infinite; will-change:transform; }
+.ht-track{ display:inline-flex; white-space:nowrap; animation:htScroll 92s linear infinite; will-change:transform; backface-visibility:hidden; }
 .hero-ticker:hover .ht-track{ animation-play-state:paused; }
 @keyframes htScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
-.ht-item{ font-family:var(--px); font-size:8px; color:var(--text2); padding:0 24px; letter-spacing:1px; }
+.ht-item{ font-family:var(--px); font-size:9px; color:var(--text2); padding:0 26px; letter-spacing:1px; }
 .ht-item .ht-star{ color:var(--accent); margin-right:9px; }
 @media (prefers-reduced-motion:reduce){ .ht-track{ animation:none; } }
 
@@ -1715,7 +1713,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     <div class="page-inner" style="padding-top:38px">
       <div class="sec-label">THE FOUR RATINGS</div>
       <div class="sec-title">Every EC, scored on what matters</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:14px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,280px));justify-content:center;gap:14px;margin-top:14px">
         <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px"><div style="font-size:26px">🔮</div><div style="font-weight:700;margin:8px 0 4px">Essence</div><p style="font-size:13px;color:var(--text2);margin:0;line-height:1.65">Overall value — how much this actually moves the needle with admissions.</p></div>
         <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px"><div style="font-size:26px">🌿</div><div style="font-weight:700;margin:8px 0 4px">Branches</div><p style="font-size:13px;color:var(--text2);margin:0;line-height:1.65">Difficulty — how much skill, knowledge, or prep it genuinely takes.</p></div>
         <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px"><div style="font-size:26px">🦴</div><div style="font-weight:700;margin:8px 0 4px">Bones</div><p style="font-size:13px;color:var(--text2);margin:0;line-height:1.65">Time commitment — the real hours per week, not the brochure version.</p></div>
@@ -1809,7 +1807,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     <div class="page-inner mode-hide" style="padding-top:0;padding-bottom:32px">
       <div class="sec-label">✦ THE RATING SYSTEMS ✦</div>
       <div class="sec-title" style="font-size:clamp(10px,1.6vw,13px)">Three Ways to Judge a Spell</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:var(--max);margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,280px));justify-content:center;gap:16px;max-width:var(--max);margin:0 auto">
         <div class="feat-card">
           <div class="feat-icon">🔮</div>
           <div class="feat-title">Essence — Overall Value</div>
