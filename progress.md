@@ -1,7 +1,7 @@
 # Arcanum — Progress & Roadmap
 
 > Living doc for Arcanum (extracurricular marketplace + AI advisor, 2026 Congressional App Challenge, deadline **Oct 26 2026**).
-> Last updated: 2026-08-04. Branch: `main` (deploys automatically to Cloudflare).
+> Last updated: 2026-08-12. Branch: `main` (deploys automatically to Cloudflare).
 
 ---
 
@@ -16,6 +16,34 @@ Arcanum runs from **one Cloudflare Worker** named `arcanum` (Workers Builds auto
 `API_URL` is same-origin (`location.origin`), so it survives renames/custom domains.
 
 **Shipped:** business-chic Planar redesign across every high-traffic surface (home hero with a live catalog "wall", marketplace, advisor, EC detail, tracker/saved, about) · a distinct retro **game-mode** hero (pixel arcade buttons, HUD scoreboard, blinking cursor, CRT, catalog ticker) · Planar-as-default with game mode opt-in · comprehensive replayable onboarding · live/total users widget · Jeb memory + import-outside-chat · Common App export · clickable scroll pill · readability + accessibility fixes · security hardening (below).
+
+---
+
+## 🧭 WHERE WE LEFT OFF (read this first on a cold start)
+
+**State as of 2026-08-12:** app is live on the single `arcanum` Cloudflare Worker and healthy. The last work was a **design-polish batch** (commit `c70dfce` on `main`), which is **pushed and confirmed live** on the Worker.
+
+**One thing still open — a final visual eyeball.** The polish batch was verified three ways: JS syntax check passed, all five change-markers confirmed present in the deployed HTML via `curl`, and code inspection. The only step NOT completed is a live *browser* drive-through (I was mid-`/verify` when the browser-navigation safety classifier hit a transient outage — `claude-sonnet-5 temporarily unavailable` — and blocked the navigate call). So: **next session, load the live URL in a browser and eyeball the 5 changes below in both modes.** Nothing is believed broken; this is confirmation, not a fix.
+
+### Design-polish batch — commit `c70dfce` (all in `public/index.html`, CSS-only)
+1. **Game-mode catalog ticker** — slowed `htScroll` 46s→**92s** and bumped `.ht-item` font 8→9px (was hard to read / looked jittery). Track is 22 items ×2 duplicated, `translateX(-50%)` = seamless loop. CSS ~line 1533/1536.
+2. **Removed the blinking terminal c‍ursor** — the `[data-mode="game"] .home-logo-sub::after` `▮` (+`@keyframes pxBlink`) read as a stray "flashing orange type-here line." Fully removed; `grep pxBlink` = 0.
+3. **Planar hero impact strip** — was stretching full-width (`max-width:none`) with stats smushed left + a big right gap. Now `width:fit-content` + `gap:22px` so the bordered box hugs its 3 stats evenly. Scoped to `@media (min-width:900px)` desktop hero; mobile keeps the base centered strip. CSS ~line 1414.
+4. **Home card grids center incomplete rows** — 4 grids (`.home-features-grid`, `.feat-ec-grid`, the "Four Ratings" inline grid, the game-only "Rating Systems" inline grid) switched from `minmax(…,1fr)` (which stretched/left orphan cards) to `minmax(…,280px|320px)` + `justify-content:center`, so ragged last rows center instead of leaving gaps.
+5. **Game-mode nav labels** — `[data-mode="game"] .nav-link` bumped 5.5→**6.5px** with padding trimmed 10→8px so all ~14 items still fit. (Scoped to game mode only; Planar nav untouched.) CSS just after `.nav-link.active`.
+
+**Verify markers (fast re-check any time):**
+```bash
+URL=https://arcanum.its-the-prithivi-show.workers.dev
+b=$(curl -s "$URL")
+grep -c 'htScroll 92s' <<<"$b"            # 1
+grep -c 'minmax(210px,280px)' <<<"$b"     # 3
+grep -c 'pxBlink' <<<"$b"                  # 0 (cursor gone)
+grep -c 'width:fit-content' <<<"$b"        # 1
+```
+
+### ⚠️ CLAUDE.md is STALE on hosting — this file is the source of truth
+`CLAUDE.md` still describes the **old** architecture (Netlify static host + a *separate* `arcanum-api-proxy…workers.dev` proxy Worker, with `API_URL` hardcoded to that proxy). That is no longer how the app runs. Since the migration, the app is **one combined `arcanum` Worker** (Static Assets + advisor proxy + `Stats`/`RateLimiter` DOs) and **`API_URL` is same-origin (`location.origin`)** — see CURRENT STATUS above and `worker.js`. The DO-NOT-TOUCH rules in CLAUDE.md (ECS_INLINE, `claude-sonnet-5`, `escH()`, `grimoire`/`spellbook` inverted naming, `arc-*` localStorage keys, dual-mode `.mode-hide`/`.std-only`/`data-std`) are all still valid. **Only its hosting/deploy/API_URL section is wrong.** Worth reconciling CLAUDE.md next session (offered, not yet done).
 
 ---
 
