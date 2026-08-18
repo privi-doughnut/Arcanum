@@ -6,7 +6,7 @@
 
 ## ⚠️ READ FIRST — THE ONE-PARAGRAPH BRIEFING
 
-Arcanum is a **finished, live, deployed application** built solo by a high school sophomore. It is the submission for the **2026 Congressional App Challenge (deadline: Oct 26, 2026)** and a centerpiece of an NCSSM application. The entire app is **one 1.9 MB HTML file with 12,109 lines**. It works. **The default action is to report, not to change.** Make the smallest possible change that solves the stated problem, never refactor, never reformat, and always ask before doing anything not explicitly requested.
+Arcanum is a **finished, live, deployed application** built solo by a high school sophomore. It is the submission for the **2026 Congressional App Challenge (deadline: Oct 26, 2026)** and a centerpiece of an NCSSM application. The entire app is **one 1.9 MB HTML file with 12,580 lines** (`public/index.html`). It works. **The default action is to report, not to change.** Make the smallest possible change that solves the stated problem, never refactor, never reformat, and always ask before doing anything not explicitly requested.
 
 **Before any edit session: ensure the working tree is committed so changes are revertible.**
 
@@ -20,8 +20,8 @@ Arcanum is a **finished, live, deployed application** built solo by a high schoo
 2. **The AI advisor ("Jebadias")** — reads the student's situation and produces personalized guidance and full strategic plans.
 3. **The tracker** — students commit to activities, track status/milestones/deadlines, and export to Common App format.
 
-**Live:** https://arcanum-ec.netlify.app
-**Repo:** `privi-doughnut/Arcanum` → Netlify auto-deploys on push to `main`.
+**Live:** https://arcanum.its-the-prithivi-show.workers.dev
+**Repo:** `privi-doughnut/Arcanum` → Cloudflare **Workers Builds** auto-deploys on push to `main`.
 
 The app has a **fantasy skin** ("game mode") that can be toggled off for a clean "**Planar**" mode. This is deliberate: the fantasy layer makes an intimidating process approachable for younger students; the toggle serves everyone else. Both modes expose identical functionality.
 
@@ -29,29 +29,40 @@ The app has a **fantasy skin** ("game mode") that can be toggled off for a clean
 
 ## 2. ARCHITECTURE
 
+Arcanum runs as **one Cloudflare Worker named `arcanum`** that serves the app *and* backs it. Line numbers below are current as of 2026-08-14.
+
 ```
-index.html  (1.9 MB, 12,109 lines)  ← THE ENTIRE APP
-├── <script>  line 9–29        · mobile arrow-reset handler (tiny)
-├── <style>   line 32–1019     · MAIN STYLESHEET (all base + responsive CSS)
-├── <style>   line ~1020–1225  · continued styles (mode overrides, Planar skin)
-├── <body>    line 1226
-│   ├── <style> line 2252      · inline scoped fix (#page-contact mobile)
-│   ├── <style> line 2686      · scoped block
-│   ├── <style> line 3354      · scoped block
+public/index.html  (1.9 MB, 12,580 lines)  ← THE ENTIRE FRONTEND
+├── <script>  line 20            · JSON-LD structured data (SEO)
+├── <script>  line 23–45         · mobile arrow-reset handler (tiny)
+├── <style>   line 46–1042       · MAIN STYLESHEET (all base + responsive CSS)
+├── <script>  line 1043          · supabase-js from jsdelivr (the one external script)
+├── <style>   line 1044–1578     · id="mode-standard-css" — Planar skin + mode overrides
+├── <body>    line 1579
+│   ├── <style> line 2644        · inline scoped fix (#page-contact mobile)
+│   ├── <style> line 2940        · scoped block
+│   ├── <style> line 3608        · scoped block
 │   └── ...all 15 pages as <div class="page"> …
-└── <script>   line 5427–12087 · ALL APPLICATION LOGIC
-    ├── const API_URL         line ~5429
-    ├── const ECS_INLINE = [  line 5692   ← 3,208 objects, the bulk of the file
-    └── const ECS = …         line 8907
-worker.js   (~90 lines)  ← Cloudflare Worker, DEPLOYED SEPARATELY
+└── <script>   line 5694–12558   · ALL APPLICATION LOGIC
+    ├── const API_URL         line 5699  ← same-origin, NOT hardcoded (see §3)
+    ├── const ECS_INLINE=[    line 5964  ← 3,208 objects, the bulk of the file
+    └── const ECS = …         line 9179
+worker.js  (228 lines)  ← the combined Worker: static assets + AI proxy + 2 Durable Objects
+wrangler.jsonc          ← Worker config (assets dir, DO bindings, migrations)
 ```
 
-**Stack:** Vanilla HTML/CSS/JS. **No framework, no build step, no router, no bundler, no npm, no dependencies.** This is a deliberate architectural decision that must be defensible to judges — do not introduce tooling.
+**Stack:** Vanilla HTML/CSS/JS. **No framework, no build step, no router, no bundler.** This is a deliberate architectural decision that must be defensible to judges — do not introduce tooling. `package.json` exists **only** so Workers Builds has a no-op `build` script and `wrangler` for deploy; it is *not* an app dependency. The app's only runtime externals are **supabase-js** (jsdelivr CDN) and **Google Fonts**.
 
-**Hosting:** Netlify (static, auto-deploy from GitHub).
+**Hosting:** Cloudflare Workers — a single Worker (`arcanum`) with Static Assets, auto-deployed from GitHub by Workers Builds. `wrangler.jsonc` sets `run_worker_first: true` so `POST /` (the advisor) and `POST /api/presence` reach the Worker instead of being 405'd by the asset layer; GET is served from `./public`.
 
-**Two external services:**
-- **Cloudflare Worker** — proxies all AI calls so the Anthropic API key never reaches the browser. Deployed at `arcanum-api-proxy.its-the-prithivi-show.workers.dev`. Key stored as encrypted Cloudflare secret `ARCANUM_ANTHROPIC_KEY`.
+**What the one Worker does** (`worker.js`):
+- serves `public/index.html` via `env.ASSETS`,
+- proxies the AI advisor to Anthropic so the API key never reaches the browser (key = encrypted Cloudflare secret),
+- `Stats` Durable Object — live/total visitor counts (`POST /api/presence`),
+- `RateLimiter` Durable Object — per-IP limits (15/min, 120/hr) + input caps,
+- sends `SEC_HEADERS` (nosniff, referrer-policy, X-Frame-Options: DENY, permissions-policy) on every response.
+
+**One external service:**
 - **Supabase** — optional accounts + cross-device sync. Tables: `profiles`, `user_state`, `submissions`, `ravens`. Protected by Row Level Security.
 
 ---
@@ -62,11 +73,11 @@ Breaking any of these takes down the live app or destroys user data.
 
 | Item | Why it's untouchable |
 |---|---|
-| `const API_URL = 'https://arcanum-api-proxy.its-the-prithivi-show.workers.dev'` | Live Worker URL. A wrong value silently kills the AI advisor with a misleading "connection unstable" error. This has already happened once. |
-| `claude-sonnet-5` (6 refs in index.html, 1 in worker.js) | Current model. The previous model was deprecated by Anthropic mid-project and took the app down. Do not "update" or guess at model strings. |
-| `ECS_INLINE` array (lines 5692–8906) | The entire 3,208-activity catalog. **Never** reformat, sort, prettify, minify, deduplicate, or "optimize" it. |
+| `const API_URL` (line 5699) — **same-origin**, derived from `location` | The app and its API are the *same* Worker, so the advisor posts to its own origin. This deliberately survives renames and custom domains. **Do not hardcode a URL here.** A wrong value silently kills the advisor with a misleading "connection unstable" error — that has already happened once. |
+| `claude-sonnet-5` (7 refs in `public/index.html`, 2 in `worker.js`) | Current model, and the Worker **pins** it server-side so a crafted request can't bill a pricier model. The previous model was deprecated by Anthropic mid-project and took the app down. Do not "update" or guess at model strings. |
+| `ECS_INLINE` array (lines 5964–9178) | The entire 3,208-activity catalog. **Never** reformat, sort, prettify, minify, deduplicate, or "optimize" it. |
 | `ARC_SUPABASE_URL` / `ARC_SUPABASE_ANON_KEY` | Live credentials. **The anon key is PUBLIC BY DESIGN** — security comes from Row Level Security policies. This is NOT a leaked secret. Do not "fix" it, do not move it to env vars, do not flag it as a vulnerability. |
-| `worker.js` | Deployed separately via the Cloudflare dashboard. Editing the local file changes nothing until manually redeployed. Do not assume local edits take effect. |
+| `worker.js` + `wrangler.jsonc` | This is the live server, not a reference copy. It deploys **only via wrangler / Workers Builds** (push to `main`) — **never** paste it into the Cloudflare dashboard code editor, which cannot handle Static Assets or Durable Object migrations. Changing `durable_objects` bindings or `migrations` tags can orphan stored state. |
 | `grimoire` / `spellbook` variable names | **INVERTED relative to their UI labels** (see §5). Renaming touches hundreds of references AND breaks localStorage for existing users. Known, accepted debt. |
 | All `arc-*` localStorage keys | Renaming any key silently wipes existing users' saved data. Full list in §7. |
 | `.mode-hide`, `.std-only`, `data-std="…"` | The dual-mode system (§4). Removing any of these breaks one of the two modes. |
@@ -201,8 +212,8 @@ Each is a `<div class="page" id="page-…">`. `nav(id)` hides all and shows one 
 
 `page-home` · `page-marketplace` (The Stacks) · `page-ec-detail` · `page-jebadias` (AI advisor) · `page-spellbook` (shortlist) · `page-grimoire` (tracker) · `page-list` (The Quill / submissions) · `page-map` (Arcana, game-only) · `page-collections` (The Chronicle) · `page-codex` (guidelines) · `page-about` (The Origin) · `page-faq` (The Guide) · `page-contact` · `page-settings` (Chamber) · `page-menu` (mobile nav)
 
-### The 14 overlays (full-screen layers, separate from pages)
-`#auth-overlay` · `#secondsea-overlay` (The Ascension) · `#commonapp-overlay` · `#share-link-overlay` · `#shared-overlay` · `#explore-overlay` · `#insights-overlay` · `#chronicle-all-overlay` · `#compare-overlay` · `#timeline-overlay` · `#rarity-overlay` · `#quiz-overlay` · `#onboarding-overlay` · `#p2-detail-overlay`
+### The 15 overlays (full-screen layers, separate from pages)
+`#auth-overlay` · `#secondsea-overlay` (The Ascension) · `#commonapp-overlay` · `#share-link-overlay` · `#shared-overlay` · `#explore-overlay` · `#insights-overlay` · `#chronicle-all-overlay` · `#compare-overlay` · `#timeline-overlay` · `#rarity-overlay` · `#quiz-overlay` · `#onboarding-overlay` · `#p2-detail-overlay` · `#jebmem-overlay` (Jeb memory)
 
 Several set `document.body.style.overflow='hidden'` when open and must restore it on close. `closeTopOverlays()` handles escape behavior.
 
@@ -244,8 +255,8 @@ Several set `document.body.style.overflow='hidden'` when open and must restore i
 ```bash
 python3 -c "
 import re
-h=open('index.html',encoding='utf-8').read()
-b=re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>',h,re.S)
+h=open('public/index.html',encoding='utf-8').read()
+b=re.findall(r'<script(?![^>]*\b(?:src=|type=["\']application/ld\+json))[^>]*>(.*?)</script>',h,re.S)
 open('/tmp/_check.js','w').write('\n;\n'.join(b))
 " && node --check /tmp/_check.js && echo "JS SYNTAX OK"
 ```
@@ -254,8 +265,8 @@ open('/tmp/_check.js','w').write('\n;\n'.join(b))
 ```bash
 python3 - <<'EOF'
 import re
-h=open('index.html',encoding='utf-8').read()
-js='\n'.join(re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>',h,re.S))
+h=open('public/index.html',encoding='utf-8').read()
+js='\n'.join(re.findall(r'<script(?![^>]*\b(?:src=|type=["\']application/ld\+json))[^>]*>(.*?)</script>',h,re.S))
 defs=set(re.findall(r'function\s+([A-Za-z_$][\w$]*)\s*\(',js))
 defs|=set(re.findall(r'(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:function|\()',js))
 defs|=set(re.findall(r'window\.([A-Za-z_$][\w$]*)\s*=',js))
@@ -271,10 +282,19 @@ EOF
 
 ### 3. Critical-value integrity
 ```bash
-grep -c "arcanum-api-proxy.its-the-prithivi-show.workers.dev" index.html   # must be ≥1
-grep -c "claude-sonnet-5" index.html                                       # must be 6
-grep -c "id:'" index.html                                                  # catalog intact
+grep -c "location.protocol" public/index.html    # API_URL still same-origin, ≥1
+grep -c "claude-sonnet-5" public/index.html      # must be 7
+grep -c "claude-sonnet-5" worker.js              # must be 2
+grep -c "id:'" public/index.html                 # catalog intact
 ```
+
+### 3b. Live deploy check (after a push — Workers Builds takes ~1 min)
+```bash
+URL=https://arcanum.its-the-prithivi-show.workers.dev
+curl -s "$URL" | shasum                                 # compare to: shasum public/index.html
+curl -s -X POST "$URL/api/presence" -d '{"vid":"x"}'    # -> {"live":..,"total":..}
+```
+Identical hashes mean the repo and the live Worker are byte-for-byte in sync.
 
 ### 4. Manual checklist (no substitute for this)
 - [ ] Both modes: game **and** Planar
@@ -295,27 +315,30 @@ Documented so they aren't "discovered" and mistakenly fixed:
 1. **`grimoire`/`spellbook` inverted naming** — see §5. Intentional. Leave alone.
 2. **`window.ECS_DB` never populated** — a legacy external-data hook. The original `arcanum-data.js` had a syntax error and never parsed; the app silently ran on the inline fallback. The dead file was removed. **Keep the fallback expression** — it's harmless and defensive.
 3. **Possible duplicate localStorage keys** ⚠️ — recon shows both `arc-bigtext` **and** `arc-large-text`, plus `arc-contrast` **and** `arc-high-contrast`. Likewise duplicate-looking functions: `toggleBigText()`/`toggleLargeText()` and `toggleContrast()`/`toggleHighContrast()`. **Investigate and REPORT — do not unilaterally remove.** One pair may be dead code, or both may be wired to different UI. Removing the wrong one breaks a setting.
-4. **Multiple `<style>` blocks** (lines 32, 2252, 2686, 3354) — later blocks and inline scoped fixes can override earlier ones. Check cascade order before adding CSS.
-5. **CSS specificity trap** — responsive `@media` queries live early (lines ~84–921), but `[data-mode="standard"]` overrides were added later (~1084+) with `!important`. Because `!important` beats non-`!important` regardless of media query, Planar-mode rules can override mobile breakpoints. **This is the root cause of a known mobile layout bug.** New mobile rules must be scoped and specific enough to win.
+4. **Five `<style>` blocks** (lines 46, 1044, 2644, 2940, 3608) — later blocks and inline scoped fixes can override earlier ones. Check cascade order before adding CSS.
+5. **CSS specificity trap** — responsive `@media` queries live early (in the main stylesheet, lines 46–1042), but the `[data-mode="standard"]` Planar overrides live in the *later* `#mode-standard-css` block (1044–1578) and lean on `!important`. Because `!important` beats non-`!important` regardless of media query, Planar-mode rules can override mobile breakpoints. **This was the root cause of a past mobile layout bug.** New mobile rules must be scoped and specific enough to win.
 6. **Generic error handling** — `sendMsg()`'s `catch` swallows every exception into one message ("connection unstable"), whether the cause is a network failure, a bad URL, or an API error. This masked a real outage. An improvement would be surfacing `data.error.message`.
-7. **Permissive Worker** — the proxy accepts any POST. The key stays safe server-side, but there is no rate limiting. Known and accepted for a student project.
+7. ~~**Permissive Worker**~~ — **FIXED (security review, Bite 2).** The Worker now pins the model server-side, `403`s cross-origin browser requests, rate-limits per IP via the `RateLimiter` DO (15/min, 120/hr), and caps input (≤40 msgs, ≤8k chars, `max_tokens` ≤1500). Remaining gap: no CSP header yet — see `progress.md` action items.
 8. **Sample reviews are AI-generated** — labeled as samples in the UI, disclosed on the About page. Not real student data. This is intentional and honestly disclosed; do not present them as real.
 
 ---
 
 ## 12. DEPLOYMENT
 
-- **`index.html`** → commit + push to GitHub → **Netlify auto-deploys**. This is the only file that needs pushing for app changes.
-- **`worker.js`** → **must be manually pasted into the Cloudflare dashboard and deployed.** Local edits have zero effect otherwise. The repo copy is a reference (and a visible artifact for judges — it demonstrates the secure key-proxy pattern).
+**Everything deploys the same way: commit + push to `main`.** Cloudflare **Workers Builds** then runs `npx wrangler deploy`, which ships `public/index.html`, `worker.js`, and `wrangler.jsonc` together as the one `arcanum` Worker. There is no second place to deploy.
+
+- **`public/index.html`** → push to `main`. (Note the `public/` prefix — only that directory is served publicly, so repo source, git history, and docs can never leak as static assets.)
+- **`worker.js` / `wrangler.jsonc`** → push to `main`. **Never** paste into the Cloudflare dashboard code editor — it cannot handle Static Assets or Durable Object migrations and will break the deploy.
+- **Manual deploy** (if Workers Builds is down): `npx wrangler deploy` from the repo root, after `wrangler login` once.
 - **Supabase schema** — already applied. Do not re-run schema SQL.
 
-**Verifying a Worker deploy** — a POST with no `model` field returns the Worker's fallback default:
+**Verifying a deploy:**
 ```bash
-curl -s -X POST "https://arcanum-api-proxy.its-the-prithivi-show.workers.dev" \
-  -H "Content-Type: application/json" \
-  -d '{"max_tokens":25,"messages":[{"role":"user","content":"hi"}]}'
+URL=https://arcanum.its-the-prithivi-show.workers.dev
+curl -s "$URL" | shasum ; shasum public/index.html      # hashes must match
+curl -s -X POST "$URL/api/presence" -d '{"vid":"x"}'    # -> {"live":..,"total":..}
 ```
-A **GET** to that URL returns `{"error":"Method not allowed. Use POST."}` — **that is correct behavior**, not a bug. The Worker is POST-only by design.
+Cross-origin browser requests to the advisor return **`403` by design** (origin lock), and the advisor is POST-only — neither is a bug.
 
 ---
 

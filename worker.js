@@ -27,8 +27,11 @@
 
 import { DurableObject } from "cloudflare:workers";
 
+// The live app is same-origin, and blockedOrigin() lets same-origin through on
+// its own — so this list is only for local dev. (The old Netlify origin was
+// removed 2026-08-14: that site is retired and returns 404, and leaving a dead
+// domain allow-listed would hand access to whoever claims it next.)
 const ALLOWED_ORIGINS = [
-  "https://arcanum-ec.netlify.app",
   "http://localhost:3000",
   "http://127.0.0.1:5500"
 ];

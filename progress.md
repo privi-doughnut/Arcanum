@@ -1,7 +1,7 @@
 # Arcanum — Progress & Roadmap
 
 > Living doc for Arcanum (extracurricular marketplace + AI advisor, 2026 Congressional App Challenge, deadline **Oct 26 2026**).
-> Last updated: 2026-08-12. Branch: `main` (deploys automatically to Cloudflare).
+> Last updated: 2026-08-14. Branch: `main` (deploys automatically to Cloudflare).
 
 ---
 
@@ -21,9 +21,22 @@ Arcanum runs from **one Cloudflare Worker** named `arcanum` (Workers Builds auto
 
 ## 🧭 WHERE WE LEFT OFF (read this first on a cold start)
 
-**State as of 2026-08-12:** app is live on the single `arcanum` Cloudflare Worker and healthy. The last work was a **design-polish batch** (commit `c70dfce` on `main`), which is **pushed and confirmed live** on the Worker.
+**State as of 2026-08-14:** app is live on the single `arcanum` Cloudflare Worker and healthy. The design-polish batch (commit `c70dfce`) is pushed, live, and — as of this session — **visually verified in a real browser**. Local `public/index.html` is byte-identical to what the Worker serves (matching `shasum`).
 
-**One thing still open — a final visual eyeball.** The polish batch was verified three ways: JS syntax check passed, all five change-markers confirmed present in the deployed HTML via `curl`, and code inspection. The only step NOT completed is a live *browser* drive-through (I was mid-`/verify` when the browser-navigation safety classifier hit a transient outage — `claude-sonnet-5 temporarily unavailable` — and blocked the navigate call). So: **next session, load the live URL in a browser and eyeball the 5 changes below in both modes.** Nothing is believed broken; this is confirmation, not a fix.
+**✅ The visual eyeball is DONE.** Drove headless Chrome over CDP against the **live** Worker at 1440px (both modes) and 390px, forcing `arc-mode` via `localStorage` and reading back computed styles. Results:
+- **Game mode** — no blinking c‍ursor after "The Extracurricular Marketplace" (change 2 confirmed gone), the ticker is legible at 9px, and all 12 nav labels fit on one row without wrapping (change 5 good).
+- **Planar mode** — `#impact-strip` computes to **429px, not full-width**, and renders as a bordered box hugging its three stats with even spacing (change 3 good).
+- **Grid centering** — `.home-features-grid` computes `279.99px ×3` and `.feat-ec-grid` `319.99px ×3`, both with `justify-content: center`. No `1fr` stretching left anywhere (change 4 good).
+- **Ticker speed** (change 1) is a CSS duration, confirmed by grep (`htScroll 92s`) rather than by eye — a still frame can't show it.
+
+Nothing from the batch is broken. **Repro recipe** for future visual checks lives in `/tmp/arcshot/cdp.mjs` (regenerate if gone: launch Chrome with `--headless=new --remote-debugging-port=9333`, drive `Page.captureScreenshot` over CDP — plain `--screenshot` **hangs** on this page because the infinite ticker animation means the load-idle heuristic never settles).
+
+### 🔎 Two pre-existing mobile issues found (NOT from the polish batch — unfixed, your call)
+Spotted at 390px in Planar while verifying. Both predate `c70dfce`; nothing in that batch touched them.
+1. **Header is cramped** — "Sign in" wraps onto two lines and crowds the "Arcanum" wordmark.
+2. **Hero CTAs are left-aligned** while every other hero element (eyebrow, headline, subhead) is centered at that width — looks unintentional. The impact strip also wraps 2+1 with a divider trailing into empty space.
+
+Neither is fixed — say the word and they're a small scoped CSS change.
 
 ### Design-polish batch — commit `c70dfce` (all in `public/index.html`, CSS-only)
 1. **Game-mode catalog ticker** — slowed `htScroll` 46s→**92s** and bumped `.ht-item` font 8→9px (was hard to read / looked jittery). Track is 22 items ×2 duplicated, `translateX(-50%)` = seamless loop. CSS ~line 1533/1536.
@@ -42,8 +55,16 @@ grep -c 'pxBlink' <<<"$b"                  # 0 (cursor gone)
 grep -c 'width:fit-content' <<<"$b"        # 1
 ```
 
-### ⚠️ CLAUDE.md is STALE on hosting — this file is the source of truth
-`CLAUDE.md` still describes the **old** architecture (Netlify static host + a *separate* `arcanum-api-proxy…workers.dev` proxy Worker, with `API_URL` hardcoded to that proxy). That is no longer how the app runs. Since the migration, the app is **one combined `arcanum` Worker** (Static Assets + advisor proxy + `Stats`/`RateLimiter` DOs) and **`API_URL` is same-origin (`location.origin`)** — see CURRENT STATUS above and `worker.js`. The DO-NOT-TOUCH rules in CLAUDE.md (ECS_INLINE, `claude-sonnet-5`, `escH()`, `grimoire`/`spellbook` inverted naming, `arc-*` localStorage keys, dual-mode `.mode-hide`/`.std-only`/`data-std`) are all still valid. **Only its hosting/deploy/API_URL section is wrong.** Worth reconciling CLAUDE.md next session (offered, not yet done).
+### ✅ CLAUDE.md reconciled (2026-08-14) — no longer stale
+`CLAUDE.md` described the **old** architecture (Netlify + a separate `arcanum-api-proxy` Worker, `API_URL` hardcoded). It has now been rewritten to match reality: single `arcanum` Worker, same-origin `API_URL`, `public/index.html`, wrangler/Workers Builds deploy. Also refreshed against the actual file: line count 12,109 → **12,580**, all structural line numbers (`ECS_INLINE` now **5964–9178**), model refs **7** in index + **2** in worker, **15** overlays (was 14 — `#jebmem-overlay` was undocumented), and 5 `<style>` blocks. Its §12 previously said to paste `worker.js` into the **dashboard code editor**, which would have broken Static Assets and DO migrations — that is now an explicit "never." The DO-NOT-TOUCH rules were all still valid and were left intact.
+
+### 🧹 Repo cleanup (2026-08-14)
+Deleted three files that no longer earn their place:
+- **`arcanum-data.js`** (488 KB) — the dead external-catalog file. Zero references anywhere in `public/index.html` or `worker.js`; the app has always run on `ECS_INLINE`. CLAUDE.md already *claimed* it was deleted — now it actually is. The defensive `window.ECS_DB` fallback expression stays.
+- **`claude-code-brief.md`** — a finished one-off task brief for the old mobile-bug hunt. Stale (Netlify/proxy era) and fully superseded by CLAUDE.md.
+- **`netlify.toml`** — Netlify is gone; `arcanum-ec.netlify.app` now returns **404**.
+
+Also: **`README.md` was an 18-byte stub** and is now a real README (what it is, features, architecture, security, how to run) — judges land on the repo, so it mattered. And the dead `https://arcanum-ec.netlify.app` entry was removed from `ALLOWED_ORIGINS` in `worker.js`: same-origin passes on its own via `blockedOrigin()`, so it was doing nothing except allow-listing a domain someone else could later claim. **This one touches the live server — it ships on your next push.**
 
 ---
 
@@ -71,8 +92,8 @@ grep -c 'width:fit-content' <<<"$b"        # 1
 
 ### Launch / QA
 - [ ] Add a **custom domain** to the `arcanum` Worker (Settings → Domains & Routes) — the clean URL for judges.
-- [ ] **Retire the Netlify site** once the Worker/custom domain is confirmed.
-- [ ] **Eyeball on a real phone** — mobile layout is verified by CSS logic, but I can't emulate a phone here.
+- [x] ~~**Retire the Netlify site**~~ — done; `arcanum-ec.netlify.app` returns 404. `netlify.toml` and the stale allow-listed origin are removed.
+- [ ] **Eyeball on a real phone** — still worth doing on real hardware. Emulated 390px found two cosmetic issues (see "Where we left off"); a real device also catches touch-target and safe-area problems emulation misses.
 
 ---
 
