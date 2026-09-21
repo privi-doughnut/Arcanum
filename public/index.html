@@ -1575,6 +1575,57 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   html[data-mode="standard"] .page-banner-title{ font-size:26px !important; }
   html[data-mode="standard"] .sec-title{ font-size:22px !important; }
 }
+
+/* ── MOBILE FIXES (2026-08-18) — three scoped cosmetic bugs found at 390px ──
+   All three predate the design-polish batch. Additive + last in this block so
+   they win the !important cascade without touching the desktop rules. */
+
+/* 1. Planar hero CTAs follow the centred lede on phones.
+   The ≥900px editorial hero left-aligns the CTA row via an UNSCOPED
+   `justify-content:flex-start !important` (~line 1394), which leaked below
+   900px and left the buttons hanging left while the eyebrow/headline/subhead
+   were centred. Re-centre only where the lede is centred (<900px). */
+@media (max-width:899px){
+  html[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ justify-content:center !important; }
+}
+
+/* 2. Impact strip: even 3-up on phones instead of a 2+1 wrap.
+   Flex-wrap dropped "Activities" onto its own line and left a 1px divider
+   trailing into empty space. Grid guarantees three even columns; the dividers
+   are decoration and are dropped once the row is no longer a single line. */
+@media (max-width:600px){
+  /* NB: never set `display` here — the widget is hidden with an inline
+     display:none and revealed with inline display:flex once /api/presence
+     answers. A `display:… !important` rule would beat both and force the
+     placeholder "—" strip to show on every phone load. */
+  #impact-strip{ flex-wrap:nowrap; gap:0; max-width:100%; padding:14px 10px; }
+  #impact-strip .impact-div{ display:none; }
+  #impact-strip .impact-stat{ flex:1 1 0; min-width:0; padding:0 4px; }
+  #impact-strip .impact-num{ font-size:19px; }
+  #impact-strip .impact-lbl{ font-size:9.5px; letter-spacing:.04em; }
+}
+
+/* 3. Nav "Sign in" wrapped to two lines and crowded the wordmark.
+   The button is a flex item with default min-width:auto, so it collapsed to
+   its longest word and wrapped. nowrap + a tighter mobile size buys back the
+   room the Planar 19px wordmark needs. */
+#nav-auth{ white-space:nowrap; flex:none; }
+@media (max-width:600px){
+  #nav-auth{ font-size:8px !important; padding:0 8px !important; }
+  .nav-right{ gap:6px; }
+}
+
+/* 4. Mobile nav bar overflowed the viewport and clipped the hamburger.
+   Measured at 390px: .nav-left 124px + .nav-right 279px + 32px padding = 435px
+   in a 390px bar, so .nav-right ended at x=421 and only ~11px of the
+   hamburger's 42px tap target was on screen — the mobile menu was nearly
+   unopenable. The Tracker button was the biggest consumer at 130px, so drop
+   its text label on phones; the 📖 icon + count badge still read, and the
+   drawer keeps a full "Tracker" row. */
+@media (max-width:600px){
+  #grim-btn-label{ display:none; }
+  .grimoire-btn{ padding:7px 9px; gap:4px; }
+}
 </style>
 <body>
 
