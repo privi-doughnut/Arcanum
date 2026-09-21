@@ -66,6 +66,7 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 
 /* ── BUTTONS ─────────────────────────────────── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border:none;cursor:pointer;font-family:var(--px);font-size:7px;letter-spacing:1px;transition:all .15s;border-radius:var(--radius);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
 .btn-primary{background:var(--accent);color:#fff;}
 .btn-primary:hover{background:var(--accent2);}
 .btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border2);}
@@ -1535,6 +1536,11 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 .ht-item .ht-star{ color:var(--accent); margin-right:9px; }
 @media (prefers-reduced-motion:reduce){ .ht-track{ animation:none; } }
 
+/* Polish: subtle shimmer while the hero wall/ticker are empty (JS hasn't populated them yet), instead of a dead blank beat on first paint. Self-resolves — :empty stops matching the instant real content is inserted. */
+#hero-wall:empty, #hero-ticker:empty{ background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--text) 8%,transparent),transparent); background-size:200% 100%; animation:heroShimmer 1.4s ease-in-out infinite; }
+@keyframes heroShimmer{ 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+@media (prefers-reduced-motion:reduce){ #hero-wall:empty, #hero-ticker:empty{ animation:none; } }
+
 /* ══ PLANAR long-tail — forms, settings, codex (readable labels, softer inputs) ══ */
 [data-mode="standard"] .form-label{ font-size:11px !important; letter-spacing:.08em; font-weight:600; }
 [data-mode="standard"] .form-input, [data-mode="standard"] .form-textarea{ border-radius:11px; padding:13px 15px; }
@@ -2175,6 +2181,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div class="ec-detail-cat" id="ec-detail-cat"></div>
       <div class="ec-detail-branches" id="ec-detail-branches"></div>
       <button class="btn btn-primary" id="ec-add-btn" onclick="addFromDetail()" style="width:100%;margin-top:8px">+ Add to Spellbook</button>
+      <button class="btn btn-ghost" id="ec-commit-btn" onclick="commitFromDetail()" style="width:100%;margin-top:8px">📖 Commit to Grimoire</button>
       <button class="btn btn-ghost" id="ec-compare-btn" data-ec="" onclick="if(this.getAttribute('data-ec'))toggleCompare(this.getAttribute('data-ec'))" style="width:100%;margin-top:8px">⊕ Compare</button>
       <button class="btn btn-ghost" id="ec-copy-btn" onclick="copyECLink(currentEC&&currentEC.id)" style="font-size:11px;margin-top:4px;width:100%">🔗 Copy EC Link</button>
       <button class="btn btn-ghost" onclick="nav('marketplace')" style="width:100%">←</button>
@@ -2243,9 +2250,10 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         <button class="btn btn-ghost" data-std="🧠 Personalize the Advisor" onclick="openJebMem()" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">🧠 Personalize Jeb</button>
       </div>
       <div class="chat-input-row">
-        <textarea class="chat-input" id="chat-input" placeholder="Speak your truth to Jebadias…" onkeydown="chatKey(event)"></textarea>
-        <button class="btn btn-primary" onclick="sendMsg()">SEND ▶</button>
+        <textarea class="chat-input" id="chat-input" maxlength="2000" placeholder="Speak your truth to Jebadias…" onkeydown="chatKey(event)" oninput="updateChatCount()"></textarea>
+        <button class="btn btn-primary" id="chat-send-btn" onclick="sendMsg()">SEND ▶</button>
       </div>
+      <div id="chat-charcount" style="font-size:10px;color:var(--text3);text-align:right;margin-top:2px"></div>
     </div>
   </div>
 </div>
@@ -2384,7 +2392,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   </div>
 </div>
     <div class="form-group"><label class="form-label">ADDITIONAL DETAILS</label><p class="form-hint" style="margin:2px 0 4px">Anything else students should know — stipends, housing, alumni outcomes, tips for applying</p><textarea class="form-textarea" id="list-extra" style="min-height:80px" placeholder="Include anything that would have helped you when you were deciding whether to pursue this EC."></textarea></div>
-    <button class="btn btn-primary" onclick="document.getElementById('jeb-listing-warn').classList.add('show')">Submit Listing →</button>
+    <button class="btn btn-primary" onclick="submitListing()">Submit Listing →</button>
     <p style="font-size:12px;color:var(--text3);line-height:1.6">All listings go through AI moderation before appearing in the Marketplace. Inaccurate or misleading submissions will be rejected. See the Codex for guidelines.</p>
   </div>
 </div>
@@ -9381,7 +9389,7 @@ function nav(id) {
     l.classList.toggle('active', oc.includes("'"+id+"'"));
   });
   currentPage = id;
-  window.scrollTo(0,0);
+  document.documentElement.scrollTop = document.body.scrollTop = 0; // instant — scrollTo(0,0) fights global scroll-behavior:smooth and lands mid-transition
   if(id==='settings'){updateChamberFrags();updateChamberStats();}
   closeDrawer();
   
@@ -9605,7 +9613,8 @@ function renderMarketplace() {
   var grid = document.getElementById('ec-grid');
   if (!grid) return;
   if (typeof renderRecommendations==='function') renderRecommendations();
-  var srch = _ecNorm((document.getElementById('mkt-search')||{value:''}).value||'');
+  var rawSrch = (document.getElementById('mkt-search')||{value:''}).value||'';
+  var srch = _ecNorm(rawSrch);
   var filtered = ECS.filter(function(ec) {
     if (mktFilters.size > 0 && !mktFilters.has(ec.cat||'')) return false;
     if (mktImpactFilters.size > 0 && !mktImpactFilters.has(ec.impact||'Local')) return false;
@@ -9634,7 +9643,9 @@ function renderMarketplace() {
   else if (mktSort==='rarity') filtered.sort(function(a,b){return (rarityO[(b.rarity||'').toLowerCase()]||0)-(rarityO[(a.rarity||'').toLowerCase()]||0);});
   else if (mktSort==='newest') filtered.reverse();
   if (!filtered.length) {
-    grid.innerHTML = '<div class="mkt-empty">No ' + (isGameMode()?'spells':'activities') + ' match your filters.<br><span style="font-size:11px;opacity:.6">Try broadening your selection above.</span></div>';
+    grid.innerHTML = srch
+      ? '<div class="mkt-empty">No ' + (isGameMode()?'spells':'activities') + ' match ‘' + escH(rawSrch) + '’.<br><button class="btn btn-ghost" onclick="clearMktSearch()" style="margin-top:14px;font-size:11px">Clear search</button></div>'
+      : '<div class="mkt-empty">No ' + (isGameMode()?'spells':'activities') + ' match your filters.<br><span style="font-size:11px;opacity:.6">Try broadening your selection above.</span></div>';
     return;
   }
   var shown = 0;
@@ -9678,6 +9689,7 @@ function renderMarketplace() {
   }
   renderBatch();
 }
+function clearMktSearch(){ var s=document.getElementById('mkt-search'); if(s){ s.value=''; renderMarketplace(); } }
 
 function branchHtml(n) {
   return ratingBar(n, '🌿');
@@ -9839,6 +9851,13 @@ function openEC(ec) {
   btn.textContent = inGrim ? '✓ In Your '+savedLabel() : '+ Add to '+savedLabel();
   btn.style.opacity = inGrim ? '0.6' : '1';
 
+  const inSpell = spellbook.some(s=>s.id===ec.id);
+  const cbtn = document.getElementById('ec-commit-btn');
+  if (cbtn) {
+    cbtn.textContent = inSpell ? '✓ In Your '+trackerLabel() : '📖 Commit to '+trackerLabel();
+    cbtn.style.opacity = inSpell ? '0.6' : '1';
+  }
+
   const imgWrap = document.getElementById('ec-detail-img-wrap');
   const imgEl = document.getElementById('ec-detail-img');
   if (ec.img && imgWrap && imgEl) { imgEl.src=ec.img; imgWrap.style.display='block'; }
@@ -9944,15 +9963,34 @@ function openEC(ec) {
 
 function addFromDetail() {
   if (!currentEC) return;
-  if (!grimoire.some(g=>g.id===currentEC.id)) {
+  const btn = document.getElementById('ec-add-btn');
+  if (grimoire.some(g=>g.id===currentEC.id)) {
+    grimoire = grimoire.filter(g=>g.id!==currentEC.id); saveGrimoire();
+    showNotif('Removed from '+savedLabel()+'.');
+    if (btn) { btn.textContent = '+ Add to '+savedLabel(); btn.style.opacity = '1'; }
+  } else {
     grimoire.push({...currentEC}); saveGrimoire();
-    saveGrimoire();
-    showNotif('Added to Spellbook! 📜');
-    document.getElementById('ec-add-btn').textContent = '✓ In Your Spellbook';
-    document.getElementById('ec-add-btn').style.opacity = '0.6';
-    
+    showNotif('Added to '+savedLabel()+'! 📜');
+    if (btn) { btn.textContent = '✓ In Your '+savedLabel(); btn.style.opacity = '0.6'; }
     if (grimoire.length === 16) triggerEgg(13);
   }
+}
+function commitFromDetail() {
+  if (!currentEC) return;
+  const cbtn = document.getElementById('ec-commit-btn');
+  if (spellbook.some(s=>s.id===currentEC.id)) { showNotif('Already in your '+trackerLabel()+'.'); return; }
+  spellbook.push({...currentEC, status:'not-started', milestones:[], notes:'', castDate: Date.now()});
+  saveSpellbook();
+  showNotif('Committed to your '+trackerLabel()+'! 📖');
+  if (cbtn) { cbtn.textContent = '✓ In Your '+trackerLabel(); cbtn.style.opacity = '0.6'; }
+}
+function commitToTracker(id) {
+  var ec = (typeof EC_MAP!=='undefined' && EC_MAP[id]) || grimoire.find(g=>g.id===id);
+  if (!ec) return;
+  if (spellbook.some(s=>s.id===id)) { showNotif('Already in your '+trackerLabel()+'.'); return; }
+  spellbook.push({...ec, status:'not-started', milestones:[], notes:'', castDate: Date.now()});
+  saveSpellbook();
+  showNotif('Committed to your '+trackerLabel()+'! 📖');
 }
 
 function renderGrimoire() {
@@ -9974,6 +10012,7 @@ function renderGrimoire() {
         ${ec.deadline?`<div style="font-size:10px;color:var(--gold);margin-top:3px">📅 ${ec.deadline}</div>`:''}
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
+        <button class="grim-remove" onclick="commitToTracker('${ec.id}')" title="Commit to Tracker" style="font-size:10px">📖</button>
         <button class="grim-remove" onclick="openEditModal('${ec.id}','grimoire')" title="Edit" style="font-size:10px">✎</button>
         <button class="grim-remove" onclick="removeFromGrimoire('${ec.id}')" title="Remove">✕</button>
       </div>
@@ -9985,7 +10024,6 @@ function renderGrimoire() {
 }
 function removeFromGrimoire(id) {
   grimoire = grimoire.filter(g => g.id !== id); saveGrimoire();
-  saveGrimoire();
   renderGrimoire();
   showNotif('Removed from Grimoire.');
 }
@@ -10243,7 +10281,8 @@ function appendBubble(who, text) {
     name.textContent = p ? p.name.toUpperCase() : 'JEBADIAS';
     div.appendChild(name);
   }
-  div.append(document.createTextNode(text));
+  if (who === 'jeb') { const body = document.createElement('span'); renderMdLite(body, text); div.appendChild(body); }
+  else div.append(document.createTextNode(text));
   win.appendChild(div);
   win.scrollTop = win.scrollHeight;
 }
@@ -10258,7 +10297,7 @@ function typeBubble(text){
   const span = document.createElement('span'); div.appendChild(span);
   win.appendChild(div); win.scrollTop = win.scrollHeight;
   var i=0, n=text.length, step=Math.max(2, Math.round(n/160));
-  (function tick(){ i=Math.min(n, i+step); span.textContent=text.slice(0,i); win.scrollTop=win.scrollHeight; if(i<n) setTimeout(tick,16); })();
+  (function tick(){ i=Math.min(n, i+step); renderMdLite(span, text.slice(0,i)); win.scrollTop=win.scrollHeight; if(i<n) setTimeout(tick,16); })();
 }
 function showTyping() {
   const win = document.getElementById('chat-win');
@@ -10272,6 +10311,13 @@ function showTyping() {
 }
 function chatKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+function updateChatCount(){
+  var inp=document.getElementById('chat-input'), c=document.getElementById('chat-charcount');
+  if(!inp||!c) return;
+  var n=inp.value.length, max=2000;
+  c.textContent = n>max*0.8 ? (n+' / '+max) : '';
+  c.style.color = n>max*0.95 ? '#c0392b' : 'var(--text3)';
 }
 /* Shared advisory core — identical substance across every persona/age.
    Tone and lore change with the persona; advice QUALITY never does. */
@@ -10528,6 +10574,18 @@ function ssMarkdown(md){
 
 /* ── shared small HTML escaper ──────────────────────────────────────── */
 function escH(s){ return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+// Renders Jeb's reply into `el` as plain DOM nodes — only **bold** and line breaks are
+// interpreted. No HTML parsing of the text ever happens, so nothing here can be markup.
+function renderMdLite(el, text){
+  el.textContent = '';
+  String(text==null?'':text).split(/\*\*(.+?)\*\*/g).forEach(function(part, i){
+    part.split('\n').forEach(function(line, j){
+      if (j > 0) el.appendChild(document.createElement('br'));
+      if (i % 2 === 1) { var b = document.createElement('strong'); b.textContent = line; el.appendChild(b); }
+      else if (line) el.appendChild(document.createTextNode(line));
+    });
+  });
+}
 // Sanitize a user-supplied URL for use in href/style: allow only http(s) and
 // relative/protocol-relative; block javascript:, data:, etc.; encode quotes/angles
 // so it can't break out of the attribute. Returns '' if unsafe.
@@ -11056,10 +11114,14 @@ function openSharedView(payload){
 }
 function closeSharedView(){ var ov=document.getElementById('shared-overlay'); if(ov) ov.style.display='none'; document.body.style.overflow=''; try{ if(location.hash) history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
 function checkSharedHash(){
-  try{ var m=(location.hash||'').match(/share=(.+)$/); if(!m) return;
+  var m=(location.hash||'').match(/share=(.+)$/); if(!m) return;
+  try{
     var payload=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
-    if(payload && payload.e && payload.e.length) openSharedView(payload);
+    if(payload && payload.e && payload.e.length){ openSharedView(payload); return; }
   }catch(e){}
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  showNotif('This shared plan link is broken or expired.');
+  nav('home');
 }
 
 /* ── UPGRADE: EC of the day ──────────────────────────────────────────── */
@@ -11086,7 +11148,11 @@ async function sendMsg() {
   const inp = document.getElementById('chat-input');
   if (!inp) return;
   const msg = inp.value.trim();
+  inp.value = msg; // reflect the trim even on a whitespace-only bail below
   if (!msg) return;
+  const sendBtn = document.getElementById('chat-send-btn');
+  if (sendBtn && sendBtn.disabled) return; // a reply is still in flight
+  if (sendBtn) sendBtn.disabled = true;
   inp.value = '';
   appendBubble('user', msg);
   chatHistory.push({role:'user', content:msg});
@@ -11137,6 +11203,8 @@ async function sendMsg() {
       ? 'The connection to the Arcanum is unstable. Check your connection and try again.'
       : 'Could not reach the advisor. Check your internet connection and try again.');
     if (statusEl) statusEl.textContent = 'DISCONNECTED';
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
   }
 }
 // Personas unlock by GRIMOIRE PROGRESS — more committed ECs = older, wiser Jeb.
@@ -11461,7 +11529,7 @@ function checkAllVisited() {
 const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
 let konamiIdx = 0;
 document.addEventListener('keydown', e => {
-  
+  var tag=(e.target&&e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select') return;
   if (e.key === KONAMI[konamiIdx]) { konamiIdx++; if(konamiIdx===KONAMI.length){konamiIdx=0;triggerEgg(2);} }
   else { konamiIdx = 0; }
   
@@ -12559,7 +12627,9 @@ function authSubmit(){
   if(!ARC_CLOUD.isReady()){ if(msg) msg.textContent='Cloud not configured yet.'; return; }
   var profile=null;
   if(_authMode==='up'){
-    profile={ name:(_aval('auth-name')||email.split('@')[0]), age:_aval('auth-age'), grade:_aval('auth-grade'), goal:_aval('auth-goal') };
+    var ageRaw=_aval('auth-age'), ageNum=parseInt(ageRaw,10);
+    if(ageRaw && (isNaN(ageNum) || ageNum<11 || ageNum>25)){ if(msg) msg.textContent='Enter a valid age between 11 and 25.'; return; }
+    profile={ name:(_aval('auth-name')||email.split('@')[0]), age:ageRaw, grade:_aval('auth-grade'), goal:_aval('auth-goal') };
     try{ localStorage.setItem('arc-profile', JSON.stringify(profile)); }catch(e){}
     window.ARC_PROFILE=profile;
   }
