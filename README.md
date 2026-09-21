@@ -1,68 +1,38 @@
 # Arcanum
 
-**A free extracurricular marketplace and planning tool for high school students.**
+**Live app:** https://arcanum.its-the-prithivi-show.workers.dev
 
-🔗 **Live:** https://arcanum.its-the-prithivi-show.workers.dev
+Arcanum helps high schoolers figure out which extracurriculars to do and how to actually go after them.
 
-Figuring out which extracurriculars are worth your time is mostly guesswork — the good information is scattered, paywalled, or comes from people selling something. Arcanum puts it in one place: a searchable catalog of real activities with honest ratings, an AI advisor that builds a plan around your actual situation, and a tracker that follows you from "maybe" to "done."
-
-Built solo. Submitted to the **2026 Congressional App Challenge**.
-
----
+Right now that's insider knowledge. Students with connected parents or a great counselor get a roadmap. Everyone else guesses. Arcanum gives every student the same roadmap, for free.
 
 ## What it does
 
-**📚 The catalog** — 3,208 real extracurriculars across 40 categories. Every one is rated on four dimensions (difficulty, time commitment, competitiveness, and an overall value score), tagged by impact level from Local to Global, and filterable and searchable.
+**The catalog.** 3,208 real activities, each rated on four dimensions. Filter, sort, and search (the search handles typos).
 
-**🔮 The advisor** — an AI advisor that interviews you about your goals, grade, and constraints, then writes a personalized strategic plan. It remembers context across sessions and can take in activities you found outside the app.
+**The AI advisor (Jebadias).** Tell it your grade, goals, and interests and it gives you personalized guidance or a full strategic plan. Nine advisor personas unlock as you make progress.
 
-**📖 The tracker** — commit to activities, set milestones and deadlines, track status, and export the whole thing into Common App format when applications open.
+**The tracker.** Commit to activities, track status, milestones, and deadlines, then export everything to Common App format with the character limits already handled.
 
-**Two visual modes.** Arcanum ships a fantasy "game mode" and a clean editorial "Planar" mode, toggleable at any time. The fantasy layer makes an intimidating process approachable for younger students; the clean mode serves everyone else. Both expose identical functionality.
+Other stuff:
 
----
+- Game mode (fantasy skin) and Planar mode (clean, minimal). Same features either way.
+- Shareable plan links encoded in the URL, so nothing is stored on a server
+- Sign-up flow (name, age, grade, goal) that personalizes the advisor's welcome
+- Optional accounts with cross-device sync. Everything also works with no account, saved in your browser.
+- Accessibility: high contrast, reduced motion, hover-to-read-aloud, keyboard shortcuts
+- Print stylesheet for a clean PDF of your plan
 
-## Architecture
+## How it's built
 
-The entire frontend is **one HTML file** — `public/index.html`, about 1.9 MB — with no framework, no build step, no bundler, and no router. That is a deliberate choice, not a shortcut: it means the app has no dependency tree to rot, loads as a single request, and can be read end to end by anyone who opens it.
+- **Frontend:** one `index.html` file (in `public/`). Vanilla HTML, CSS, and JS. No framework, no bundler, no build step, no dependencies. That's on purpose.
+- **Hosting + AI proxy:** a Cloudflare Worker (`worker.js`) serves the site and proxies calls to Anthropic's Claude API, so the API key never touches the browser.
+- **Accounts/sync:** Supabase (optional).
 
-The backend is **one Cloudflare Worker** (`worker.js`) that:
+## AI use
 
-- serves the static app via Static Assets,
-- proxies AI calls to Anthropic so the API key never reaches the browser,
-- tracks live and total visitors with a `Stats` Durable Object,
-- rate-limits and guards the advisor with a `RateLimiter` Durable Object.
+I built Arcanum with AI coding assistants (Claude) writing a lot of the code. I came up with the idea, designed the features and the look, made every product decision, tested and debugged it, and deployed it. The sample reviews in the catalog are AI-generated and labeled that way in the app.
 
-**Supabase** provides optional accounts and cross-device sync, protected by Row Level Security.
+## Author
 
-```
-public/index.html   the entire frontend
-worker.js           combined Worker: assets + AI proxy + Durable Objects
-wrangler.jsonc      Worker config (assets, DO bindings, migrations)
-```
-
-## Security
-
-- The Anthropic API key lives as an encrypted Cloudflare secret and is never exposed client-side.
-- The Worker pins the model server-side, so no caller can request a pricier one.
-- Per-IP rate limiting (15/min, 120/hr) plus input caps on message count, length, and `max_tokens`.
-- Cross-origin browser requests to the advisor are rejected.
-- Security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`) on every response.
-- User-submitted content is escaped at every `innerHTML` boundary, and user-supplied URLs are scheme-checked.
-- Only `./public` is served publicly, so repo source and history can't leak as static assets.
-
-## Running it
-
-The app is a static file — open `public/index.html` in a browser and everything works except the AI advisor and visitor counter, which need the Worker.
-
-For the full stack:
-
-```bash
-npm install
-npx wrangler dev      # local Worker + assets
-npx wrangler deploy   # deploy (Workers Builds also auto-deploys on push to main)
-```
-
----
-
-*Ratings and reviews shown as samples are labeled as such in the app and disclosed on the About page.*
+Prithivi Vijayakumar ([@privi-doughnut](https://github.com/privi-doughnut)), high school sophomore, Charlotte NC.
