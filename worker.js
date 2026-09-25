@@ -41,13 +41,17 @@ const ALLOWED_ORIGINS = [
 const ALLOWED_MODELS = ["claude-sonnet-5"];
 const DEFAULT_MODEL = "claude-sonnet-5";
 
-// Safe security response headers (no CSP here — a strict CSP on an inline-script
-// app needs careful testing; tracked in progress.md).
+// Safe security response headers. CSP tightened vs. the progress.md draft:
+// script-src drops jsdelivr since supabase-js is now self-hosted in public/vendor/.
 const SEC_HEADERS = {
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "X-Frame-Options": "DENY",
-  "Permissions-Policy": "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+  "Permissions-Policy": "geolocation=(), microphone=(), camera=(), interest-cohort=()",
+  "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; " +
+    "img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; " +
+    "frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
 };
 
 // A visitor counts as "live" for this long after their last heartbeat.

@@ -4,8 +4,8 @@
   "name": "arcanum",
   "main": "worker.js",
   "compatibility_date": "2026-07-01",
-  // Only ./public is served publicly (it contains just index.html), so the repo
-  // source, git history, and docs can never be exposed as static assets.
+  // Only ./public is served publicly (index.html + the self-hosted vendor/ JS),
+  // so the repo source, git history, and docs can never be exposed as static assets.
   // GET requests are served from assets; POST falls through to worker.js.
   "assets": {
     "directory": "./public",
