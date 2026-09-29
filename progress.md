@@ -78,17 +78,17 @@ Also: **`README.md` was an 18-byte stub** and is now a real README (what it is, 
 - [ ] (Optional) Add a **Turnstile** widget to the contact form — `ravens` allows anonymous inserts (by design) with no spam guard.
 
 ### Dependency hardening (supply-chain)
-- [ ] **Self-host `supabase-js`** instead of the unpinned jsdelivr CDN (`@supabase/supabase-js@2`, no SRI). Drop the versioned file into `public/` and load it same-origin — removes the CDN supply-chain risk entirely. (Or at minimum pin an exact version + add an `integrity=` SRI hash.)
+- [x] ~~**Self-host `supabase-js`**~~ — done (`7b8fe90`, 2026-09-25). Pinned `supabase-js` 2.117.2 now lives at `public/vendor/supabase-js-2.117.2.min.js`, loaded same-origin. jsdelivr dependency removed entirely.
 
 ### CSP (test carefully before enforcing)
-- [ ] Add a **Content-Security-Policy**. The safe headers (nosniff, frame-options, referrer, permissions-policy) are already live. CSP is left out because the app uses inline scripts/styles + CDNs, so a wrong policy breaks it. Recommended starting policy to add to `SEC_HEADERS` in `worker.js` and test on the workers.dev URL before trusting:
+- [x] ~~Add a **Content-Security-Policy**~~ — done (`7b8fe90`, 2026-09-25), one change tighter than the draft below: `script-src` drops `https://cdn.jsdelivr.net` since supabase-js is now self-hosted.
   ```
-  default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+  default-src 'self'; script-src 'self' 'unsafe-inline';
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com;
   img-src 'self' data: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co;
   frame-ancestors 'none'; base-uri 'self'; form-action 'self'
   ```
-  (If you self-host supabase-js, drop `https://cdn.jsdelivr.net`. If you self-host fonts, tighten style/font-src too.)
+  **Verified live 2026-09-29** in a real browser against the deployed Worker: homepage loads clean (no CSP console errors), the auth overlay opens and the self-hosted supabase-js script loads (200, same-origin), and the Jebadias advisor sends/receives a live reply through the Worker proxy — nothing the CSP touches is broken.
 
 ### Launch / QA
 - [ ] Add a **custom domain** to the `arcanum` Worker (Settings → Domains & Routes) — the clean URL for judges.
