@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function(){
   --bg:#07070f;--card:#0e0e1a;--card2:#0a0a14;
   --border:#1e1e2e;--border2:#2a2a3e;
   --text:#ece5da;--text2:#aeaec6;--text3:#8e90aa;
-  --accent:#b85c18;--accent2:#ca6e28;--gold:#9e6e14;
+  --accent:#b85c18;--accent2:#ca6e28;--gold:#9e6e14;--accent-text:#c98451;
   --green:#16903e;--px:'Press Start 2P',monospace;--brand-font:'Dancing Script',cursive;--chic:'Cormorant Garamond',serif;
   --radius:2px;--max:1100px;--pad:clamp(16px,4vw,40px);
 }
@@ -108,6 +108,10 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
   *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
   .firefly,#fireflies,.moon-face,.scroll-pill{ animation:none !important; }
 }
+/* same safety valve, but driven by the in-app "Reduce Motion" toggle (previously this toggle only
+   paused a handful of map-page sprite animations — it now matches the OS-level block above) */
+html[data-reduce-motion="1"] *,html[data-reduce-motion="1"] *::before,html[data-reduce-motion="1"] *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+html[data-reduce-motion="1"] .firefly,html[data-reduce-motion="1"] #fireflies,html[data-reduce-motion="1"] .moon-face,html[data-reduce-motion="1"] .scroll-pill{ animation:none !important; }
 
 /* clean PDF when printing the master plan (scoped so normal Ctrl+P is unaffected) */
 @media print{
@@ -134,13 +138,13 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 
 /* ── HOME ────────────────────────────────────── */
 .home-hero{max-width:var(--max);margin:0 auto;padding:60px var(--pad) 48px;text-align:center;}
-.home-eyebrow{font-family:var(--px);font-size:7px;color:var(--accent);letter-spacing:3px;margin-bottom:16px;}
+.home-eyebrow{font-family:var(--px);font-size:7px;color:var(--accent-text);letter-spacing:3px;margin-bottom:16px;}
 .home-title{font-family:var(--px);font-size:clamp(18px,4vw,36px);color:var(--text);line-height:1.5;margin-bottom:8px;}
 .home-title span{color:var(--accent);}
 .home-tagline{font-size:15px;color:var(--text2);line-height:1.75;max-width:600px;margin:0 auto 28px;}
 .home-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 .home-what{max-width:var(--max);margin:0 auto;padding:24px var(--pad);background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.home-what-label{font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px;}
+.home-what-label{font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px;}
 .home-what-text{font-size:14px;color:var(--text2);line-height:1.75;max-width:800px;}
 .home-features{max-width:var(--max);margin:0 auto;padding:48px var(--pad) 40px;}
 .home-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,280px));justify-content:center;gap:16px;margin-top:28px;}
@@ -153,14 +157,14 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 #home-extra{display:none;}
 
 /* Section headers */
-.sec-label{font-family:var(--px);font-size:6px;color:var(--accent);letter-spacing:3px;text-align:center;margin-bottom:10px;}
+.sec-label{font-family:var(--px);font-size:6px;color:var(--accent-text);letter-spacing:3px;text-align:center;margin-bottom:10px;}
 .sec-title{font-family:var(--px);font-size:clamp(10px,1.8vw,15px);color:var(--text);text-align:center;margin-bottom:32px;line-height:1.6;}
 
 /* How It Works */
 .how-timeline{max-width:700px;margin:0 auto;}
 .how-item{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--border);}
 .how-item:last-child{border-bottom:none;}
-.how-num{font-family:var(--px);font-size:9px;color:var(--accent);opacity:.5;min-width:28px;padding-top:2px;}
+.how-num{font-family:var(--px);font-size:9px;color:var(--accent-text);min-width:28px;padding-top:2px;}
 .how-item-title{font-family:var(--px);font-size:7px;color:var(--text);margin-bottom:7px;line-height:1.5;}
 .how-item-desc{font-size:13px;color:var(--text2);line-height:1.7;}
 
@@ -607,6 +611,7 @@ body {
   --text2: #5a4030;
   --text3: #7c6a4e;
   --accent: #b85c18;
+  --accent-text: #8a4512;
   --accent2: #ca6e28;
   --gold: #9e6e14;
   --green: #2a7a3a;
@@ -893,7 +898,7 @@ body { background-color: var(--bg); background-image: none; }
 .test-slide.active{opacity:1;pointer-events:auto;}
 .test-quote{font-family:'IM Fell English',serif;font-size:clamp(14px,2.2vw,18px);line-height:1.8;color:var(--text);margin:0 0 14px;font-style:italic;}
 .test-attr{font-family:var(--px);font-size:6px;color:var(--accent);letter-spacing:.06em;}
-.test-dots2 .test-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);border:none;cursor:pointer;transition:background .2s;padding:0;flex-shrink:0;}
+.test-dots2 .test-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);background-clip:content-box;border:none;cursor:pointer;transition:background .2s;padding:8px;box-sizing:content-box;flex-shrink:0;}
 .test-dots2 .test-dot.active{background:var(--accent);}
 
 
@@ -1044,7 +1049,7 @@ body { background-color: var(--bg); background-image: none; }
 <!-- Inter for the clean/standard skin -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- Supabase JS SDK (UMD global: window.supabase) -->
-<script src="/vendor/supabase-js-2.117.2.min.js"></script>
+<script src="/vendor/supabase-js-2.117.2.min.js" defer></script>
 <style id="mode-standard-css">
 /* nav hover pill (Chrome-tab style) — body-level so nav overflow can't clip it */
 #nav-pill{position:fixed;transform:translateX(-50%);background:var(--card);color:var(--text);
@@ -1203,7 +1208,7 @@ html[data-contrast="high"] .page-banner-sub{ color:#e8e0d4; }
 [data-mode="standard"] .sec-title{ font-size:30px; }
 [data-mode="standard"] .home-what-label{ font-size:22px; }
 [data-mode="standard"] .sec-label,
-[data-mode="standard"] .home-eyebrow{ color:var(--accent) !important; font-weight:600; letter-spacing:.14em; font-size:11px; text-transform:uppercase; }
+[data-mode="standard"] .home-eyebrow{ color:var(--accent-text) !important; font-weight:600; letter-spacing:.14em; font-size:11px; text-transform:uppercase; }
 [data-mode="standard"] .home-tagline{ font-size:17px; line-height:1.7; }
 [data-mode="standard"] .home-what-text{ font-size:15px; line-height:1.85; }
 [data-mode="standard"] .feat-card{ transition:transform .15s ease, box-shadow .15s ease; }
@@ -1213,7 +1218,7 @@ html[data-contrast="high"] .page-banner-sub{ color:#e8e0d4; }
 [data-mode="standard"] .faq-a p{ font-size:14px; line-height:1.8; }
 [data-mode="standard"] .how-item-title{ font-size:16px; font-weight:700; }
 [data-mode="standard"] .how-item-desc{ font-size:14px; line-height:1.7; }
-[data-mode="standard"] .how-num{ font-family:var(--chic) !important; color:var(--accent); font-weight:700; }
+[data-mode="standard"] .how-num{ font-family:var(--chic) !important; color:var(--accent-text); font-weight:700; }
 [data-mode="standard"] .stat-num{ font-family:var(--chic) !important; font-weight:700; color:var(--accent); }
 [data-mode="standard"] .ec-name{ font-weight:700; letter-spacing:-.01em; }
 [data-mode="standard"] .home-logo-rule{ background:linear-gradient(90deg,transparent,var(--accent),transparent); height:2px; }
@@ -1261,14 +1266,14 @@ html[data-mode="standard"]{
   --bg:#0e1118; --card:#161b24; --card2:#11151d;
   --border:#252c39; --border2:#343d4d;
   --text:#eef1f6; --text2:#b0b8c6; --text3:#828d9e;
-  --accent:#e0894a; --accent2:#eea366; --gold:#d7b471;
+  --accent:#e0894a; --accent2:#eea366; --gold:#d7b471; --accent-text:#e0894a;
 }
 /* -- Palette: Planar LIGHT (warm cream — softer than pure white) -- */
 html[data-mode="standard"][data-theme="light"]{
   --bg:#f5f0e8; --card:#fdfbf6; --card2:#efe8da;
   --border:#e6ddcd; --border2:#d7ccb8;
   --text:#1a1208; --text2:#544636; --text3:#7a6a52;
-  --accent:#b0561a; --accent2:#c4681f; --gold:#9a6b1a;
+  --accent:#b0561a; --accent2:#c4681f; --gold:#9a6b1a; --accent-text:#844013;
 }
 /* High-contrast toggle must win in Planar too (Planar palette overrides base data-contrast) */
 html[data-mode="standard"][data-contrast="high"]{ --text2:#e8ecf2; --text3:#c8d0da; --border:#5a6473; }
@@ -1341,8 +1346,10 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
 .impact-num{ display:inline-flex; align-items:center; gap:7px; font-size:22px; font-weight:700; color:var(--text); line-height:1.1; }
 .impact-lbl{ font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--text3); margin-top:5px; }
 .impact-div{ width:1px; align-self:stretch; background:var(--border); margin:4px 0; }
-.impact-live-dot{ width:8px; height:8px; border-radius:50%; background:#22a565; box-shadow:0 0 0 0 rgba(34,165,101,.5); animation:impactPulse 2s infinite; }
-@keyframes impactPulse{ 0%{box-shadow:0 0 0 0 rgba(34,165,101,.5);} 70%{box-shadow:0 0 0 7px rgba(34,165,101,0);} 100%{box-shadow:0 0 0 0 rgba(34,165,101,0);} }
+.impact-live-dot{ width:8px; height:8px; border-radius:50%; background:#22a565; position:relative; }
+.impact-live-dot::after{ content:''; position:absolute; inset:0; border-radius:50%; background:rgba(34,165,101,.5); animation:impactPulse 2s infinite; }
+/* perf: transform+opacity instead of animating box-shadow spread, so this composites on the GPU instead of forcing a paint every frame */
+@keyframes impactPulse{ 0%{transform:scale(1); opacity:.5;} 70%{transform:scale(2.75); opacity:0;} 100%{transform:scale(2.75); opacity:0;} }
 [data-mode="standard"] .impact-num{ font-family:var(--chic); }
 
 /* Personalize-Jeb modal — token-based, works in both modes & themes */
@@ -1670,7 +1677,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     </div>
   </div>
   <div class="nav-right">
-    <button class="nav-theme-btn" id="nav-auth" onclick="openAuth()" title="Sign in / create account" style="width:auto;padding:0 12px;font-size:10px;font-family:var(--px);color:var(--accent)">Sign in</button>
+    <button class="nav-theme-btn" id="nav-auth" onclick="openAuth()" title="Sign in / create account" style="width:auto;padding:0 12px;font-size:10px;font-family:var(--px);color:var(--accent-text)">Sign in</button>
     <button class="nav-theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
     <button class="grimoire-btn" onclick="nav('grimoire')">
       📖 <span id="grim-btn-label">Spellbook</span> <span class="grimoire-badge" id="grim-count">0</span>
@@ -1683,7 +1690,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 
 <!-- ── MOBILE DRAWER ──────────────────────────── -->
 
-
+<main>
 <!-- ── HOME ──────────────────────────────────── -->
 <div id="page-home" class="page active">
   <!-- Big Homepage Logo -->
@@ -1930,7 +1937,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       </div>
       </div>
       <div class="test-dots2" style="display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap">
-        <button class="test-dot active" onclick="goTestSlide(0)"></button><button class="test-dot" onclick="goTestSlide(1)"></button><button class="test-dot" onclick="goTestSlide(2)"></button><button class="test-dot" onclick="goTestSlide(3)"></button><button class="test-dot" onclick="goTestSlide(4)"></button><button class="test-dot" onclick="goTestSlide(5)"></button><button class="test-dot" onclick="goTestSlide(6)"></button><button class="test-dot" onclick="goTestSlide(7)"></button><button class="test-dot" onclick="goTestSlide(8)"></button><button class="test-dot" onclick="goTestSlide(9)"></button><button class="test-dot" onclick="goTestSlide(10)"></button><button class="test-dot" onclick="goTestSlide(11)"></button><button class="test-dot" onclick="goTestSlide(12)"></button><button class="test-dot" onclick="goTestSlide(13)"></button><button class="test-dot" onclick="goTestSlide(14)"></button><button class="test-dot" onclick="goTestSlide(15)"></button><button class="test-dot" onclick="goTestSlide(16)"></button><button class="test-dot" onclick="goTestSlide(17)"></button><button class="test-dot" onclick="goTestSlide(18)"></button><button class="test-dot" onclick="goTestSlide(19)"></button><button class="test-dot" onclick="goTestSlide(20)"></button><button class="test-dot" onclick="goTestSlide(21)"></button><button class="test-dot" onclick="goTestSlide(22)"></button><button class="test-dot" onclick="goTestSlide(23)"></button><button class="test-dot" onclick="goTestSlide(24)"></button><button class="test-dot" onclick="goTestSlide(25)"></button><button class="test-dot" onclick="goTestSlide(26)"></button><button class="test-dot" onclick="goTestSlide(27)"></button><button class="test-dot" onclick="goTestSlide(28)"></button><button class="test-dot" onclick="goTestSlide(29)"></button>
+        <button class="test-dot active" onclick="goTestSlide(0)" aria-label="Testimonial 1"></button><button class="test-dot" onclick="goTestSlide(1)" aria-label="Testimonial 2"></button><button class="test-dot" onclick="goTestSlide(2)" aria-label="Testimonial 3"></button><button class="test-dot" onclick="goTestSlide(3)" aria-label="Testimonial 4"></button><button class="test-dot" onclick="goTestSlide(4)" aria-label="Testimonial 5"></button><button class="test-dot" onclick="goTestSlide(5)" aria-label="Testimonial 6"></button><button class="test-dot" onclick="goTestSlide(6)" aria-label="Testimonial 7"></button><button class="test-dot" onclick="goTestSlide(7)" aria-label="Testimonial 8"></button><button class="test-dot" onclick="goTestSlide(8)" aria-label="Testimonial 9"></button><button class="test-dot" onclick="goTestSlide(9)" aria-label="Testimonial 10"></button><button class="test-dot" onclick="goTestSlide(10)" aria-label="Testimonial 11"></button><button class="test-dot" onclick="goTestSlide(11)" aria-label="Testimonial 12"></button><button class="test-dot" onclick="goTestSlide(12)" aria-label="Testimonial 13"></button><button class="test-dot" onclick="goTestSlide(13)" aria-label="Testimonial 14"></button><button class="test-dot" onclick="goTestSlide(14)" aria-label="Testimonial 15"></button><button class="test-dot" onclick="goTestSlide(15)" aria-label="Testimonial 16"></button><button class="test-dot" onclick="goTestSlide(16)" aria-label="Testimonial 17"></button><button class="test-dot" onclick="goTestSlide(17)" aria-label="Testimonial 18"></button><button class="test-dot" onclick="goTestSlide(18)" aria-label="Testimonial 19"></button><button class="test-dot" onclick="goTestSlide(19)" aria-label="Testimonial 20"></button><button class="test-dot" onclick="goTestSlide(20)" aria-label="Testimonial 21"></button><button class="test-dot" onclick="goTestSlide(21)" aria-label="Testimonial 22"></button><button class="test-dot" onclick="goTestSlide(22)" aria-label="Testimonial 23"></button><button class="test-dot" onclick="goTestSlide(23)" aria-label="Testimonial 24"></button><button class="test-dot" onclick="goTestSlide(24)" aria-label="Testimonial 25"></button><button class="test-dot" onclick="goTestSlide(25)" aria-label="Testimonial 26"></button><button class="test-dot" onclick="goTestSlide(26)" aria-label="Testimonial 27"></button><button class="test-dot" onclick="goTestSlide(27)" aria-label="Testimonial 28"></button><button class="test-dot" onclick="goTestSlide(28)" aria-label="Testimonial 29"></button><button class="test-dot" onclick="goTestSlide(29)" aria-label="Testimonial 30"></button>
       </div>
     </div>
 
@@ -2085,7 +2092,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   <div class="mkt-controls">
     <div id="rec-wrap" style="display:none;max-width:var(--max);margin:0 auto 4px;padding:0"></div>
     <div class="mkt-search-row">
-      <input class="mkt-search" id="mkt-search" type="text" placeholder="Search spells..." oninput="renderMarketplace()">
+      <input class="mkt-search" id="mkt-search" type="text" aria-label="Search the activity catalog" placeholder="Search spells..." oninput="renderMarketplace()">
       <button class="btn btn-ghost" onclick="openRarity()" style="font-size:9px;padding:8px 12px;white-space:nowrap">✦ By Rarity</button>
       <button class="btn btn-ghost" onclick="surpriseEC()" style="font-size:9px;padding:8px 12px;white-space:nowrap">🎲 Surprise</button>
     </div>
@@ -2213,9 +2220,9 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         <div id="ec-review-form" class="review-form">
           <div>
             <div style="font-family:var(--px);font-size:6px;color:var(--text3);margin-bottom:6px">YOUR RATING</div>
-            <div class="star-rating" id="rev-stars">
-              <span onclick="setRevStar(1)">★</span><span onclick="setRevStar(2)">★</span>
-              <span onclick="setRevStar(3)">★</span><span onclick="setRevStar(4)">★</span><span onclick="setRevStar(5)">★</span>
+            <div class="star-rating" id="rev-stars" role="radiogroup" aria-label="Your rating">
+              <span role="radio" tabindex="0" aria-checked="false" aria-label="1 star" onclick="setRevStar(1)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setRevStar(1);}">★</span><span role="radio" tabindex="0" aria-checked="false" aria-label="2 stars" onclick="setRevStar(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setRevStar(2);}">★</span>
+              <span role="radio" tabindex="0" aria-checked="false" aria-label="3 stars" onclick="setRevStar(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setRevStar(3);}">★</span><span role="radio" tabindex="0" aria-checked="false" aria-label="4 stars" onclick="setRevStar(4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setRevStar(4);}">★</span><span role="radio" tabindex="0" aria-checked="false" aria-label="5 stars" onclick="setRevStar(5)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();setRevStar(5);}">★</span>
             </div>
           </div>
           <input class="form-input" id="rev-name" type="text" placeholder="Your name (or leave anonymous)" style="font-size:13px;padding:8px 12px">
@@ -2246,14 +2253,14 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       </div>
     </div>
     <div class="jeb-chat-area">
-      <div class="chat-win" id="chat-win"></div>
+      <div class="chat-win" id="chat-win" role="log" aria-live="polite" aria-label="Conversation with the advisor"></div>
       <div style="padding:8px 0 4px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-ghost" onclick="shareWithJebadias('grimoire')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📜 Load Grimoire</button>
         <button class="btn btn-ghost" data-std="📖 Load Saved" onclick="shareWithJebadias('spellbook')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📖 Load Spellbook</button>
         <button class="btn btn-ghost" data-std="🧠 Personalize the Advisor" onclick="openJebMem()" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">🧠 Personalize Jeb</button>
       </div>
       <div class="chat-input-row">
-        <textarea class="chat-input" id="chat-input" maxlength="2000" placeholder="Speak your truth to Jebadias…" onkeydown="chatKey(event)" oninput="updateChatCount()"></textarea>
+        <textarea class="chat-input" id="chat-input" maxlength="2000" aria-label="Message to the advisor" placeholder="Speak your truth to Jebadias…" onkeydown="chatKey(event)" oninput="updateChatCount()"></textarea>
         <button class="btn btn-primary" id="chat-send-btn" onclick="sendMsg()">SEND ▶</button>
       </div>
       <div id="chat-charcount" style="font-size:10px;color:var(--text3);text-align:right;margin-top:2px"></div>
@@ -2957,7 +2964,7 @@ body { background-color: var(--bg); background-image: none; }
 .test-slide.active{opacity:1;pointer-events:auto;}
 .test-quote{font-family:'IM Fell English',serif;font-size:clamp(14px,2.2vw,18px);line-height:1.8;color:var(--text);margin:0 0 14px;font-style:italic;}
 .test-attr{font-family:var(--px);font-size:6px;color:var(--accent);letter-spacing:.06em;}
-.test-dots2 .test-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);border:none;cursor:pointer;transition:background .2s;padding:0;flex-shrink:0;}
+.test-dots2 .test-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);background-clip:content-box;border:none;cursor:pointer;transition:background .2s;padding:8px;box-sizing:content-box;flex-shrink:0;}
 .test-dots2 .test-dot.active{background:var(--accent);}
 
 
@@ -5231,7 +5238,7 @@ body { background-color: var(--bg); background-image: none; }
         <button class="btn btn-ghost" onclick="resetFragments()" style="font-size:11px;padding:5px 12px">Reset</button>
       </div>
       <div class="setting-row">
-        <span class="setting-name">Export my portfolio<br><span style="font-size:11px;color:var(--text3);font-weight:400">Downloads your Grimoire + Spellbook as a Markdown file.</span></span>
+        <span class="setting-name" data-std="Export my portfolio<br><span style=&quot;font-size:11px;color:var(--text3);font-weight:400&quot;>Downloads your Tracker + Saved list as a Markdown file.</span>">Export my portfolio<br><span style="font-size:11px;color:var(--text3);font-weight:400">Downloads your Grimoire + Spellbook as a Markdown file.</span></span>
         <button class="btn btn-ghost" onclick="exportGrimoire()" style="font-size:11px;padding:5px 12px">Export</button>
       </div>
     </div>
@@ -5349,11 +5356,11 @@ body { background-color: var(--bg); background-image: none; }
     <div class="setting-group">
       <div class="setting-label">EXPORT YOUR DATA</div>
       <div class="setting-row">
-        <span class="setting-name">Export Spellbook</span>
+        <span class="setting-name" data-std="Export Tracker">Export Spellbook</span>
         <button class="btn btn-ghost" onclick="exportData('spellbook')" style="font-size:11px;padding:5px 12px">↓ Download</button>
       </div>
       <div class="setting-row">
-        <span class="setting-name">Export Grimoire</span>
+        <span class="setting-name" data-std="Export Saved">Export Grimoire</span>
         <button class="btn btn-ghost" onclick="exportData('grimoire')" style="font-size:11px;padding:5px 12px">↓ Download</button>
       </div>
       <div class="setting-row">
@@ -5694,6 +5701,8 @@ body { background-color: var(--bg); background-image: none; }
   </div>
 </div>
 
+</main>
+
 <!-- ── OVERLAYS ───────────────────────────────── -->
 <div id="auth-greeting" style="display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% -8%, rgba(184,92,24,.16), transparent 55%), var(--bg);z-index:10007;align-items:center;justify-content:center;padding:20px">
   <div style="background:var(--card);border:1px solid var(--accent);border-radius:16px;max-width:400px;width:100%;padding:30px;text-align:center">
@@ -5712,8 +5721,8 @@ body { background-color: var(--bg); background-image: none; }
   <div class="edit-modal-title" id="edit-modal-title">Edit Spell</div>
   <div style="display:flex;flex-direction:column;gap:12px">
     <div class="form-group"><label class="form-label">PERSONAL NOTES</label><textarea class="form-textarea" id="edit-notes" style="min-height:80px" placeholder="Your notes about this EC..."></textarea></div>
-    <div class="form-group"><label class="form-label">DEADLINE</label><input class="form-input" id="edit-deadline" type="date"></div>
-    <div class="form-group"><label class="form-label">PERSONAL PRIORITY</label>
+    <div class="form-group"><label class="form-label" for="edit-deadline">DEADLINE</label><input class="form-input" id="edit-deadline" type="date"></div>
+    <div class="form-group"><label class="form-label" for="edit-priority">PERSONAL PRIORITY</label>
       <select class="form-input" id="edit-priority">
         <option value="">No priority set</option>
         <option value="high">🔴 High</option>
@@ -11623,13 +11632,15 @@ document.addEventListener('DOMContentLoaded', () => {
   { var _pb=document.getElementById('phase-btn'); if(_pb) _pb.textContent = localStorage.getItem('arc-phase')==='two' ? 'Return' : 'Ascend'; }
   if (typeof applyBigText==='function') applyBigText();
   if (typeof applyContrast==='function') applyContrast();
+  if (typeof applyReduceMotion==='function') applyReduceMotion(localStorage.getItem('arc-reduce-motion')==='1');
   if (localStorage.getItem('arc-p2-unlocked')==='1'){ var _an=document.getElementById('ascension-nav'); if(_an) _an.style.display=''; var _am=document.getElementById('menu-ascension'); if(_am) _am.style.display=''; }
   if (typeof checkSharedHash==='function') checkSharedHash();
-  if (typeof renderEcOfDay==='function') renderEcOfDay();
+  // perf: renderEcOfDay()/renderRecent() used to also run here, duplicating the work
+  // nav('home') below already does for id==='home' — removed, not deferred, since
+  // there's no reason to do it twice on every load.
   if (typeof initShortcuts==='function') initShortcuts();
-  if (typeof renderRecent==='function') renderRecent();
   if (typeof initQuillPreview==='function') initQuillPreview();
-  if (typeof checkBadges==='function') checkBadges();
+  if (typeof checkBadges==='function') setTimeout(checkBadges, 0);
   initOnboarding();
   checkECDeepLink();
   if (typeof startUsageWidget==='function') startUsageWidget();
@@ -11665,7 +11676,7 @@ function setRevRating(type, n) {
 }
 function setRevStar(n) {
   revRatings.essence = n;
-  document.querySelectorAll('#rev-stars span').forEach((s,i)=>s.classList.toggle('lit', i<n));
+  document.querySelectorAll('#rev-stars span').forEach((s,i)=>{ s.classList.toggle('lit', i<n); s.setAttribute('aria-checked', i<n ? 'true' : 'false'); });
 }
 function toggleReviewForm() {
   const f = document.getElementById('ec-review-form');
@@ -11812,7 +11823,7 @@ function renderBadges(){
     return `<div style="border:1px solid var(--border);border-radius:10px;padding:10px;opacity:${got?1:0.45};background:var(--card)">
       <div style="font-size:22px;line-height:1">${got?b.icon:'🔒'}</div>
       <div style="font-weight:600;font-size:13px;margin-top:4px;color:var(--text)">${b.name}</div>
-      <div style="font-size:11px;color:var(--text3);margin-top:2px">${b.desc}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px">${b.desc.replace('Spellbook', savedLabel()).replace('Grimoire', trackerLabel())}</div>
     </div>`;
   }).join('');
 }
@@ -12204,13 +12215,19 @@ function savePref(key, val){
   if(key==='mktSort') mktSort = val;
   showNotif('Preference saved.');
 }
+function applyReduceMotion(on){
+  document.documentElement.setAttribute('data-reduce-motion', on ? '1' : '0');
+  var tog = document.getElementById('motion-toggle');
+  if(tog) tog.classList.toggle('on', on);
+  var animals = document.querySelectorAll('[class*="herd-"],[class*="birds-"],[class*="whale-"],[class*="fish-"]');
+  animals.forEach(function(el){el.style.animationPlayState = on ? 'paused' : 'running';});
+}
 function toggleReduceMotion(){
   var tog = document.getElementById('motion-toggle');
-  var on = tog && tog.classList.contains('on');
-  if(tog) tog.classList.toggle('on');
-  var animals = document.querySelectorAll('[class*="herd-"],[class*="birds-"],[class*="whale-"],[class*="fish-"]');
-  animals.forEach(function(el){el.style.animationPlayState = on ? 'running' : 'paused';});
-  try{localStorage.setItem('arc-reduce-motion', on?'0':'1');}catch(e){}
+  var wasOn = tog && tog.classList.contains('on');
+  var on = !wasOn;
+  applyReduceMotion(on);
+  try{localStorage.setItem('arc-reduce-motion', on?'1':'0');}catch(e){}
 }
 function toggleParticles(){
   var tog = document.getElementById('anim-toggle');
