@@ -6,7 +6,7 @@
 
 ## ⚠️ READ FIRST — THE ONE-PARAGRAPH BRIEFING
 
-Arcanum is a **finished, live, deployed application** built solo by a high school sophomore. It is the submission for the **2026 Congressional App Challenge (deadline: Oct 26, 2026)** and a centerpiece of an NCSSM application. The entire app is **one 1.9 MB HTML file with 12,580 lines** (`public/index.html`). It works. **The default action is to report, not to change.** Make the smallest possible change that solves the stated problem, never refactor, never reformat, and always ask before doing anything not explicitly requested.
+Arcanum is a **finished, live, deployed application** built solo by a high school sophomore. It is a centerpiece of an NCSSM application. **It is no longer going to the Congressional App Challenge** (that window closed Oct 26, 2026, and the slot went to a different project, Plainscript) — current target competitions are **Technovation Challenge** (solo-eligible, due ~May 2027) and possibly **Webby Awards** (paid entry, allows pre-existing apps); **Diamond Challenge** is demoted to a maybe (needs a team + adult advisor, and an investor-style mock judge wouldn't advance it in a venture track). The entire app is **one 1.9 MB HTML file** (`public/index.html`). It works. **The default action is to report, not to change.** Make the smallest possible change that solves the stated problem, never refactor, never reformat, and always ask before doing anything not explicitly requested.
 
 **Before any edit session: ensure the working tree is committed so changes are revertible.**
 
@@ -117,6 +117,16 @@ Two complete visual modes, driven by a `data-mode` attribute on the root `<html>
 **Relevant functions:** `applyMode()`, `toggleMode()`, `isGameMode()`
 
 **RULE: Every CSS or UI change must be verified in BOTH modes.** They share one stylesheet.
+
+### ⚠️ Game mode is now hidden-by-default (Nov 2026 product decision)
+
+A simulated panel of mock competition judges found Game mode net-negative: it trivialized real activities, didn't feel meaningfully distinct from Planar visually, and leaked its own terminology into Planar mode in several places (now fixed). Privi's decision: **keep every line of Game-mode code, but remove the public toggle.**
+
+- `siteMode` only initializes to `'game'` if **both** `localStorage['arc-dev-unlock']==='1'` **and** `localStorage['arc-mode']==='game'` — everyone else always gets Planar, even with a stale `arc-mode=game` value from before this change.
+- The Settings "Game mode" toggle row (`#game-mode-row`) and "Current style" row (`#mode-name-row`) are `display:none` unless unlocked; `updateSettingsDisplay()` un-hides them.
+- **Secret entrance:** typing `sanctum` anywhere outside a form field (via the existing `typedBuffer`/`checkTypedEggs()` easter-egg system) calls `unlockGameMode()`, which sets the unlock flag, switches to Game mode, and reveals the Settings toggle on that device going forward.
+- Privi's stated intent: keep developing Game mode privately via the secret entrance, and eventually reintroduce it as a real secret/unlockable feature once it's different enough from today's version. **Don't delete Game-mode code, pages (Map/Arcana, Chronicle/Lore), or CSS** — it's dormant, not gone.
+- Jebadias himself is unchanged in Game mode. The one change: `JEB_STANDARD_SYSTEM` (the Planar-mode system prompt) now allows him to drop one brief, warm hint per conversation that he has more depth than he shows — *only if asked about himself directly*, and *never* explained as an app mechanic (no mentioning "modes" or "unlocking"). This is meant to foreshadow Game mode through dialogue instead of through app-exploration, since exploration-based discovery (the Map, Chronicle fragments) is no longer reachable by normal users.
 
 ---
 
@@ -351,5 +361,6 @@ Cross-origin browser requests to the advisor return **`403` by design** (origin 
 - **Prioritize findings** as: critical → important → nice-to-have.
 - **Be honest about weaknesses.** The owner explicitly prefers hearing problems from you rather than from a competition judge.
 - **The app is feature-dense on purpose.** Suggesting consolidation is welcome; unilaterally removing features is not.
+- **No monetization by individual users, ever.** Privi has made this promise publicly and intends to keep it. The only monetization he'd consider is institutional (e.g. a school/district licensing arrangement), never a fee, paywall, or premium tier charged to a student. Don't suggest per-user monetization features.
 
 **When in doubt: stop and ask. Restoring a backup costs far more than a question.**

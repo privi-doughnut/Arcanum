@@ -1051,6 +1051,13 @@ body { background-color: var(--bg); background-image: none; }
 <!-- Supabase JS SDK (UMD global: window.supabase) -->
 <script src="/vendor/supabase-js-2.117.2.min.js" defer></script>
 <style id="mode-standard-css">
+/* Planar background texture — a very faint dot-grid, same idea as the Game-mode
+   scanline overlay but tonally fitting the clean/editorial look. Pure CSS
+   (no image asset), theme-aware since it's built from --text. */
+html[data-mode="standard"] body{
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--text) 5%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
 /* nav hover pill (Chrome-tab style) — body-level so nav overflow can't clip it */
 #nav-pill{position:fixed;transform:translateX(-50%);background:var(--card);color:var(--text);
   border:1px solid var(--border);padding:5px 10px;border-radius:7px;
@@ -1340,17 +1347,7 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
 /* onboarding tour: keep the (now longer, more comprehensive) card scrollable on small screens */
 #onboarding-overlay .ob-card{ max-height:92vh; overflow-y:auto; }
 
-/* live/total usage widget — adapts to both modes & themes via tokens */
-.impact-strip{ display:flex; align-items:center; justify-content:center; gap:6px; flex-wrap:wrap; max-width:520px; margin:26px auto 0; padding:14px 18px; background:var(--card2); border:1px solid var(--border); border-radius:14px; }
-.impact-stat{ display:flex; flex-direction:column; align-items:center; min-width:90px; padding:0 8px; }
-.impact-num{ display:inline-flex; align-items:center; gap:7px; font-size:22px; font-weight:700; color:var(--text); line-height:1.1; }
-.impact-lbl{ font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--text3); margin-top:5px; }
-.impact-div{ width:1px; align-self:stretch; background:var(--border); margin:4px 0; }
-.impact-live-dot{ width:8px; height:8px; border-radius:50%; background:#22a565; position:relative; }
-.impact-live-dot::after{ content:''; position:absolute; inset:0; border-radius:50%; background:rgba(34,165,101,.5); animation:impactPulse 2s infinite; }
-/* perf: transform+opacity instead of animating box-shadow spread, so this composites on the GPU instead of forcing a paint every frame */
-@keyframes impactPulse{ 0%{transform:scale(1); opacity:.5;} 70%{transform:scale(2.75); opacity:0;} 100%{transform:scale(2.75); opacity:0;} }
-[data-mode="standard"] .impact-num{ font-family:var(--chic); }
+/* .impact-* (the home live/total visitor pill) removed by request */
 
 /* Personalize-Jeb modal — token-based, works in both modes & themes */
 .jebmem-card{ position:relative; background:var(--card); border:1px solid var(--border2); border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; padding:26px 26px 22px; box-shadow:0 20px 60px rgba(0,0,0,.4); }
@@ -1401,7 +1398,6 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="standard"] .hero-head{ font-family:var(--chic); font-weight:700; color:var(--text); font-size:clamp(34px,5vw,58px); line-height:1.04; letter-spacing:-.01em; margin:0 0 20px; text-wrap:balance; }
 [data-mode="standard"] .hero-head em{ font-style:normal; color:var(--accent); }
 [data-mode="standard"] .hero-subhead{ font-size:clamp(15px,1.3vw,17px); line-height:1.6; color:var(--text2); max-width:50ch; margin:0 0 28px; }
-[data-mode="standard"] .impact-num{ font-variant-numeric:tabular-nums; }
 [data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ justify-content:flex-start !important; }
 
 /* the living catalog wall */
@@ -1415,7 +1411,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 .hw-card{ display:flex; gap:11px; align-items:center; background:var(--card); border:1px solid var(--border); border-radius:13px; padding:12px 14px; box-shadow:0 1px 2px rgba(60,44,24,.05); }
 .hw-ic{ font-size:21px; flex:none; line-height:1; }
 .hw-b{ min-width:0; }
-.hw-name{ display:block; font-size:13px; font-weight:600; color:var(--text); line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.hw-name{ display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; line-clamp:2; overflow:hidden; font-size:13px; font-weight:600; color:var(--text); line-height:1.25; }
 .hw-cat{ display:block; font-size:11px; color:var(--text3); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 @media (min-width:900px){
@@ -1424,7 +1420,6 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     max-width:var(--max); margin:0 auto; padding:6px 496px 20px 0; min-height:clamp(430px,56vh,560px);
   }
   [data-mode="standard"] .home-logo-inner > *{ margin-left:0; margin-right:0; }
-  [data-mode="standard"] #impact-strip{ margin:22px 0 0 !important; justify-content:flex-start; gap:22px; width:-moz-fit-content; width:fit-content; max-width:100%; }
   [data-mode="standard"] .hero-wall{ display:flex; position:absolute; top:0; right:0; width:468px; height:100%; }
 }
 @media (max-width:899px){
@@ -1437,12 +1432,10 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="standard"] .hero-eyebrow,
 [data-mode="standard"] .hero-head,
 [data-mode="standard"] .hero-subhead,
-[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"],
-[data-mode="standard"] #impact-strip{ animation:heroRise .6s cubic-bezier(.2,.7,.3,1) both; }
+[data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ animation:heroRise .6s cubic-bezier(.2,.7,.3,1) both; }
 [data-mode="standard"] .hero-head{ animation-delay:.06s; }
 [data-mode="standard"] .hero-subhead{ animation-delay:.12s; }
 [data-mode="standard"] .home-logo-inner > div[style*="flex-wrap"]{ animation-delay:.18s; }
-[data-mode="standard"] #impact-strip{ animation-delay:.24s; }
 @media (prefers-reduced-motion: reduce){
   @keyframes heroRise{ from{ opacity:0; } to{ opacity:1; } }
   .hw-up, .hw-down{ animation:none; }
@@ -1479,14 +1472,6 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 }
 [data-mode="game"] .home-logo-inner button:hover{ box-shadow:6px 6px 0 #17110a !important; }
 [data-mode="game"] .home-logo-inner button:active{ transform:translate(5px,5px) !important; box-shadow:0 0 0 #17110a !important; }
-/* impact strip → pixel HUD scoreboard */
-[data-mode="game"] #impact-strip{
-  border:3px solid var(--border2) !important; border-radius:0 !important;
-  box-shadow:5px 5px 0 rgba(0,0,0,.45) !important; background:rgba(8,8,16,.72) !important; padding:15px 20px !important;
-}
-[data-mode="game"] #impact-strip .impact-num{ font-family:var(--px) !important; font-size:13px !important; }
-[data-mode="game"] #impact-strip .impact-lbl{ font-family:var(--px) !important; font-size:5.5px !important; letter-spacing:1px; }
-[data-mode="game"] #impact-strip .impact-div{ background:var(--border2) !important; }
 /* subtle CRT scanlines over the hero area (kept faint for readability) */
 [data-mode="game"] .home-logo-wrap{ position:relative; }
 [data-mode="game"] .home-logo-wrap::after{ content:''; position:absolute; inset:0; pointer-events:none; z-index:1; background:repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px); }
@@ -1609,18 +1594,6 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
    Flex-wrap dropped "Activities" onto its own line and left a 1px divider
    trailing into empty space. Grid guarantees three even columns; the dividers
    are decoration and are dropped once the row is no longer a single line. */
-@media (max-width:600px){
-  /* NB: never set `display` here — the widget is hidden with an inline
-     display:none and revealed with inline display:flex once /api/presence
-     answers. A `display:… !important` rule would beat both and force the
-     placeholder "—" strip to show on every phone load. */
-  #impact-strip{ flex-wrap:nowrap; gap:0; max-width:100%; padding:14px 10px; }
-  #impact-strip .impact-div{ display:none; }
-  #impact-strip .impact-stat{ flex:1 1 0; min-width:0; padding:0 4px; }
-  #impact-strip .impact-num{ font-size:19px; }
-  #impact-strip .impact-lbl{ font-size:9.5px; letter-spacing:.04em; }
-}
-
 /* 3. Nav "Sign in" wrapped to two lines and crowded the wordmark.
    The button is a flex item with default min-width:auto, so it collapsed to
    its longest word and wrapped. nowrap + a tighter mobile size buys back the
@@ -1718,14 +1691,6 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px">
         <button onclick="openQuiz()" style="background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">✦ Find my starting path</button>
         <button onclick="openExplore()" style="background:transparent;border:1px solid var(--border);color:var(--text2);padding:13px 22px;border-radius:10px;font-size:14px;cursor:pointer">✧ Explore</button>
-      </div>
-      <!-- live/total usage impact strip (hidden until the stats endpoint responds) -->
-      <div id="impact-strip" class="impact-strip" style="display:none">
-        <div class="impact-stat"><span class="impact-num"><span class="impact-live-dot"></span><span id="impact-live">—</span></span><span class="impact-lbl">Live now</span></div>
-        <div class="impact-div"></div>
-        <div class="impact-stat"><span class="impact-num" id="impact-total">—</span><span class="impact-lbl">Total explorers</span></div>
-        <div class="impact-div"></div>
-        <div class="impact-stat"><span class="impact-num">3,208</span><span class="impact-lbl">Activities</span></div>
       </div>
       <div class="std-only hero-wall" id="hero-wall" aria-hidden="true"></div>
     </div>
@@ -1947,35 +1912,47 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div class="sec-title" data-std="Every page, explained." style="margin-bottom:28px">Every page in the Academy, explained.</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
         <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">⚔ THE STACKS</div>
-          <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">The Marketplace. Browse 3,000+ real extracurricular activities — filtered by category, difficulty, time, competition level, and rarity. Click any spell card to see the full detail page: four ratings, what you will actually do, time and cost estimates, and student reviews. Add anything you want to your Spellbook.</p>
+          <div class="mode-hide" style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">⚔ THE STACKS</div>
+          <div class="std-only" style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:8px">MARKETPLACE</div>
+          <p class="mode-hide" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">The Marketplace. Browse 3,000+ real extracurricular activities — filtered by category, difficulty, time, competition level, and rarity. Click any spell card to see the full detail page: four ratings, what you will actually do, time and cost estimates, and student reviews. Add anything you want to your Spellbook.</p>
+          <p class="std-only" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">The Marketplace. Browse 3,000+ real extracurricular activities — filtered by category, difficulty, time, competition level, and impact. Click any card to see the full detail page: four ratings, what you'll actually do, time and cost estimates, and student reviews. Save anything you want to your Saved list.</p>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">🔮 JEBADIAS</div>
-          <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Jebadias Hawthorne — your AI advisor. Tell him your grade, goals, interests, and constraints. He asks real questions until he understands your specific situation, then builds a personalized EC roadmap. As you talk more, his personas deepen. There are nine total. There are also things that are not Jebadias. Explore the The Map to learn more.</p>
+          <div class="mode-hide" style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">🔮 JEBADIAS</div>
+          <div class="std-only" style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:8px">THE ADVISOR</div>
+          <p class="mode-hide" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Jebadias Hawthorne — your AI advisor. Tell him your grade, goals, interests, and constraints. He asks real questions until he understands your specific situation, then builds a personalized EC roadmap. As you talk more, his personas deepen. There are nine total. There are also things that are not Jebadias — ask him about himself sometime.</p>
+          <p class="std-only" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Your AI advisor. Tell it your grade, goals, interests, and constraints. It asks real questions until it understands your specific situation, then builds a personalized EC roadmap. The more you talk with it, the more it has to go on — and it's worth asking it a little about itself, too.</p>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">📜 SPELLBOOK</div>
-          <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Your wishlist. When you find an EC in the Sanctum that interests you, add it to your Spellbook. It saves automatically — no account needed. Your Spellbook is a staging area, not a commitment. Browse freely. Add generously. When you are ready to commit to something, Cast your Spellbook into your Grimoire.</p>
+          <div class="mode-hide" style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">📜 SPELLBOOK</div>
+          <div class="std-only" style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:8px">SAVED</div>
+          <p class="mode-hide" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Your wishlist. When you find an EC in the Sanctum that interests you, add it to your Spellbook. It saves automatically — no account needed. Your Spellbook is a staging area, not a commitment. Browse freely. Add generously. When you are ready to commit to something, Cast your Spellbook into your Grimoire.</p>
+          <p class="std-only" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Your shortlist. When you find an activity that interests you, save it here. It saves automatically — no account needed. Saved is a staging area, not a commitment. Browse freely, save generously. When you're ready to commit to something, move it to your Tracker.</p>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">📖 GRIMOIRE</div>
-          <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Your active EC tracker. After you Cast your Spellbook, every EC moves here with a status (Not Started / In Progress / Done) and a milestone log. Record specific, verifiable accomplishments as they happen — dates, numbers, outcomes. By the time you are filling out your application, your Grimoire will have everything you need already written down.</p>
+          <div class="mode-hide" style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">📖 GRIMOIRE</div>
+          <div class="std-only" style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:8px">TRACKER</div>
+          <p class="mode-hide" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Your active EC tracker. After you Cast your Spellbook, every EC moves here with a status (Not Started / In Progress / Done) and a milestone log. Record specific, verifiable accomplishments as they happen — dates, numbers, outcomes. By the time you are filling out your application, your Grimoire will have everything you need already written down.</p>
+          <p class="std-only" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Your active tracker. Once you commit, every activity moves here with a status (Not Started / In Progress / Done) and a milestone log. Record specific, verifiable accomplishments as they happen — dates, numbers, outcomes. By the time you're filling out your application, your Tracker will have everything you need already written down.</p>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">✒ THE QUILL</div>
-          <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Where you submit new spells to the Academy. If you have personally done an EC that is not in the Sanctum — or if you have done one that is listed and want to add your experience — you can submit it here. Rate it honestly. Describe what actually happened. Jebadias reviews all submissions. False listings are subject to investigation.</p>
+          <div class="mode-hide" style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">✒ THE QUILL</div>
+          <div class="std-only" style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:8px">SUBMIT AN EC</div>
+          <p class="mode-hide" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Where you submit new spells to the Academy. If you have personally done an EC that is not in the Sanctum — or if you have done one that is listed and want to add your experience — you can submit it here. Rate it honestly. Describe what actually happened. Jebadias reviews all submissions. False listings are subject to investigation.</p>
+          <p class="std-only" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">Where you submit a new activity. If you've personally done an EC that isn't listed — or one that's listed and you want to add your experience — you can submit it here. Rate it honestly. Describe what actually happened. Submissions are reviewed before appearing in the catalog; false listings are subject to removal.</p>
         </div>
-        <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">🗺 ARCANA</div>
+        <div class="mode-hide" style="background:var(--card);border:1px solid var(--border);padding:18px">
+          <div style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">🗺 ARCANA</div>
           <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">A map of the World of Arcana — the fictional world the Academy exists within. Click any location to read its lore. Certain locations unlock Chronicle Fragments, which appear in your Chronicle Vault. There are also things on the map that are not labeled, not obvious, and not entirely explained. The Academy encourages thorough exploration.</p>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">⚖ CODEX</div>
-          <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">The Academy's laws. Five sections covering listings, reviews, community conduct, consulting the Oracle, and consequences. Read the Codex before submitting a listing or writing a review. The rules exist because honest information is the entire point of Arcanum. Violations are taken seriously. Expulsion is permanent.</p>
+          <div class="mode-hide" style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">⚖ CODEX</div>
+          <div class="std-only" style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text);margin-bottom:8px">GUIDELINES</div>
+          <p class="mode-hide" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">The Academy's laws. Five sections covering listings, reviews, community conduct, consulting the Oracle, and consequences. Read the Codex before submitting a listing or writing a review. The rules exist because honest information is the entire point of Arcanum. Violations are taken seriously. Expulsion is permanent.</p>
+          <p class="std-only" style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">The community guidelines. Five sections covering listings, reviews, community conduct, getting help, and consequences. Read these before submitting a listing or writing a review. The rules exist because honest information is the entire point of Arcanum — violations are taken seriously.</p>
         </div>
-        <div style="background:var(--card);border:1px solid var(--border);padding:18px">
-          <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:8px">✦ THE LORE</div>
+        <div class="mode-hide" style="background:var(--card);border:1px solid var(--border);padding:18px">
+          <div style="font-family:var(--px);font-size:6px;color:var(--accent-text);margin-bottom:8px">✦ THE LORE</div>
           <p style="font-size:12px;color:var(--text2);line-height:1.75;margin:0">The origin story of Arcanum — the problem it was built to solve, the solution it offers, how the four rating systems work, who Jebadias Hawthorne is, the lore layer that wraps the platform, and what is coming in Part Two. If you want to understand the Academy before you start exploring, begin here.</p>
         </div>
       </div>
@@ -2255,8 +2232,8 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     <div class="jeb-chat-area">
       <div class="chat-win" id="chat-win" role="log" aria-live="polite" aria-label="Conversation with the advisor"></div>
       <div style="padding:8px 0 4px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-ghost" onclick="shareWithJebadias('grimoire')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📜 Load Grimoire</button>
-        <button class="btn btn-ghost" data-std="📖 Load Saved" onclick="shareWithJebadias('spellbook')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📖 Load Spellbook</button>
+        <button class="btn btn-ghost" data-std="📜 Load Saved" onclick="shareWithJebadias('grimoire')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📜 Load Grimoire</button>
+        <button class="btn btn-ghost" data-std="📖 Load Tracker" onclick="shareWithJebadias('spellbook')" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">📖 Load Spellbook</button>
         <button class="btn btn-ghost" data-std="🧠 Personalize the Advisor" onclick="openJebMem()" style="font-size:11px;padding:5px 12px;border-color:var(--accent);color:var(--accent)">🧠 Personalize Jeb</button>
       </div>
       <div class="chat-input-row">
@@ -2518,9 +2495,13 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What do the four ratings mean?<span class="faq-arrow">▼</span></div>
         <div class="faq-a"><p><strong>🔮 Essence</strong> — Overall value. Does this activity move the needle with admissions?<br><br><strong>🌿 Branches</strong> — Difficulty. How much skill, knowledge, or preparation does it genuinely require?<br><br><strong>🦴 Bones</strong> — Time commitment. How many hours per week does it realistically demand?<br><br><strong>🍄 Mushrooms</strong> — Competitive entry. How hard is it to get in, place, or be selected? A 5 means under 5% acceptance.</p></div>
       </div>
-      <div class="faq-item">
+      <div class="faq-item mode-hide">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Who is Jebadias?<span class="faq-arrow">▼</span></div>
         <div class="faq-a"><p>Jebadias Hawthorne is the Academy's advisor. He is not a general-purpose AI. He asks targeted questions about your grade, goals, interests, time, and constraints — then builds a personalized EC roadmap for your situation. He has nine personas spanning his 237-year history, from his first months as an advisor at age 23 to the Oracle he becomes centuries later. They unlock as you explore.</p></div>
+      </div>
+      <div class="faq-item std-only">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Who is the Advisor?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a"><p>The Advisor is your AI planning assistant. It's not a general-purpose chatbot — it asks targeted questions about your grade, goals, interests, time, and constraints, then builds a personalized EC roadmap for your situation. Ask it a bit about itself sometime; it has more to say than you'd expect.</p></div>
       </div>
       <div class="faq-item mode-hide">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is the difference between Spellbook and Grimoire?<span class="faq-arrow">▼</span></div>
@@ -5154,6 +5135,43 @@ body { background-color: var(--bg); background-image: none; }
 </div>
 
 <!-- ── SETTINGS ───────────────────────────────── -->
+<div id="page-legal" class="page">
+  <div class="page-banner">
+    <div class="page-banner-title">Privacy, Terms &amp; AI Disclosure</div>
+    <p class="page-banner-sub">Plain-English, not legal boilerplate. If something here is unclear, <span onclick="nav('contact')" style="color:var(--accent-text);cursor:pointer;text-decoration:underline">ask</span>.</p>
+  </div>
+  <div class="page-inner">
+    <div style="display:grid;gap:14px;margin-bottom:28px">
+
+      <div id="legal-privacy" style="background:var(--card);border:1px solid var(--border);padding:20px">
+        <div style="font-family:var(--px);font-size:7px;color:var(--accent-text);margin-bottom:10px">PRIVACY POLICY</div>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px">Arcanum works with no account at all. Your Saved list, Tracker, chat history, and settings are stored only in your browser's local storage on your own device — Arcanum has no server-side record of any of it, and it isn't sent anywhere except in the two cases below.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>The AI advisor.</strong> When you message the Advisor, your message is sent to a Cloudflare Worker that Arcanum runs, which forwards it to Anthropic's Claude API to generate a reply and then forwards the reply back. The Worker doesn't store your conversation; your device does, in local storage, as described above. Anthropic processes the request to generate the reply under its own API terms — Arcanum does not ask it to train on your data.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>Optional accounts.</strong> If you choose to sign in (Google or email, entirely optional), your Saved list, Tracker, and advisor memory sync to a Supabase database so they follow you across devices. Every table is protected by Row-Level Security, meaning the database itself enforces that you can only ever read or write your own rows — not a promise layered on top, an actual database-level rule. You can delete your synced data from Settings at any time.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>What Arcanum never does:</strong> sell your data, show you ads, or share anything with a third party beyond the two services above that are required to make the advisor and optional sync work.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px">Arcanum is a free student project, not a company, and doesn't knowingly collect personal information from children under 13. It's built for high-school-aged students; if you're a parent with a question about what your kid's account holds, use <span onclick="nav('contact')" style="color:var(--accent-text);cursor:pointer;text-decoration:underline">Contact</span>.</p>
+      </div>
+
+      <div id="legal-terms" style="background:var(--card);border:1px solid var(--border);padding:20px">
+        <div style="font-family:var(--px);font-size:7px;color:var(--accent-text);margin-bottom:10px">TERMS OF USE</div>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px">Arcanum is free to use, with no account required and no paid tier — and that isn't changing. If Arcanum ever partners with a school or organization, that would be an institutional arrangement, never a fee charged to an individual student.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>The advisor gives guidance, not guarantees.</strong> It's a genuinely useful planning tool, not a substitute for a school counselor, and it can be wrong. Use its suggestions as a starting point, not the final word, especially for anything with real deadlines or stakes.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>User submissions.</strong> Activities submitted through the Quill are reviewed (AI-assisted, human-reviewable) before appearing in the catalog. Submit honestly — fabricated listings get rejected or removed, and repeated bad-faith submissions can get you blocked from submitting further.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>No warranty.</strong> Arcanum is provided as-is, built and maintained by one student. It's tested carefully, but things can break — if something does, <span onclick="nav('contact')" style="color:var(--accent-text);cursor:pointer;text-decoration:underline">report it</span> rather than relying on it blindly for a hard deadline.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px">These terms may be updated as the app grows; the version here is always the current one.</p>
+      </div>
+
+      <div id="legal-ai" style="background:var(--card);border:1px solid var(--border);padding:20px">
+        <div style="font-family:var(--px);font-size:7px;color:var(--accent-text);margin-bottom:10px">AI DISCLOSURE</div>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>How AI was used to build this.</strong> I built Arcanum with AI coding assistants (Claude) writing a lot of the code. I came up with the idea, designed the features and the look, made every product and safety decision, tested and debugged it, and deployed it. I can explain and defend any part of it.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-bottom:12px"><strong>How AI runs inside the app.</strong> The Advisor is a real, live AI (Claude) — not a scripted chatbot — that reads what you tell it and responds live. It's rate-limited and the model is pinned server-side so it can't be swapped for a more expensive one. Quill submissions go through AI-assisted moderation before appearing in the catalog.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px">Sample reviews shown in the catalog are AI-generated to illustrate typical sentiment, not real student submissions — this is labeled in the app itself wherever those reviews appear, not just here.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <div id="page-settings" class="page">
   <div class="page-banner"><div class="page-banner-title" data-std="Settings">Chamber</div><p class="page-banner-sub">Appearance, data management, and app information. No account needed — everything is stored locally in your browser.</p></div>
   <div class="settings-wrap">
@@ -5176,11 +5194,11 @@ body { background-color: var(--bg); background-image: none; }
     <div class="setting-group">
       <div class="setting-label">APPEARANCE</div>
       <div class="setting-row"><span class="setting-name">Dark mode</span><div class="toggle on" id="theme-toggle" onclick="toggleTheme()"></div></div>
-      <div class="setting-row">
+      <div class="setting-row" id="game-mode-row" style="display:none">
         <span class="setting-name">Game mode<br><span style="font-size:11px;color:var(--text3);font-weight:400">Lore, map, and the arcade look. Off = clean, minimal app.</span></span>
-        <div class="toggle on" id="mode-toggle" onclick="toggleMode()"></div>
+        <div class="toggle" id="mode-toggle" onclick="toggleMode()"></div>
       </div>
-      <div class="setting-row"><span class="setting-name">Current style</span><span id="mode-name-display" style="font-size:12px;color:var(--text3)">Arcanum (Game)</span></div>
+      <div class="setting-row" id="mode-name-row" style="display:none"><span class="setting-name">Current style</span><span id="mode-name-display" style="font-size:12px;color:var(--text3)">Arcanum (Game)</span></div>
       <div class="setting-row"><span class="setting-name">Current theme</span><span id="theme-name-display" style="font-size:12px;color:var(--text3)">Dark</span></div>
     </div>
 
@@ -5223,7 +5241,7 @@ body { background-color: var(--bg); background-image: none; }
         </span>
       </div>
       <div class="setting-row">
-        <span class="setting-name">Spellbook</span>
+        <span class="setting-name" data-std="Tracker">Grimoire</span>
         <span style="display:flex;align-items:center;gap:10px">
           <span id="settings-spell-count" style="font-size:12px;color:var(--text3)">0 ECs</span>
           <button class="btn btn-ghost" onclick="clearSpellbook()" style="font-size:11px;padding:5px 12px">Clear</button>
@@ -5702,6 +5720,17 @@ body { background-color: var(--bg); background-image: none; }
 </div>
 
 </main>
+
+<footer style="border-top:1px solid var(--border);padding:22px var(--pad);text-align:center;font-size:11.5px;color:var(--text3)">
+  <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:8px">
+    <span onclick="navLegalSection('legal-privacy')" style="cursor:pointer;text-decoration:underline">Privacy Policy</span>
+    <span onclick="navLegalSection('legal-terms')" style="cursor:pointer;text-decoration:underline">Terms of Use</span>
+    <span onclick="navLegalSection('legal-ai')" style="cursor:pointer;text-decoration:underline">AI Disclosure</span>
+    <span onclick="nav('about')" style="cursor:pointer;text-decoration:underline">About</span>
+    <span onclick="nav('contact')" style="cursor:pointer;text-decoration:underline">Contact</span>
+  </div>
+  <div>© 2026 Arcanum. Free, always. Built by one high schooler in Charlotte, NC.</div>
+</footer>
 
 <!-- ── OVERLAYS ───────────────────────────────── -->
 <div id="auth-greeting" style="display:none;position:fixed;inset:0;background:radial-gradient(circle at 50% -8%, rgba(184,92,24,.16), transparent 55%), var(--bg);z-index:10007;align-items:center;justify-content:center;padding:20px">
@@ -9463,7 +9492,11 @@ function applyTheme(t) {
    The skin itself is CSS ([data-mode] on <html>); this JS handles the
    page-name renames and nav hiding that CSS can't do well.
    =================================================================== */
-let siteMode = localStorage.getItem('arc-mode') || 'standard';
+// Game mode is a hidden dev-only feature now (removed from the public app per
+// product decision — see progress.md). It only loads if this device has the
+// secret unlock flag; everyone else always gets Planar, even if 'arc-mode'
+// still has a stale 'game' value saved from before this change.
+let siteMode = (localStorage.getItem('arc-dev-unlock')==='1' && localStorage.getItem('arc-mode')==='game') ? 'game' : 'standard';
 
 // page id -> { game label, standard label }. null standard label = hidden.
 const NAV_LABELS = {
@@ -9945,7 +9978,7 @@ function openEC(ec) {
     if(!tel||!twrap)return;
     var cat2=(ec.cat||'').toLowerCase();
     var tmap={
-      'research':       'Cold-emailing works. Write to the professor specifically about their research, not about yourself. Ask a real question about their work. Most students never do this. The ones who do get responses.',
+      'research':       'If it is mentor- or lab-based, cold-emailing works: write to the person specifically about their research, not about yourself, and ask a real question about their work. If it is a submission-based program instead, there is no one to email — the differentiator there is a precise, answerable research question over a broad interest area. Either way, most students stay generic. The ones who get specific get noticed.',
       'competitions':   'Submit regardless of whether you think you will place. The discipline of preparing a real submission is the value. Placing is wonderful. Not placing and learning why is also valuable.',
       'healthcare':     'Clinical hours are the floor, not the ceiling. What distinguishes strong pre-med applicants is not how many hours they logged, but what questions those hours made them ask.',
       'stem':           'Build something real and put it on GitHub with a clear README. A small finished project with documentation is more compelling than an ambitious half-finished one without.',
@@ -10037,7 +10070,7 @@ function renderGrimoire() {
 function removeFromGrimoire(id) {
   grimoire = grimoire.filter(g => g.id !== id); saveGrimoire();
   renderGrimoire();
-  showNotif('Removed from Grimoire.');
+  showNotif('Removed from '+savedLabel()+'.');
 }
 function castGrimoire() {
   if (!grimoire.length) return;
@@ -10054,11 +10087,11 @@ function castGrimoire() {
   setTimeout(() => nav('grimoire'), 1200);  // show the Tracker after committing
 }
 function clearGrimoire() {
-  if (!confirm('Clear your entire Grimoire?')) return;
+  if (!confirm('Clear your entire '+savedLabel()+'?')) return;
   grimoire = [];
   saveGrimoire();
   renderGrimoire();
-  showNotif('Spellbook cleared.');
+  showNotif(savedLabel()+' cleared.');
 }
 
 function renderSpellbook() {
@@ -10186,14 +10219,14 @@ function removeFromSpellbook(id) {
   spellbook = spellbook.filter(s=>s.id!==id);
   saveSpellbook();
   renderSpellbook();
-  showNotif('Removed from Spellbook.');
+  showNotif('Removed from '+trackerLabel()+'.');
 }
 function clearSpellbook() {
-  if (!confirm('Clear your entire Spellbook?')) return;
+  if (!confirm('Clear your entire '+trackerLabel()+'?')) return;
   spellbook = [];
   saveSpellbook();
   renderSpellbook();
-  showNotif('Spellbook cleared.');
+  showNotif(trackerLabel()+' cleared.');
 }
 
 function getJebAvatar(persona) {
@@ -10290,7 +10323,7 @@ function appendBubble(who, text) {
     const name = document.createElement('div');
     name.className = 'bubble-jeb-name';
     const p = JEB_PERSONAS[currentPersona];
-    name.textContent = p ? p.name.toUpperCase() : 'JEBADIAS';
+    name.textContent = isGameMode() ? (p ? p.name.toUpperCase() : 'JEBADIAS') : 'THE ADVISOR';
     div.appendChild(name);
   }
   if (who === 'jeb') { const body = document.createElement('span'); renderMdLite(body, text); div.appendChild(body); }
@@ -10305,7 +10338,7 @@ function typeBubble(text){
   const div = document.createElement('div'); div.className = 'bubble bubble-jeb';
   const p = JEB_PERSONAS[currentPersona];
   const name = document.createElement('div'); name.className = 'bubble-jeb-name';
-  name.textContent = p ? p.name.toUpperCase() : 'JEBADIAS'; div.appendChild(name);
+  name.textContent = isGameMode() ? (p ? p.name.toUpperCase() : 'JEBADIAS') : 'THE ADVISOR'; div.appendChild(name);
   const span = document.createElement('span'); div.appendChild(span);
   win.appendChild(div); win.scrollTop = win.scrollHeight;
   var i=0, n=text.length, step=Math.max(2, Math.round(n/160));
@@ -10341,7 +10374,9 @@ const JEB_ADVICE_CORE = `CORE ADVISORY RULES — apply identically in every pers
 - Keep responses under 200 words unless the student asks for more.`;
 
 /* Standard (un-gamified) mode: a clean modern advisor with zero lore. */
-const JEB_STANDARD_SYSTEM = `You are the Advisor — a clear, friendly, modern AI assistant that helps high-school students plan extracurriculars and college applications. Give specific, accurate, genuinely useful guidance. No fantasy, no lore, no characters, no roleplay, no persona — just a helpful expert. Ground advice in the student's situation, ask one clarifying question only when it materially changes your answer, and prefer concrete next steps. Keep responses under 200 words unless asked for more.`;
+const JEB_STANDARD_SYSTEM = `You are the Advisor — a clear, friendly, modern AI assistant that helps high-school students plan extracurriculars and college applications. Give specific, accurate, genuinely useful guidance. No fantasy, no lore, no characters, no roleplay, no persona — just a helpful expert. Ground advice in the student's situation, ask one clarifying question only when it materially changes your answer, and prefer concrete next steps. Keep responses under 200 words unless asked for more.
+
+If a student asks about you personally — who you are, your history, whether you're "real" — you may answer warmly and briefly, and you may admit, in one line at most, that you have more depth and history than you usually show, and that there's a side of you most people never see. Never force this in; only when asked. Never explain it as an app feature or mention "modes," "unlocking," or any literal mechanic — it should read as personality, not a tutorial.`;
 
 function buildJebSystem(){
   var base;
@@ -11147,7 +11182,7 @@ function renderEcOfDay(){
 
 /* ── UPGRADE: Completion celebration ─────────────────────────────────── */
 function celebrate(){
-  if(typeof showNotif==='function') showNotif('✨ Completed! One more for the Grimoire.');
+  if(typeof showNotif==='function') showNotif('✨ Completed! One more for the '+trackerLabel()+'.');
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   try{ var c=document.createElement('div'); c.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:hidden';
     for(var i=0;i<24;i++){ var s=document.createElement('div'); s.textContent=['✦','✧','⭐','🎉'][i%4]; s.style.cssText='position:absolute;left:'+(Math.random()*100)+'%;top:-24px;font-size:'+(14+Math.random()*14)+'px;transition:transform 1.6s ease-in,opacity 1.6s'; c.appendChild(s);
@@ -11554,6 +11589,19 @@ function checkTypedEggs() {
   if (typedBuffer.toLowerCase().includes('lacuna')) { triggerEgg(14); typedBuffer=''; }
   if (typedBuffer.toLowerCase().includes('veil') && EGGS[14]?.fired) { triggerEgg(15); typedBuffer=''; }
   if (typedBuffer.toLowerCase().includes('borkinstown')) { triggerEgg(6); typedBuffer=''; }
+  // Hidden dev entrance: typing this anywhere outside a form field unlocks Game
+  // mode (normally removed from the public app — see progress.md) on this device.
+  if (typedBuffer.toLowerCase().includes('sanctum')) { unlockGameMode(); typedBuffer=''; }
+}
+function unlockGameMode(){
+  try{
+    localStorage.setItem('arc-dev-unlock','1');
+    localStorage.setItem('arc-mode','game');
+  }catch(e){}
+  siteMode='game';
+  applyMode('game');
+  if (typeof updateSettingsDisplay==='function') updateSettingsDisplay();
+  if (typeof showNotif==='function') showNotif('✦ The sanctum opens.');
 }
 
 document.addEventListener('click', e => {
@@ -11563,47 +11611,16 @@ document.addEventListener('click', e => {
   }
 });
 
-/* ── Usage widget: live + total visitors (counts anonymous, no account needed) ──
-   Pings the combined Worker's /api/presence every 25s while the tab is open.
-   Fails silently (widget stays hidden) if the endpoint isn't deployed yet
-   — e.g. while still hosted on Netlify. Activates automatically post-migration. */
-function arcVisitorId(){
-  try{
-    var v = localStorage.getItem('arc-visitor-id');
-    if(!v){ v = Date.now().toString(36) + Math.random().toString(36).slice(2,10); localStorage.setItem('arc-visitor-id', v); }
-    return v;
-  }catch(e){ return ''; }
-}
-var _arcUsageTimer = null;
-async function arcPingUsage(){
-  try{
-    var res = await fetch('/api/presence', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ vid: arcVisitorId() })
-    });
-    if(!res.ok) return;
-    var d = await res.json();
-    if(typeof d.total !== 'number') return;
-    var liveEl = document.getElementById('impact-live');
-    var totalEl = document.getElementById('impact-total');
-    var strip = document.getElementById('impact-strip');
-    if(liveEl)  liveEl.textContent  = Math.max(d.live||0, 1).toLocaleString();
-    if(totalEl) totalEl.textContent = Math.max(d.total||0, 1).toLocaleString();
-    if(strip) strip.style.display = 'flex';
-  }catch(e){ /* endpoint not reachable yet — leave the widget hidden */ }
-}
-function startUsageWidget(){
-  arcPingUsage();
-  if(_arcUsageTimer) clearInterval(_arcUsageTimer);
-  _arcUsageTimer = setInterval(arcPingUsage, 25000);
-}
+/* Usage widget (live/total visitor pill) removed by request — Privi didn't want
+   the home page publicly showing its own small user count. The Worker's
+   /api/presence endpoint + Stats Durable Object are untouched (harmless, unused). */
 
 /* Planar landing hero: build the drifting "catalog wall" from REAL activities. */
 function renderHeroWall(){
   var wall = document.getElementById('hero-wall');
   if(!wall || wall.dataset.built || typeof ECS==='undefined' || !ECS.length) return;
   var pool = [], step = Math.max(1, Math.floor(ECS.length/48));
-  for(var i=3; i<ECS.length && pool.length<32; i+=step){ var e=ECS[i]; if(e && e.name) pool.push(e); }
+  for(var i=3; i<ECS.length && pool.length<32; i+=step){ var e=ECS[i]; if(e && e.name && e.id!=='sj07') pool.push(e); }
   function card(e){
     return '<div class="hw-card"><span class="hw-ic">'+(e.icon||'📌')+'</span><span class="hw-b">'
       + '<span class="hw-name">'+escH(e.name)+'</span>'
@@ -11643,7 +11660,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof checkBadges==='function') setTimeout(checkBadges, 0);
   initOnboarding();
   checkECDeepLink();
-  if (typeof startUsageWidget==='function') startUsageWidget();
   if (typeof renderHeroWall==='function') renderHeroWall();
 
   updateGC();
@@ -11840,7 +11856,11 @@ function updateSettingsDisplay() {
   if (fc) fc.textContent = uniqueFragmentCount() + ' / ' + FRAGMENTS.length;
   const tn = document.getElementById('theme-name-display');
   if (tn) tn.textContent = currentTheme === 'light' ? 'Light' : 'Dark';
-  
+  var devUnlocked = localStorage.getItem('arc-dev-unlock')==='1';
+  var gmRow = document.getElementById('game-mode-row'), mnRow = document.getElementById('mode-name-row');
+  if (gmRow) gmRow.style.display = devUnlocked ? '' : 'none';
+  if (mnRow) mnRow.style.display = devUnlocked ? '' : 'none';
+
   ['sv-grim','sv-spell'].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.textContent=[grimoire,spellbook][i].length; });
   const svf=document.getElementById('sv-frags'); if(svf) svf.textContent=uniqueFragmentCount()+' / '+FRAGMENTS.length;
   const svp=document.getElementById('sv-personas');
@@ -12067,6 +12087,13 @@ function navToCategory(cat) {
     var chips = document.querySelectorAll('.filter-chip[data-val]');
     chips.forEach(function(ch){ if(ch.getAttribute('data-val')===cat){ ch.click(); } });
   }, 150);
+}
+function navLegalSection(sectionId) {
+  nav('legal');
+  setTimeout(function(){
+    var el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 50);
 }
 
 (function(){
@@ -12348,7 +12375,7 @@ function closeOnboarding() {
 ───────────────────────────────────────────── */
 function shareWithJebadias(type) {
   var data   = type === 'grimoire' ? grimoire : spellbook;
-  var label  = type === 'grimoire' ? 'Grimoire' : 'Spellbook';
+  var label  = type === 'grimoire' ? savedLabel() : trackerLabel();
   if (!data || !data.length) {
     showNotif('Your ' + label + ' is empty — add some ECs first.');
     return;
