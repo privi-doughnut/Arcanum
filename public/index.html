@@ -293,7 +293,9 @@ html[data-reduce-motion="1"] .firefly,html[data-reduce-motion="1"] #fireflies,ht
 .persona-btn{font-family:var(--px);font-size:5px;padding:7px 6px;border:1px solid var(--border);background:var(--card2);color:var(--text2);cursor:pointer;transition:all .15s;text-align:left;}
 .persona-btn:hover:not(.locked){border-color:var(--accent);color:var(--accent);}
 .persona-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.persona-btn.locked{opacity:.4;cursor:not-allowed;}
+/* contrast fix: opacity:.4 crushed the locked label to ~2:1 against its background in
+   both themes (it's meaningful text — the unlock requirement — not decoration) */
+.persona-btn.locked{opacity:.8;cursor:not-allowed;}
 .jeb-chat-area{display:flex;flex-direction:column;height:100%;min-height:400px;}
 .chat-win{flex:1;overflow-y:auto;background:var(--card);border:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:14px;min-height:300px;}
 .bubble{max-width:80%;padding:12px 16px;line-height:1.7;font-size:14px;}
@@ -1465,8 +1467,13 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="standard"] .ec-impact{ border-radius:6px; }
 /* rarity: quiet outlined pill differentiated by colour, not a loud fill */
 [data-mode="standard"] .ec-badge{ background:transparent !important; border:1px solid var(--border); border-radius:20px; font-size:10px !important; font-weight:600; letter-spacing:.04em; padding:3px 10px; color:var(--text3) !important; }
-[data-mode="standard"] .ec-badge.rare{ color:#3b82a6 !important; border-color:#3b82a655; }
-[data-mode="standard"] .ec-badge.epic{ color:#8a63cc !important; border-color:#8a63cc55; }
+/* contrast fix: #3b82a6/#8a63cc measured 3.9-4.3:1 against the card background in
+   both themes (small text needs 4.5:1) — split per theme instead of one flat value,
+   same reasoning as the --accent-text fix. */
+[data-mode="standard"][data-theme="light"] .ec-badge.rare{ color:#26546b !important; border-color:#3b82a655; }
+[data-mode="standard"][data-theme="light"] .ec-badge.epic{ color:#594084 !important; border-color:#8a63cc55; }
+[data-mode="standard"]:not([data-theme="light"]) .ec-badge.rare{ color:#93bace !important; border-color:#3b82a655; }
+[data-mode="standard"]:not([data-theme="light"]) .ec-badge.epic{ color:#bea9e2 !important; border-color:#8a63cc55; }
 [data-mode="standard"] .ec-badge.legendary{ color:var(--accent-text) !important; border-color:color-mix(in srgb,var(--accent) 45%,transparent); }
 
 /* ══ GAME-MODE HERO — retro arcade / pixel-art (distinct from Planar) ═════════
@@ -1492,9 +1499,18 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 [data-mode="standard"] .jeb-role{ font-size:12.5px; }
 [data-mode="standard"] .jeb-status-wrap{ justify-content:center; }
 [data-mode="standard"] .jeb-status-txt{ font-size:10px !important; letter-spacing:.08em; }
+/* contrast fix: --green (#16903e) measured ~4.0-4.2:1 against the card background */
+[data-mode="standard"][data-theme="light"] .jeb-status-txt{ color:#0f642b; }
+[data-mode="standard"]:not([data-theme="light"]) .jeb-status-txt{ color:#73bc8b; }
 [data-mode="standard"] .persona-section{ border-radius:14px; }
 [data-mode="standard"] .persona-label{ font-size:11px !important; letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px; }
 [data-mode="standard"] .persona-btn{ font-size:12px !important; padding:10px; border-radius:9px; letter-spacing:0 !important; }
+/* contrast fix: white-on-accent only measured 2.68:1 in dark Planar (the lighter
+   dark-theme accent, #e0894a, is too light for white text); light theme's accent
+   is dark enough that white already passes (5.01:1), left alone. */
+[data-mode="standard"]:not([data-theme="light"]) .persona-btn.active{ color:#1a0f06; }
+/* same white-on-accent contrast fix, same root cause, for the nav Tracker button */
+[data-mode="standard"]:not([data-theme="light"]) .grimoire-btn{ color:#1a0f06; }
 [data-mode="standard"] .chat-win{ border-radius:16px; padding:20px; gap:16px; }
 [data-mode="standard"] .bubble{ font-size:15px; line-height:1.65; border-radius:16px; padding:13px 17px; }
 [data-mode="standard"] .bubble-jeb{ border-radius:5px 16px 16px 16px; }
@@ -2047,7 +2063,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div class="jeb-spotlight" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;background:var(--card);border:1px solid var(--border);padding:28px">
         <div>
           <div style="font-family:var(--px);font-size:6px;color:var(--text3);margin-bottom:10px">✦ YOUR ADVISOR ✦</div>
-          <h3 style="font-family:var(--px);font-size:10px;color:var(--accent-text);margin:0 0 14px;line-height:1.6">Jebadias Hawthorne, Oracle of the Arcanum</h3>
+          <h2 style="font-family:var(--px);font-size:10px;color:var(--accent-text);margin:0 0 14px;line-height:1.6">Jebadias Hawthorne, Oracle of the Arcanum</h2>
           <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0 0 14px">He has been advising students for 237 years. He has seen every background, every goal, every mistake. He does not give generic advice. He asks you questions until he understands your specific situation, and then he builds a roadmap that fits your actual life.</p>
           <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0 0 20px">Nine personas. Unlocked through genuine engagement. The deeper you go, the more he reveals — about your path, about the Arcanum, and about things that were buried a very long time ago.</p>
           <button class="btn btn-primary" onclick="nav('jebadias')">🔮 Consult Jebadias Now</button>
@@ -5354,7 +5370,7 @@ body { background-color: var(--bg); background-image: none; }
     <div class="setting-group">
       <div class="setting-label">DISPLAY PREFERENCES</div>
       <div class="setting-row">
-        <span class="setting-name">Default sort in The Stacks</span>
+        <label class="setting-name" for="pref-sort">Default sort in The Stacks</label>
         <select id="pref-sort" class="form-select" style="font-size:11px;padding:5px 10px;background:var(--card);color:var(--text);border:1px solid var(--border)" onchange="savePref('mktSort',this.value)">
           <option value="default">Highest Essence</option>
           <option value="impact">Impact Level</option>
@@ -5365,7 +5381,7 @@ body { background-color: var(--bg); background-image: none; }
         </select>
       </div>
       <div class="setting-row">
-        <span class="setting-name">Cards per page</span>
+        <label class="setting-name" for="pref-batch">Cards per page</label>
         <select id="pref-batch" class="form-select" style="font-size:11px;padding:5px 10px;background:var(--card);color:var(--text);border:1px solid var(--border)" onchange="savePref('mktBatch',this.value)">
           <option value="24">24 — Focused</option>
           <option value="48" selected>48 — Standard</option>
@@ -10879,8 +10895,22 @@ function applyA11y(){
     var txt=(el.textContent||'').trim(), title=el.getAttribute('title');
     if(!txt && title){ el.setAttribute('aria-label', title); }
   });
-  ['compare-overlay','rarity-overlay','timeline-overlay','secondsea-overlay','auth-overlay','onboarding-overlay'].forEach(function(id){
-    var el=document.getElementById(id); if(el){ el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); }
+  // Every overlay gets real dialog semantics + a specific name — screen readers
+  // announced plain "dialog" with no indication of what it was, and 9 of the
+  // 15 overlays had no dialog semantics at all until this fix.
+  var OVERLAY_NAMES = {
+    'compare-overlay':'Compare activities','rarity-overlay':'Browse by rarity',
+    'timeline-overlay':'Your timeline','secondsea-overlay':'The Ascension',
+    'auth-overlay':'Sign in or create account','onboarding-overlay':'Welcome tour',
+    'commonapp-overlay':'Common App export','share-link-overlay':'Share your plan',
+    'shared-overlay':'Shared plan','explore-overlay':'Explore the catalog',
+    'insights-overlay':'Your insights','chronicle-all-overlay':'The Chronicle',
+    'quiz-overlay':'Personalization quiz','p2-detail-overlay':'Plan detail',
+    'jebmem-overlay':'Personalize the Advisor'
+  };
+  Object.keys(OVERLAY_NAMES).forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){ el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label', OVERLAY_NAMES[id]); }
   });
   var svg=document.getElementById('map-svg'); if(svg){ svg.setAttribute('role','img'); svg.setAttribute('aria-label','Map of the world of Arcana with clickable locations'); }
   var nav=document.querySelector('nav'); if(nav && !nav.getAttribute('aria-label')) nav.setAttribute('aria-label','Main navigation');
