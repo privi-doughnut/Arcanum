@@ -11068,11 +11068,18 @@ var OVERLAY_CLOSERS = {
 };
 function _overlayVisible(el){ return el.classList.contains('show') || window.getComputedStyle(el).display!=='none'; }
 function closeTopOverlays(){
+  var anyWasOpen = false;
   Object.keys(OVERLAY_CLOSERS).forEach(function(id){
     var el=document.getElementById(id);
-    if(el && _overlayVisible(el)){ try{ OVERLAY_CLOSERS[id](); }catch(e){} }
+    if(el && _overlayVisible(el)){ anyWasOpen = true; try{ OVERLAY_CLOSERS[id](); }catch(e){} }
   });
   var w=document.getElementById('p2-welcome'); if(w) w.style.display='none';
+  // Verified via a real keyboard test: relying only on the polling interval
+  // below for focus-return was too slow/unreliable on the Escape path —
+  // do it synchronously here instead of waiting for the next 150ms tick.
+  if (anyWasOpen && typeof _lastOverlayTrigger!=='undefined' && _lastOverlayTrigger && document.body.contains(_lastOverlayTrigger)) {
+    _lastOverlayTrigger.focus({preventScroll:true});
+  }
 }
 
 /* ── Generic modal focus management for every role="dialog" overlay ──────
