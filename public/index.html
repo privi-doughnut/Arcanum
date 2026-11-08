@@ -1051,12 +1051,14 @@ body { background-color: var(--bg); background-image: none; }
 <!-- Supabase JS SDK (UMD global: window.supabase) -->
 <script src="/vendor/supabase-js-2.117.2.min.js" defer></script>
 <style id="mode-standard-css">
-/* Planar background texture — a very faint dot-grid, same idea as the Game-mode
-   scanline overlay but tonally fitting the clean/editorial look. Pure CSS
-   (no image asset), theme-aware since it's built from --text. */
+/* Planar background texture — a faint brick/masonry grid, a small tribute to
+   Game mode's cobblestone (#cobble-bg) without pulling in its JS-driven,
+   per-page stone system. Pure CSS, theme-aware since it's built from --text. */
 html[data-mode="standard"] body{
-  background-image: radial-gradient(circle, color-mix(in srgb, var(--text) 5%, transparent) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--text) 6%, transparent) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--text) 6%, transparent) 0 1px, transparent 1px 60px);
+  background-size: 60px 30px;
 }
 /* nav hover pill (Chrome-tab style) — body-level so nav overflow can't clip it */
 #nav-pill{position:fixed;transform:translateX(-50%);background:var(--card);color:var(--text);
@@ -1169,12 +1171,18 @@ html[data-contrast="high"] .page-banner-sub{ color:#e8e0d4; }
 [data-mode="standard"] .ec-badge,
 [data-mode="standard"] .frag-num,
 [data-mode="standard"] .grimoire-btn,
+[data-mode="standard"] .notif,
+[data-mode="standard"] .scroll-pill,
 [data-mode="standard"] .feat-title{
   font-family:'Inter',system-ui,sans-serif !important;
   letter-spacing:0 !important;
 }
 [data-mode="standard"] .nav-link{font-size:14px;font-weight:500;}
 [data-mode="standard"] .page-banner-title{font-size:26px;font-weight:700;}
+/* Notification toast + scroll pill were stuck at the Game-mode pixel-font
+   size (6px) with no Planar override at all — unreadable (Privi's report). */
+[data-mode="standard"] .notif{font-size:14px;line-height:1.4;padding:12px 18px;}
+[data-mode="standard"] .scroll-pill{font-size:13px;letter-spacing:.04em;padding:9px 18px;}
 [data-mode="standard"] .feat-title{font-size:16px;font-weight:600;}
 [data-mode="standard"] .setting-label{font-size:12px;font-weight:600;letter-spacing:.04em !important;text-transform:uppercase;}
 [data-mode="standard"] .grimoire-btn{font-size:13px;font-weight:600;border-radius:8px;}
@@ -11594,14 +11602,15 @@ function checkTypedEggs() {
   if (typedBuffer.toLowerCase().includes('sanctum')) { unlockGameMode(); typedBuffer=''; }
 }
 function unlockGameMode(){
+  var toGame = siteMode !== 'game';
   try{
     localStorage.setItem('arc-dev-unlock','1');
-    localStorage.setItem('arc-mode','game');
+    localStorage.setItem('arc-mode', toGame ? 'game' : 'standard');
   }catch(e){}
-  siteMode='game';
-  applyMode('game');
+  siteMode = toGame ? 'game' : 'standard';
+  applyMode(siteMode);
   if (typeof updateSettingsDisplay==='function') updateSettingsDisplay();
-  if (typeof showNotif==='function') showNotif('✦ The sanctum opens.');
+  if (typeof showNotif==='function') showNotif(toGame ? '✦ The sanctum opens.' : '✦ The sanctum closes.');
 }
 
 document.addEventListener('click', e => {
