@@ -106,12 +106,12 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 /* accessibility: respect reduced-motion */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
-  .firefly,#fireflies,.moon-face,.scroll-pill{ animation:none !important; }
+  .moon-face,.scroll-pill{ animation:none !important; }
 }
 /* same safety valve, but driven by the in-app "Reduce Motion" toggle (previously this toggle only
    paused a handful of map-page sprite animations — it now matches the OS-level block above) */
 html[data-reduce-motion="1"] *,html[data-reduce-motion="1"] *::before,html[data-reduce-motion="1"] *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
-html[data-reduce-motion="1"] .firefly,html[data-reduce-motion="1"] #fireflies,html[data-reduce-motion="1"] .moon-face,html[data-reduce-motion="1"] .scroll-pill{ animation:none !important; }
+html[data-reduce-motion="1"] .moon-face,html[data-reduce-motion="1"] .scroll-pill{ animation:none !important; }
 
 /* clean PDF when printing the master plan (scoped so normal Ctrl+P is unaffected) */
 @media print{
@@ -2098,47 +2098,47 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <button class="btn btn-ghost" onclick="surpriseEC()" style="font-size:9px;padding:8px 12px;white-space:nowrap">🎲 Surprise</button>
     </div>
     <div class="mkt-filters" id="mkt-filters">
-      <span class="filter-chip active" data-val="all" onclick="setFilter(this,'all')">All</span>
-      <span class="filter-chip" data-val="Agriculture" onclick="setFilter(this,'Agriculture')">🌾 Agriculture</span>
-      <span class="filter-chip" data-val="Architecture" onclick="setFilter(this,'Architecture')">🏗 Architecture</span>
-      <span class="filter-chip" data-val="Arts" onclick="setFilter(this,'Arts')">🎨 Arts</span>
-      <span class="filter-chip" data-val="Astronomy" onclick="setFilter(this,'Astronomy')">🔭 Astronomy</span>
-      <span class="filter-chip" data-val="Aviation" onclick="setFilter(this,'Aviation')">✈️ Aviation</span>
-      <span class="filter-chip" data-val="Competitions" onclick="setFilter(this,'Competitions')">🏆 Competitions</span>
-      <span class="filter-chip" data-val="Content" onclick="setFilter(this,'Content')">📱 Content</span>
-      <span class="filter-chip" data-val="Criminal Justice" onclick="setFilter(this,'Criminal Justice')">⚖ Criminal Justice</span>
-      <span class="filter-chip" data-val="Culinary" onclick="setFilter(this,'Culinary')">🍳 Culinary</span>
-      <span class="filter-chip" data-val="Dance" onclick="setFilter(this,'Dance')">💃 Dance</span>
-      <span class="filter-chip" data-val="Data Science" onclick="setFilter(this,'Data Science')">📊 Data Science</span>
-      <span class="filter-chip" data-val="Debate" onclick="setFilter(this,'Debate')">🗣️ Debate</span>
-      <span class="filter-chip" data-val="Design" onclick="setFilter(this,'Design')">🖌 Design</span>
-      <span class="filter-chip" data-val="Education" onclick="setFilter(this,'Education')">📚 Education</span>
-      <span class="filter-chip" data-val="Entrepreneurship" onclick="setFilter(this,'Entrepreneurship')">🚀 Entrepreneurship</span>
-      <span class="filter-chip" data-val="Environment" onclick="setFilter(this,'Environment')">🌿 Environment</span>
-      <span class="filter-chip" data-val="Fashion" onclick="setFilter(this,'Fashion')">✂️ Fashion</span>
-      <span class="filter-chip" data-val="Finance" onclick="setFilter(this,'Finance')">💹 Finance</span>
-      <span class="filter-chip" data-val="Gaming" onclick="setFilter(this,'Gaming')">🎮 Gaming</span>
-      <span class="filter-chip" data-val="Healthcare" onclick="setFilter(this,'Healthcare')">🩺 Healthcare</span>
-      <span class="filter-chip" data-val="International" onclick="setFilter(this,'International')">✈ International</span>
-      <span class="filter-chip" data-val="Journalism" onclick="setFilter(this,'Journalism')">📰 Journalism</span>
-      <span class="filter-chip" data-val="Law" onclick="setFilter(this,'Law')">⚖ Law</span>
-      <span class="filter-chip" data-val="Leadership" onclick="setFilter(this,'Leadership')">🗳 Leadership</span>
-      <span class="filter-chip" data-val="Linguistics" onclick="setFilter(this,'Linguistics')">🗣 Linguistics</span>
-      <span class="filter-chip" data-val="Marine Science" onclick="setFilter(this,'Marine Science')">🌊 Marine Science</span>
-      <span class="filter-chip" data-val="Music" onclick="setFilter(this,'Music')">🎵 Music</span>
-      <span class="filter-chip" data-val="Nonprofit" onclick="setFilter(this,'Nonprofit')">💡 Nonprofit</span>
-      <span class="filter-chip" data-val="Philosophy" onclick="setFilter(this,'Philosophy')">📜 Philosophy</span>
-      <span class="filter-chip" data-val="Politics" onclick="setFilter(this,'Politics')">🏛 Politics</span>
-      <span class="filter-chip" data-val="Psychology" onclick="setFilter(this,'Psychology')">🧠 Psychology</span>
-      <span class="filter-chip" data-val="Public Health" onclick="setFilter(this,'Public Health')">🦠 Public Health</span>
-      <span class="filter-chip" data-val="Real Estate" onclick="setFilter(this,'Real Estate')">🏘 Real Estate</span>
-      <span class="filter-chip" data-val="Research" onclick="setFilter(this,'Research')">🔬 Research</span>
-      <span class="filter-chip" data-val="STEM" onclick="setFilter(this,'STEM')">💻 STEM</span>
-      <span class="filter-chip" data-val="Service" onclick="setFilter(this,'Service')">🏅 Service</span>
-      <span class="filter-chip" data-val="Social Justice" onclick="setFilter(this,'Social Justice')">✊ Social Justice</span>
-      <span class="filter-chip" data-val="Sports" onclick="setFilter(this,'Sports')">🏃 Sports</span>
-      <span class="filter-chip" data-val="Theater" onclick="setFilter(this,'Theater')">🎭 Theater</span>
-      <span class="filter-chip" data-val="Veterinary" onclick="setFilter(this,'Veterinary')">🐾 Veterinary</span>
+      <span class="filter-chip active" data-val="all" onclick="setFilter(this,'all')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">All</span>
+      <span class="filter-chip" data-val="Agriculture" onclick="setFilter(this,'Agriculture')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🌾 Agriculture</span>
+      <span class="filter-chip" data-val="Architecture" onclick="setFilter(this,'Architecture')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏗 Architecture</span>
+      <span class="filter-chip" data-val="Arts" onclick="setFilter(this,'Arts')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🎨 Arts</span>
+      <span class="filter-chip" data-val="Astronomy" onclick="setFilter(this,'Astronomy')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🔭 Astronomy</span>
+      <span class="filter-chip" data-val="Aviation" onclick="setFilter(this,'Aviation')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">✈️ Aviation</span>
+      <span class="filter-chip" data-val="Competitions" onclick="setFilter(this,'Competitions')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏆 Competitions</span>
+      <span class="filter-chip" data-val="Content" onclick="setFilter(this,'Content')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">📱 Content</span>
+      <span class="filter-chip" data-val="Criminal Justice" onclick="setFilter(this,'Criminal Justice')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">⚖ Criminal Justice</span>
+      <span class="filter-chip" data-val="Culinary" onclick="setFilter(this,'Culinary')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🍳 Culinary</span>
+      <span class="filter-chip" data-val="Dance" onclick="setFilter(this,'Dance')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">💃 Dance</span>
+      <span class="filter-chip" data-val="Data Science" onclick="setFilter(this,'Data Science')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">📊 Data Science</span>
+      <span class="filter-chip" data-val="Debate" onclick="setFilter(this,'Debate')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🗣️ Debate</span>
+      <span class="filter-chip" data-val="Design" onclick="setFilter(this,'Design')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🖌 Design</span>
+      <span class="filter-chip" data-val="Education" onclick="setFilter(this,'Education')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">📚 Education</span>
+      <span class="filter-chip" data-val="Entrepreneurship" onclick="setFilter(this,'Entrepreneurship')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🚀 Entrepreneurship</span>
+      <span class="filter-chip" data-val="Environment" onclick="setFilter(this,'Environment')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🌿 Environment</span>
+      <span class="filter-chip" data-val="Fashion" onclick="setFilter(this,'Fashion')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">✂️ Fashion</span>
+      <span class="filter-chip" data-val="Finance" onclick="setFilter(this,'Finance')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">💹 Finance</span>
+      <span class="filter-chip" data-val="Gaming" onclick="setFilter(this,'Gaming')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🎮 Gaming</span>
+      <span class="filter-chip" data-val="Healthcare" onclick="setFilter(this,'Healthcare')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🩺 Healthcare</span>
+      <span class="filter-chip" data-val="International" onclick="setFilter(this,'International')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">✈ International</span>
+      <span class="filter-chip" data-val="Journalism" onclick="setFilter(this,'Journalism')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">📰 Journalism</span>
+      <span class="filter-chip" data-val="Law" onclick="setFilter(this,'Law')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">⚖ Law</span>
+      <span class="filter-chip" data-val="Leadership" onclick="setFilter(this,'Leadership')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🗳 Leadership</span>
+      <span class="filter-chip" data-val="Linguistics" onclick="setFilter(this,'Linguistics')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🗣 Linguistics</span>
+      <span class="filter-chip" data-val="Marine Science" onclick="setFilter(this,'Marine Science')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🌊 Marine Science</span>
+      <span class="filter-chip" data-val="Music" onclick="setFilter(this,'Music')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🎵 Music</span>
+      <span class="filter-chip" data-val="Nonprofit" onclick="setFilter(this,'Nonprofit')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">💡 Nonprofit</span>
+      <span class="filter-chip" data-val="Philosophy" onclick="setFilter(this,'Philosophy')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">📜 Philosophy</span>
+      <span class="filter-chip" data-val="Politics" onclick="setFilter(this,'Politics')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏛 Politics</span>
+      <span class="filter-chip" data-val="Psychology" onclick="setFilter(this,'Psychology')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🧠 Psychology</span>
+      <span class="filter-chip" data-val="Public Health" onclick="setFilter(this,'Public Health')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🦠 Public Health</span>
+      <span class="filter-chip" data-val="Real Estate" onclick="setFilter(this,'Real Estate')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏘 Real Estate</span>
+      <span class="filter-chip" data-val="Research" onclick="setFilter(this,'Research')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🔬 Research</span>
+      <span class="filter-chip" data-val="STEM" onclick="setFilter(this,'STEM')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">💻 STEM</span>
+      <span class="filter-chip" data-val="Service" onclick="setFilter(this,'Service')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏅 Service</span>
+      <span class="filter-chip" data-val="Social Justice" onclick="setFilter(this,'Social Justice')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">✊ Social Justice</span>
+      <span class="filter-chip" data-val="Sports" onclick="setFilter(this,'Sports')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏃 Sports</span>
+      <span class="filter-chip" data-val="Theater" onclick="setFilter(this,'Theater')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🎭 Theater</span>
+      <span class="filter-chip" data-val="Veterinary" onclick="setFilter(this,'Veterinary')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🐾 Veterinary</span>
     </div>
     <div class="sort-chips" id="mkt-sort">
       <span class="sort-chip active" title="Our curated default ordering" onclick="setSort(this,'default')">★ Featured</span>
@@ -2154,22 +2154,22 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     <div style="margin-top:8px">
       <div title="How far an activity's reach extends — from your school or town up to the whole world" style="font-family:var(--px);font-size:9px;color:var(--text3);letter-spacing:.08em;margin-bottom:5px;cursor:help">IMPACT</div>
       <div class="filter-row" id="mkt-impact-filters">
-        <span class="filter-chip filter-chip-lg active" data-val="all" onclick="setImpactFilter(this,'all')">All</span>
-        <span class="filter-chip filter-chip-lg" data-val="Local" onclick="setImpactFilter(this,'Local')">🏘 Local</span>
-        <span class="filter-chip filter-chip-lg" data-val="Regional" onclick="setImpactFilter(this,'Regional')">🗺 Regional</span>
-        <span class="filter-chip filter-chip-lg" data-val="State" onclick="setImpactFilter(this,'State')">🏛 State</span>
-        <span class="filter-chip filter-chip-lg" data-val="National" onclick="setImpactFilter(this,'National')">🇺🇸 National</span>
-        <span class="filter-chip filter-chip-lg" data-val="International" onclick="setImpactFilter(this,'International')">🌐 International</span>
+        <span class="filter-chip filter-chip-lg active" data-val="all" onclick="setImpactFilter(this,'all')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">All</span>
+        <span class="filter-chip filter-chip-lg" data-val="Local" onclick="setImpactFilter(this,'Local')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏘 Local</span>
+        <span class="filter-chip filter-chip-lg" data-val="Regional" onclick="setImpactFilter(this,'Regional')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🗺 Regional</span>
+        <span class="filter-chip filter-chip-lg" data-val="State" onclick="setImpactFilter(this,'State')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🏛 State</span>
+        <span class="filter-chip filter-chip-lg" data-val="National" onclick="setImpactFilter(this,'National')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🇺🇸 National</span>
+        <span class="filter-chip filter-chip-lg" data-val="International" onclick="setImpactFilter(this,'International')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">🌐 International</span>
       </div>
     </div>
     <div style="margin-top:8px">
       <div title="How selective or prestigious an activity is — from Common to Legendary" style="font-family:var(--px);font-size:9px;color:var(--text3);letter-spacing:.08em;margin-bottom:5px;cursor:help">RARITY</div>
       <div class="filter-row" id="mkt-rarity-filters">
-        <span class="filter-chip filter-chip-lg active" data-val="all" onclick="setRarityFilter(this,'all')">All</span>
-        <span class="filter-chip filter-chip-lg" data-val="Common" title="Widely available — most students can do these" onclick="setRarityFilter(this,'Common')">○ Common</span>
-        <span class="filter-chip filter-chip-lg" data-val="Rare" title="Somewhat selective or uncommon" onclick="setRarityFilter(this,'Rare')">◇ Rare</span>
-        <span class="filter-chip filter-chip-lg" data-val="Epic" title="Highly selective or high-effort" onclick="setRarityFilter(this,'Epic')">◆ Epic</span>
-        <span class="filter-chip filter-chip-lg" data-val="Legendary" title="The most prestigious, hardest-to-earn activities" onclick="setRarityFilter(this,'Legendary')">★ Legendary</span>
+        <span class="filter-chip filter-chip-lg active" data-val="all" onclick="setRarityFilter(this,'all')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">All</span>
+        <span class="filter-chip filter-chip-lg" data-val="Common" title="Widely available — most students can do these" onclick="setRarityFilter(this,'Common')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">○ Common</span>
+        <span class="filter-chip filter-chip-lg" data-val="Rare" title="Somewhat selective or uncommon" onclick="setRarityFilter(this,'Rare')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">◇ Rare</span>
+        <span class="filter-chip filter-chip-lg" data-val="Epic" title="Highly selective or high-effort" onclick="setRarityFilter(this,'Epic')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">◆ Epic</span>
+        <span class="filter-chip filter-chip-lg" data-val="Legendary" title="The most prestigious, hardest-to-earn activities" onclick="setRarityFilter(this,'Legendary')" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">★ Legendary</span>
       </div>
     </div>
   </div>
@@ -5778,7 +5778,7 @@ body { background-color: var(--bg); background-image: none; }
 
 
 <!-- Edit EC Modal -->
-<div class="edit-modal" id="edit-modal">
+<div class="edit-modal" id="edit-modal" inert>
   <button class="edit-modal-close" onclick="closeEditModal()">✕</button>
   <div class="edit-modal-title" id="edit-modal-title">Edit Spell</div>
   <div style="display:flex;flex-direction:column;gap:12px">
@@ -5815,7 +5815,7 @@ body { background-color: var(--bg); background-image: none; }
 </div>
 
 <!-- Map popup -->
-<div class="map-popup" id="map-popup">
+<div class="map-popup" id="map-popup" inert>
   <button class="map-popup-close" onclick="closeMapPopup()">✕</button>
   <div class="map-popup-title" id="map-popup-title"></div>
   <p class="map-popup-text" id="map-popup-text"></p>
@@ -9736,7 +9736,7 @@ function renderMarketplace() {
       var ess = getEssence(ec);
       var pct = Math.min(100, (ess/5)*100);
       var rar = (ec.rarity||'common').toLowerCase();
-      html += '<div class="ec-card" onclick="openECById(\'' + ec.id + '\')">'
+      html += '<div class="ec-card" tabindex="0" role="button" aria-label="' + escH(ec.name||'Activity') + '" onclick="openECById(\'' + ec.id + '\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openECById(\'' + ec.id + '\');}">'
         + '<div class="ec-card-accent"></div>'
         + '<div class="ec-card-top">'
         + '<span class="ec-badge ' + rar + '">' + (ec.rarity||'Common') + '</span>'
@@ -10897,6 +10897,20 @@ function seededReviews(ec){
   return out;
 }
 
+/* Every overlay's id -> a specific accessible name, and (below) its real close
+   function — shared by applyA11y() (naming) and the focus-trap system below
+   (knowing what's open and how to actually close it on Escape). */
+var OVERLAY_NAMES = {
+  'compare-overlay':'Compare activities','rarity-overlay':'Browse by rarity',
+  'timeline-overlay':'Your timeline','secondsea-overlay':'The Ascension',
+  'auth-overlay':'Sign in or create account','onboarding-overlay':'Welcome tour',
+  'commonapp-overlay':'Common App export','share-link-overlay':'Share your plan',
+  'shared-overlay':'Shared plan','explore-overlay':'Explore the catalog',
+  'insights-overlay':'Your insights','chronicle-all-overlay':'The Chronicle',
+  'quiz-overlay':'Personalization quiz','p2-detail-overlay':'Plan detail',
+  'jebmem-overlay':'Personalize the Advisor','edit-modal':'Edit activity',
+  'map-popup':'Location details'
+};
 /* ── #21 ACCESSIBILITY PASS ──────────────────────────────────────────── */
 function applyA11y(){
   document.querySelectorAll('button, [onclick]').forEach(function(el){
@@ -10907,16 +10921,6 @@ function applyA11y(){
   // Every overlay gets real dialog semantics + a specific name — screen readers
   // announced plain "dialog" with no indication of what it was, and 9 of the
   // 15 overlays had no dialog semantics at all until this fix.
-  var OVERLAY_NAMES = {
-    'compare-overlay':'Compare activities','rarity-overlay':'Browse by rarity',
-    'timeline-overlay':'Your timeline','secondsea-overlay':'The Ascension',
-    'auth-overlay':'Sign in or create account','onboarding-overlay':'Welcome tour',
-    'commonapp-overlay':'Common App export','share-link-overlay':'Share your plan',
-    'shared-overlay':'Shared plan','explore-overlay':'Explore the catalog',
-    'insights-overlay':'Your insights','chronicle-all-overlay':'The Chronicle',
-    'quiz-overlay':'Personalization quiz','p2-detail-overlay':'Plan detail',
-    'jebmem-overlay':'Personalize the Advisor'
-  };
   Object.keys(OVERLAY_NAMES).forEach(function(id){
     var el=document.getElementById(id);
     if(el){ el.setAttribute('role','dialog'); el.setAttribute('aria-modal','true'); el.setAttribute('aria-label', OVERLAY_NAMES[id]); }
@@ -11051,7 +11055,71 @@ function pushRecent(id){ try{ var r=JSON.parse(localStorage.getItem('arc-recent'
 function renderRecent(){ var wrap=document.getElementById('recent-wrap'); if(!wrap||typeof EC_MAP==='undefined') return; var r=[]; try{ r=JSON.parse(localStorage.getItem('arc-recent')||'[]'); }catch(e){} var ecs=r.map(function(id){return EC_MAP[id];}).filter(Boolean); if(!ecs.length){ wrap.style.display='none'; return; } wrap.style.display='block'; wrap.innerHTML='<div style="font-family:var(--px);font-size:8px;color:var(--accent);letter-spacing:1px;margin:0 0 12px">RECENTLY VIEWED</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px">'+ecs.map(function(s){return '<div onclick="openECById(\''+s.id+'\')" style="cursor:pointer;border:1px solid var(--border);border-radius:9px;padding:11px;background:var(--card)"><div style="font-size:17px">'+(s.icon||'📌')+'</div><div style="font-size:12px;color:var(--text);font-weight:600;margin-top:4px;line-height:1.3">'+escH(s.name)+'</div></div>';}).join('')+'</div>'; }
 
 /* ── UPGRADE: Keyboard shortcuts ─────────────────────────────────────── */
-function closeTopOverlays(){ ['compare-overlay','rarity-overlay','timeline-overlay','p2-detail-overlay'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; }); var q=document.getElementById('quiz-overlay'); if(q) q.classList.remove('show'); var w=document.getElementById('p2-welcome'); if(w) w.style.display='none'; }
+// Escape used to only know how to close 4 of the 15 overlays (Auth, Onboarding,
+// and 8 others were unreachable by keyboard — confirmed via a real keyboard
+// audit). Each overlay has its own close function with its own cleanup, so this
+// calls the REAL closer for whichever one is actually open, instead of just
+// hiding divs directly.
+var OVERLAY_CLOSERS = {
+  'auth-overlay':closeAuth,'onboarding-overlay':closeOnboarding,
+  'commonapp-overlay':closeCommonApp,'share-link-overlay':closeShareLink,
+  'shared-overlay':closeSharedView,'explore-overlay':closeExplore,
+  'insights-overlay':closeInsights,'chronicle-all-overlay':closeChronicleAll,
+  'quiz-overlay':closeQuiz,'jebmem-overlay':closeJebMem,
+  'compare-overlay':closeCompare,'rarity-overlay':closeRarity,
+  'timeline-overlay':closeTimeline,'secondsea-overlay':exitPhaseTwo,
+  'p2-detail-overlay':closeP2Detail
+};
+function _overlayVisible(el){ return el.classList.contains('show') || window.getComputedStyle(el).display!=='none'; }
+function closeTopOverlays(){
+  Object.keys(OVERLAY_CLOSERS).forEach(function(id){
+    var el=document.getElementById(id);
+    if(el && _overlayVisible(el)){ try{ OVERLAY_CLOSERS[id](); }catch(e){} }
+  });
+  var w=document.getElementById('p2-welcome'); if(w) w.style.display='none';
+}
+
+/* ── Generic modal focus management for every role="dialog" overlay ──────
+   A real keyboard audit found: opening a dialog never moved focus into it,
+   Tab escaped into the page behind it (no trap), and closing never returned
+   focus anywhere. Fixed once, generically, for all 15 overlays, instead of
+   touching each overlay's own open/close function individually. */
+var _lastOverlayTrigger = null;
+function _openDialogEl(){
+  var dialogs = document.querySelectorAll('[role="dialog"]');
+  for (var i=0;i<dialogs.length;i++){ if(_overlayVisible(dialogs[i])) return dialogs[i]; }
+  return null;
+}
+function _focusableIn(container){
+  return Array.prototype.slice.call(container.querySelectorAll(
+    'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])'
+  )).filter(function(el){ return el.offsetParent!==null; });
+}
+document.addEventListener('focusin', function(e){
+  if (!e.target.closest('[role="dialog"]')) _lastOverlayTrigger = e.target;
+});
+var _lastOpenDialog = null;
+setInterval(function(){
+  var dlg = _openDialogEl();
+  if (dlg && dlg!==_lastOpenDialog){
+    // Just opened: move focus inside it.
+    var focusables = _focusableIn(dlg);
+    if (!dlg.hasAttribute('tabindex')) dlg.setAttribute('tabindex','-1');
+    (focusables[0]||dlg).focus({preventScroll:true});
+  } else if (!dlg && _lastOpenDialog){
+    // Just closed: send focus back to whatever opened it, if it's still there.
+    if (_lastOverlayTrigger && document.body.contains(_lastOverlayTrigger)) _lastOverlayTrigger.focus({preventScroll:true});
+  }
+  _lastOpenDialog = dlg;
+}, 150);
+document.addEventListener('keydown', function(e){
+  if (e.key !== 'Tab') return;
+  var dlg = _openDialogEl(); if (!dlg) return;
+  var focusables = _focusableIn(dlg); if (!focusables.length) return;
+  var first=focusables[0], last=focusables[focusables.length-1];
+  if (e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+}, true);
 function initShortcuts(){ document.addEventListener('keydown', function(e){
   if(e.key==='Escape'){ closeTopOverlays(); return; }
   var tag=(e.target&&e.target.tagName||'').toLowerCase(); if(tag==='input'||tag==='textarea'||tag==='select') return;
@@ -11371,10 +11439,12 @@ function mapClick(key) {
   
   document.getElementById('map-popup-title').textContent = loc.title;
   document.getElementById('map-popup-text').textContent = loc.text;
-  document.getElementById('map-popup').classList.add('show');
+  var mp = document.getElementById('map-popup');
+  mp.classList.add('show'); mp.removeAttribute('inert');
 }
 function closeMapPopup() {
-  document.getElementById('map-popup').classList.remove('show');
+  var mp = document.getElementById('map-popup');
+  mp.classList.remove('show'); mp.setAttribute('inert','');
 }
 function moonClick() {
   if (typeof isGameMode === 'function' && !isGameMode()) return;
@@ -11996,11 +12066,19 @@ function updateSettingsDisplay() {
   }
   initParticles();
 
-  window._initParticles = initParticles;  
+  window._initParticles = initParticles;
 
+  // Was: an unconditional requestAnimationFrame loop with no way to actually
+  // stop it — the "Disable firefly/butterfly animation" setting and Reduce
+  // Motion both only hid the canvas via CSS, so this kept computing forever
+  // either way, and the fireflies/butterflies (canvas-drawn, not real DOM
+  // elements) never actually stopped. window._particlesPaused is the real
+  // on/off switch now; toggleParticles() and applyReduceMotion() both set it.
+  window._particlesPaused = false;
+  try{ window._particlesPaused = localStorage.getItem('arc-no-particles')==='1' || localStorage.getItem('arc-reduce-motion')==='1'; }catch(e){}
+  if (canvas) canvas.style.display = window._particlesPaused ? 'none' : '';
   function animate(){
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(p=>{ p.update(); p.draw(); });
+    if (!window._particlesPaused){ ctx.clearRect(0,0,W,H); particles.forEach(p=>{ p.update(); p.draw(); }); }
     requestAnimationFrame(animate);
   }
   animate();
@@ -12090,10 +12168,12 @@ function openEditModal(id, listType) {
   document.getElementById('edit-deadline').value = ec.deadline||'';
   document.getElementById('edit-priority').value = ec.priority||'';
   document.getElementById('edit-modal').classList.add('show');
+  document.getElementById('edit-modal').removeAttribute('inert');
   document.getElementById('overlay-bg').classList.add('show');
 }
 function closeEditModal() {
   document.getElementById('edit-modal').classList.remove('show');
+  document.getElementById('edit-modal').setAttribute('inert','');
   document.getElementById('overlay-bg').classList.remove('show');
   editingEC = null; editingList = null;
 }
@@ -12288,6 +12368,12 @@ function applyReduceMotion(on){
   if(tog) tog.classList.toggle('on', on);
   var animals = document.querySelectorAll('[class*="herd-"],[class*="birds-"],[class*="whale-"],[class*="fish-"]');
   animals.forEach(function(el){el.style.animationPlayState = on ? 'paused' : 'running';});
+  // Reduce Motion pauses fireflies/butterflies too, but shouldn't permanently
+  // override the separate "Disable firefly/butterfly animation" toggle — when
+  // Reduce Motion turns back off, particles should return to whatever that
+  // other setting independently says, not just blindly resume.
+  var noParticles = false; try{ noParticles = localStorage.getItem('arc-no-particles')==='1'; }catch(e){}
+  if (typeof applyParticles==='function') applyParticles(on || noParticles);
 }
 function toggleReduceMotion(){
   var tog = document.getElementById('motion-toggle');
@@ -12296,12 +12382,15 @@ function toggleReduceMotion(){
   applyReduceMotion(on);
   try{localStorage.setItem('arc-reduce-motion', on?'1':'0');}catch(e){}
 }
+function applyParticles(on){
+  window._particlesPaused = on;
+  var tog = document.getElementById('anim-toggle'); if(tog) tog.classList.toggle('on', on);
+  var cvs = document.getElementById('bg-canvas'); if(cvs) cvs.style.display = on ? 'none' : '';
+}
 function toggleParticles(){
   var tog = document.getElementById('anim-toggle');
-  if(tog) tog.classList.toggle('on');
-  var on = tog && tog.classList.contains('on');
-  var cvs = document.getElementById('particle-canvas') || document.querySelector('canvas');
-  if(cvs) cvs.style.display = on ? 'none' : '';
+  var on = !(tog && tog.classList.contains('on'));
+  applyParticles(on);
   try{localStorage.setItem('arc-no-particles', on?'1':'0');}catch(e){}
   showNotif(on ? 'Animations hidden.' : 'Animations restored.');
 }
