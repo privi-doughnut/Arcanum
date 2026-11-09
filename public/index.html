@@ -1011,6 +1011,7 @@ body { background-color: var(--bg); background-image: none; }
 
 /* ── LOADING SCREEN ─────────────────────── */
 #loading-screen{position:fixed;inset:0;z-index:99999;overflow:hidden;background:radial-gradient(ellipse 80% 60% at 50% 30%,#15121e 0%,#0a0810 55%,#050408 100%);display:flex;align-items:center;justify-content:center;transition:opacity .7s ease;}
+[data-theme="light"] #loading-screen{background:radial-gradient(ellipse 80% 60% at 50% 30%,#f5efe2 0%,#ece3d1 55%,#e2d6bc 100%);}
 #loading-screen.fade-out{opacity:0;pointer-events:none;}
 #loading-screen::before{content:'';position:absolute;inset:0;background-image:linear-gradient(17deg,transparent 48%,rgba(255,255,255,.012) 50%,transparent 52%),linear-gradient(82deg,transparent 45%,rgba(255,255,255,.008) 47%,transparent 49%);pointer-events:none;}
 #ls-book-outer{position:absolute;left:50%;top:0;transform:translate(-50%,-220px) rotate(-3deg);animation:bookFall 3.8s cubic-bezier(.3,0,.7,1) forwards;}
@@ -1657,20 +1658,20 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       Arcanum
     </div>
     <div class="nav-links" id="nav-links">
-      <span class="nav-link" data-pill="Where you start" onclick="nav('home')" data-tip="Your entrance to the Arcanum — start here to discover everything the Academy offers.">Home</span>
-      <span class="nav-link" data-pill="Browse rated extracurriculars" onclick="nav('marketplace')" data-tip="3,000+ real extracurriculars rated 0–5 across four dimensions by students who actually did them.">The Stacks</span>
-      <span class="nav-link" data-pill="Chat with the AI advisor" onclick="nav('jebadias')" data-tip="Your AI advisor — builds a personalized EC roadmap for your specific situation.">Jebadias</span>
-      <span class="nav-link" data-pill="Your saved ECs" onclick="nav('spellbook')" data-tip="Your saved EC collection — add spells here before committing them to your Grimoire.">Spellbook</span>
-      <span class="nav-link" data-pill="Your committed ECs" onclick="nav('grimoire')" data-tip="Your Grimoire — the ECs you've committed to doing, with status, milestones, and deadlines.">Grimoire</span>
-      <span class="nav-link" id="ascension-nav" data-std="The Planner" style="display:none" data-pill="Your committed-EC synthesis" onclick="enterPhaseTwo(false)" data-tip="The Ascension — your committed ECs, synthesized into one master plan.">The Ascension</span>
-      <span class="nav-link" data-pill="Submit an EC" onclick="nav('list')" data-tip="List an EC you have personally done so other students can find, rate, and review it.">The Quill</span>
-      <span class="nav-link" data-pill="Community rules" onclick="nav('codex')" data-tip="The Academy's laws — rules every mage must follow before listing, reviewing, or consulting the Oracle.">Codex</span>
-      <span class="nav-link" data-pill="Why Arcanum exists" onclick="nav('about')" data-tip="The origin story of the Arcanum — what it is, why it was built, and what it is trying to fix.">The Origin</span>
-      <span class="nav-link" data-pill="Questions answered" onclick="nav('faq')" data-tip="Answers to every question about the rating systems, the Advisor, Saved, and Arcanum.">The Guide</span>
-      <span class="nav-link" data-pill="Reach the team" onclick="nav('contact')" data-tip="Reach the Academy — questions, suggestions, or just to say hello.">Contact</span>
-      <span class="nav-link" data-pill="Explore the world" id="nav-map-link" onclick="nav('map')" data-tip="Explore the World of Arcana — discover chronicle fragments and the lore of each location.">Arcana</span>
-      <span class="nav-link" data-pill="Story chapters you've found" id="collections-nav" style="display:none" onclick="nav('collections')" data-tip="Chronicle fragments you have discovered — pieces of the Arcanum's hidden history.">The Chronicle</span>
-      <span class="nav-link" data-pill="Settings and data" onclick="nav('settings')" data-tip="Adjust your theme, manage your local data, and configure your Arcanum experience.">Chamber</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Where you start" onclick="nav('home')" data-tip="Your entrance to the Arcanum — start here to discover everything the Academy offers.">Home</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Browse rated extracurriculars" onclick="nav('marketplace')" data-tip="3,000+ real extracurriculars rated 0–5 across four dimensions by students who actually did them.">The Stacks</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Chat with the AI advisor" onclick="nav('jebadias')" data-tip="Your AI advisor — builds a personalized EC roadmap for your specific situation.">Jebadias</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Your saved ECs" onclick="nav('spellbook')" data-tip="Your saved EC collection — add spells here before committing them to your Grimoire.">Spellbook</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Your committed ECs" onclick="nav('grimoire')" data-tip="Your Grimoire — the ECs you've committed to doing, with status, milestones, and deadlines.">Grimoire</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="ascension-nav" data-std="The Planner" style="display:none" data-pill="Your committed-EC synthesis" onclick="enterPhaseTwo(false)" data-tip="The Ascension — your committed ECs, synthesized into one master plan.">The Ascension</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Submit an EC" onclick="nav('list')" data-tip="List an EC you have personally done so other students can find, rate, and review it.">The Quill</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Community rules" onclick="nav('codex')" data-tip="The Academy's laws — rules every mage must follow before listing, reviewing, or consulting the Oracle.">Codex</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Why Arcanum exists" onclick="nav('about')" data-tip="The origin story of the Arcanum — what it is, why it was built, and what it is trying to fix.">The Origin</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Questions answered" onclick="nav('faq')" data-tip="Answers to every question about the rating systems, the Advisor, Saved, and Arcanum.">The Guide</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Reach the team" onclick="nav('contact')" data-tip="Reach the Academy — questions, suggestions, or just to say hello.">Contact</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Explore the world" id="nav-map-link" onclick="nav('map')" data-tip="Explore the World of Arcana — discover chronicle fragments and the lore of each location.">Arcana</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Story chapters you've found" id="collections-nav" style="display:none" onclick="nav('collections')" data-tip="Chronicle fragments you have discovered — pieces of the Arcanum's hidden history.">The Chronicle</span>
+      <span class="nav-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-pill="Settings and data" onclick="nav('settings')" data-tip="Adjust your theme, manage your local data, and configure your Arcanum experience.">Chamber</span>
     </div>
   </div>
   <div class="nav-right">
@@ -1679,7 +1680,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     <button class="grimoire-btn" onclick="nav('grimoire')">
       📖 <span id="grim-btn-label">Spellbook</span> <span class="grimoire-badge" id="grim-count">0</span>
     </button>
-    <button class="hamburger" id="hamburger" onclick="toggleDrawer()">
+    <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -1900,7 +1901,8 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     </div>
     <div class="page-inner" style="padding-top:40px">
       <div class="sec-label">✦ FROM THE STUDENTS ✦</div>
-      <div class="sec-title" style="margin-bottom:28px">What students are saying</div>
+      <div class="sec-title" style="margin-bottom:6px">What students are saying</div>
+      <p style="max-width:560px;margin:0 auto 22px;text-align:center;font-size:11px;color:var(--text3)">These quotes are illustrative, written to show the kind of outcome Arcanum aims for — not real student submissions. Real reviews on individual activities are labeled separately where they appear.</p>
       <div class="test-carousel-outer" style="position:relative;max-width:700px;margin:0 auto">
       <button class="test-arrow test-prev" onclick="goTestSlide(window.getTestCur()-1)" aria-label="Previous">&#8592;</button>
       <button class="test-arrow test-next" onclick="goTestSlide(window.getTestCur()+1)" aria-label="Next">&#8594;</button>
@@ -11142,7 +11144,7 @@ setInterval(function(){
     if (_lastOverlayTrigger && document.body.contains(_lastOverlayTrigger)) _lastOverlayTrigger.focus({preventScroll:true});
   }
   _lastOpenDialog = dlg;
-}, 150);
+}, 50);
 document.addEventListener('keydown', function(e){
   if (e.key !== 'Tab') return;
   var dlg = _openDialogEl(); if (!dlg) return;
@@ -12891,20 +12893,20 @@ document.addEventListener('DOMContentLoaded', function(){ try{ window.ARC_PROFIL
 <!-- MENU PAGE -->
 <div id="page-menu" class="page menu-page">
   <div class="menu-page-inner">
-    <div class="menu-page-link" id="" onclick="nav('home')"><span class="menu-link-num">00</span><span class="menu-link-icon">🏠</span><span class="menu-link-name">Home</span></div>
-    <div class="menu-page-link" id="" onclick="nav('marketplace')"><span class="menu-link-num">01</span><span class="menu-link-icon">⚔</span><span class="menu-link-name">The Stacks</span></div>
-    <div class="menu-page-link" id="" onclick="nav('jebadias')"><span class="menu-link-num">02</span><span class="menu-link-icon">🔮</span><span class="menu-link-name">Jebadias</span></div>
-    <div class="menu-page-link" id="" onclick="nav('spellbook')"><span class="menu-link-num">03</span><span class="menu-link-icon">📜</span><span class="menu-link-name">Spellbook</span></div>
-    <div class="menu-page-link" id="" onclick="nav('grimoire')"><span class="menu-link-num">04</span><span class="menu-link-icon">📖</span><span class="menu-link-name">Grimoire</span></div>
-    <div class="menu-page-link" id="menu-ascension" style="display:none" onclick="enterPhaseTwo(false)"><span class="menu-link-num">✦</span><span class="menu-link-icon">✦</span><span class="menu-link-name" data-std="The Planner">The Ascension</span></div>
-    <div class="menu-page-link" id="" onclick="nav('list')"><span class="menu-link-num">05</span><span class="menu-link-icon">✒</span><span class="menu-link-name">The Quill</span></div>
-    <div class="menu-page-link" id="menu-map-link" onclick="nav('map')"><span class="menu-link-num">06</span><span class="menu-link-icon">🗺</span><span class="menu-link-name">Arcana</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('home')"><span class="menu-link-num">00</span><span class="menu-link-icon">🏠</span><span class="menu-link-name">Home</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('marketplace')"><span class="menu-link-num">01</span><span class="menu-link-icon">⚔</span><span class="menu-link-name">The Stacks</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('jebadias')"><span class="menu-link-num">02</span><span class="menu-link-icon">🔮</span><span class="menu-link-name">Jebadias</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('spellbook')"><span class="menu-link-num">03</span><span class="menu-link-icon">📜</span><span class="menu-link-name">Spellbook</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('grimoire')"><span class="menu-link-num">04</span><span class="menu-link-icon">📖</span><span class="menu-link-name">Grimoire</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="menu-ascension" style="display:none" onclick="enterPhaseTwo(false)"><span class="menu-link-num">✦</span><span class="menu-link-icon">✦</span><span class="menu-link-name" data-std="The Planner">The Ascension</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('list')"><span class="menu-link-num">05</span><span class="menu-link-icon">✒</span><span class="menu-link-name">The Quill</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="menu-map-link" onclick="nav('map')"><span class="menu-link-num">06</span><span class="menu-link-icon">🗺</span><span class="menu-link-name">Arcana</span></div>
     <div class="menu-page-link " id="menu-collections-link" style="display:none" onclick="nav('collections')"><span class="menu-link-num">07</span><span class="menu-link-icon">📚</span><span class="menu-link-name">The Chronicle</span></div>
-    <div class="menu-page-link" id="" onclick="nav('codex')"><span class="menu-link-num">08</span><span class="menu-link-icon">⚖</span><span class="menu-link-name">Codex</span></div>
-    <div class="menu-page-link" id="" onclick="nav('about')"><span class="menu-link-num">09</span><span class="menu-link-icon">✦</span><span class="menu-link-name">The Origin</span></div>
-    <div class="menu-page-link" id="" onclick="nav('faq')"><span class="menu-link-num">10</span><span class="menu-link-icon">❓</span><span class="menu-link-name">The Guide</span></div>
-    <div class="menu-page-link" id="" onclick="nav('contact')"><span class="menu-link-num">11</span><span class="menu-link-icon">✉</span><span class="menu-link-name">Contact</span></div>
-    <div class="menu-page-link" id="" onclick="nav('settings')"><span class="menu-link-num">12</span><span class="menu-link-icon">⚙</span><span class="menu-link-name">Chamber</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('codex')"><span class="menu-link-num">08</span><span class="menu-link-icon">⚖</span><span class="menu-link-name">Codex</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('about')"><span class="menu-link-num">09</span><span class="menu-link-icon">✦</span><span class="menu-link-name">The Origin</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('faq')"><span class="menu-link-num">10</span><span class="menu-link-icon">❓</span><span class="menu-link-name">The Guide</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('contact')"><span class="menu-link-num">11</span><span class="menu-link-icon">✉</span><span class="menu-link-name">Contact</span></div>
+    <div class="menu-page-link" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" id="" onclick="nav('settings')"><span class="menu-link-num">12</span><span class="menu-link-icon">⚙</span><span class="menu-link-name">Chamber</span></div>
   </div>
 </div>
 </body>
