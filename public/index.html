@@ -1659,14 +1659,14 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     <div class="nav-links" id="nav-links">
       <span class="nav-link" data-pill="Where you start" onclick="nav('home')" data-tip="Your entrance to the Arcanum — start here to discover everything the Academy offers.">Home</span>
       <span class="nav-link" data-pill="Browse rated extracurriculars" onclick="nav('marketplace')" data-tip="3,000+ real extracurriculars rated 0–5 across four dimensions by students who actually did them.">The Stacks</span>
-      <span class="nav-link" data-pill="Chat with the AI advisor" onclick="nav('jebadias')" data-tip="Jebadias Hawthorne — your AI advisor who builds a personalized EC roadmap for your specific situation.">Jebadias</span>
+      <span class="nav-link" data-pill="Chat with the AI advisor" onclick="nav('jebadias')" data-tip="Your AI advisor — builds a personalized EC roadmap for your specific situation.">Jebadias</span>
       <span class="nav-link" data-pill="Your saved ECs" onclick="nav('spellbook')" data-tip="Your saved EC collection — add spells here before committing them to your Grimoire.">Spellbook</span>
       <span class="nav-link" data-pill="Your committed ECs" onclick="nav('grimoire')" data-tip="Your Grimoire — the ECs you've committed to doing, with status, milestones, and deadlines.">Grimoire</span>
       <span class="nav-link" id="ascension-nav" data-std="The Planner" style="display:none" data-pill="Your committed-EC synthesis" onclick="enterPhaseTwo(false)" data-tip="The Ascension — your committed ECs, synthesized into one master plan.">The Ascension</span>
       <span class="nav-link" data-pill="Submit an EC" onclick="nav('list')" data-tip="List an EC you have personally done so other students can find, rate, and review it.">The Quill</span>
       <span class="nav-link" data-pill="Community rules" onclick="nav('codex')" data-tip="The Academy's laws — rules every mage must follow before listing, reviewing, or consulting the Oracle.">Codex</span>
       <span class="nav-link" data-pill="Why Arcanum exists" onclick="nav('about')" data-tip="The origin story of the Arcanum — what it is, why it was built, and what it is trying to fix.">The Origin</span>
-      <span class="nav-link" data-pill="Questions answered" onclick="nav('faq')" data-tip="Answers to every question about the rating systems, Jebadias, the Spellbook, and the Academy.">The Guide</span>
+      <span class="nav-link" data-pill="Questions answered" onclick="nav('faq')" data-tip="Answers to every question about the rating systems, the Advisor, Saved, and Arcanum.">The Guide</span>
       <span class="nav-link" data-pill="Reach the team" onclick="nav('contact')" data-tip="Reach the Academy — questions, suggestions, or just to say hello.">Contact</span>
       <span class="nav-link" data-pill="Explore the world" id="nav-map-link" onclick="nav('map')" data-tip="Explore the World of Arcana — discover chronicle fragments and the lore of each location.">Arcana</span>
       <span class="nav-link" data-pill="Story chapters you've found" id="collections-nav" style="display:none" onclick="nav('collections')" data-tip="Chronicle fragments you have discovered — pieces of the Arcanum's hidden history.">The Chronicle</span>
@@ -1817,7 +1817,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       </div>
       <div style="text-align:center;margin-top:24px"><button class="btn btn-secondary" data-std="Browse all ECs →" onclick="nav('marketplace')">Browse All Spells →</button></div>
     </div>
-    <div class="jeb-spot">
+    <div class="jeb-spot mode-hide">
       <div class="jeb-spot-inner">
         <div class="jeb-spot-avatar" id="home-jeb-avatar" onclick="nav('jebadias')"></div>
         <div>
@@ -1829,15 +1829,26 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         </div>
       </div>
     </div>
+    <div class="jeb-spot std-only">
+      <div class="jeb-spot-inner">
+        <div class="jeb-spot-avatar" style="font-size:32px;display:flex;align-items:center;justify-content:center" onclick="nav('jebadias')">🔮</div>
+        <div>
+          <div class="sec-label" style="text-align:left;margin-bottom:12px">✦ YOUR ADVISOR ✦</div>
+          <blockquote class="jeb-spot-quote" style="font-family:'Newsreader',serif">"I have been doing this for a very long time. Long enough to know that most students don't need more information — they need someone to ask them the right question. That is what I do."</blockquote>
+          <p class="jeb-spot-sub">Meet your AI advisor. He's a little more than a chatbot — talk to him long enough and you'll find out why.</p>
+          <button class="btn btn-secondary" onclick="nav('jebadias')" style="margin-top:16px">Talk to the Advisor →</button>
+        </div>
+      </div>
+    </div>
     <div class="page-inner" style="padding-top:40px">
       <div class="sec-label">✦ WHY ARCANUM ✦</div>
       <div class="sec-title">Different by Design</div>
       <div class="why-grid">
         <div class="why-item"><span class="why-check">✦</span><div><strong>Built for students, not parents.</strong> Every description is written the way a student would explain it.</div></div>
         <div class="why-item"><span class="why-check">✦</span><div><strong>Branch ratings from real people.</strong> Difficulty scores come from students who've done the EC.</div></div>
-        <div class="why-item"><span class="why-check">✦</span><div><strong>AI that actually knows you.</strong> Jebadias interviews you. The roadmap reflects your life, not an average.</div></div>
+        <div class="why-item"><span class="why-check">✦</span><div><strong>AI that actually knows you.</strong> <span data-std="The Advisor">Jebadias</span> interviews you. The roadmap reflects your life, not an average.</div></div>
         <div class="why-item"><span class="why-check">✦</span><div><strong>Impact tagged, always.</strong> Every EC tagged by reach level — local recognition vs. national publication.</div></div>
-        <div class="why-item"><span class="why-check">✦</span><div><strong>Your Grimoire, your path.</strong> No generic lists. Your collection, your roadmap, your Spellbook.</div></div>
+        <div class="why-item"><span class="why-check">✦</span><div><strong><span data-std="Your path, your way.">Your Grimoire, your path.</span></strong> <span data-std="No generic lists. Your saved list, your roadmap, your tracker.">No generic lists. Your collection, your roadmap, your Spellbook.</span></div></div>
         <div class="why-item mode-hide"><span class="why-check">✦</span><div><strong>There's more here than it seems.</strong> Arcanum has layers. Explore carefully.</div></div>
       </div>
     </div>
@@ -1894,36 +1905,36 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <button class="test-arrow test-prev" onclick="goTestSlide(window.getTestCur()-1)" aria-label="Previous">&#8592;</button>
       <button class="test-arrow test-next" onclick="goTestSlide(window.getTestCur()+1)" aria-label="Next">&#8594;</button>
       <div class="test-carousel-wrap2" id="test-carousel">
-        <div class="test-slide active" id="ts-0"><p class="test-quote">“Jebadias asked me one question I'd never thought about. The whole roadmap shifted. I ended up applying to a program I'd never heard of — and got in.”</p><span class="test-attr">— Maya R., Johns Hopkins '26</span></div>
+        <div class="test-slide active" id="ts-0"><p class="test-quote">“The Advisor asked me one question I'd never thought about. The whole roadmap shifted. I ended up applying to a program I'd never heard of — and got in.”</p><span class="test-attr">— Maya R., Johns Hopkins '26</span></div>
         <div class="test-slide" id="ts-1"><p class="test-quote">“I spent two years doing random stuff. Arcanum made me realize I had a thread — I just hadn't named it.”</p><span class="test-attr">— Arjun K., MIT '25</span></div>
         <div class="test-slide" id="ts-2"><p class="test-quote">“The easter eggs kept me on the site way longer than I planned. But my EC list is legitimately better for it.”</p><span class="test-attr">— Sofia M., Stanford '26</span></div>
-        <div class="test-slide" id="ts-3"><p class="test-quote">“Before Arcanum I thought I needed to do 12 ECs. Jebadias told me I needed three good ones and a story. He was right.”</p><span class="test-attr">— Caleb T., Duke '26</span></div>
+        <div class="test-slide" id="ts-3"><p class="test-quote">“Before Arcanum I thought I needed to do 12 ECs. The Advisor told me I needed three good ones and a story. He was right.”</p><span class="test-attr">— Caleb T., Duke '26</span></div>
         <div class="test-slide" id="ts-4"><p class="test-quote">“I found the NIH internship through a random filter click at 11pm. Changed my entire summer. Changed my entire application.”</p><span class="test-attr">— Priya S., Yale '26</span></div>
         <div class="test-slide" id="ts-5"><p class="test-quote">“The Mushrooms rating showed me which doors were actually open. I stopped wasting time on things I couldn't get into.”</p><span class="test-attr">— Daniel W., Princeton '26</span></div>
-        <div class="test-slide" id="ts-6"><p class="test-quote">“Jebadias has 9 modes. I found all of them. My application essay basically wrote itself.”</p><span class="test-attr">— Nia B., Cornell '26</span></div>
+        <div class="test-slide" id="ts-6"><p class="test-quote">“The Advisor asked questions no counselor ever had. My application essay basically wrote itself.”</p><span class="test-attr">— Nia B., Cornell '26</span></div>
         <div class="test-slide" id="ts-7"><p class="test-quote">“I listed an EC I ran and three people messaged me saying they got in because of it. That felt insane.”</p><span class="test-attr">— Marcus L., Columbia '26</span></div>
-        <div class="test-slide" id="ts-8"><p class="test-quote">“The Grimoire milestone tracker saved me. I had receipts when it came time to write my activities list.”</p><span class="test-attr">— Ishaan P., Northwestern '25</span></div>
+        <div class="test-slide" id="ts-8"><p class="test-quote">“The Tracker's milestones saved me. I had receipts when it came time to write my activities list.”</p><span class="test-attr">— Ishaan P., Northwestern '25</span></div>
         <div class="test-slide" id="ts-9"><p class="test-quote">“I used to think competitive meant impossible. Arcanum taught me to read the ratings before assuming.”</p><span class="test-attr">— Zoe C., UChicago '26</span></div>
-        <div class="test-slide" id="ts-10"><p class="test-quote">“Jebadias asked me why I wanted to be a doctor four different ways until I could actually answer it.”</p><span class="test-attr">— Anika R., UCSF Med '30</span></div>
+        <div class="test-slide" id="ts-10"><p class="test-quote">“The Advisor asked me why I wanted to be a doctor four different ways until I could actually answer it.”</p><span class="test-attr">— Anika R., UCSF Med '30</span></div>
         <div class="test-slide" id="ts-11"><p class="test-quote">“Found out about the Congressional Award here at 10th grade. Had Gold by junior year. Would have missed it.”</p><span class="test-attr">— Ethan F., Georgetown '26</span></div>
         <div class="test-slide" id="ts-12"><p class="test-quote">“I thought I had a weak application. Arcanum organized what I already had and I realized I had a real story.”</p><span class="test-attr">— Jordan H., Dartmouth '26</span></div>
         <div class="test-slide" id="ts-13"><p class="test-quote">“The Bones rating saved me twice. I almost committed to two ECs I physically did not have time for.”</p><span class="test-attr">— Chloe K., Vanderbilt '26</span></div>
-        <div class="test-slide" id="ts-14"><p class="test-quote">“My counselor gave me the same advice every year. Jebadias gave me advice that was specifically about me.”</p><span class="test-attr">— Rahul M., Carnegie Mellon '25</span></div>
-        <div class="test-slide" id="ts-15"><p class="test-quote">“I unlocked Jebadias's oracle mode. I don't know what to say other than it made everything click.”</p><span class="test-attr">— Sara D., Yale '27</span></div>
+        <div class="test-slide" id="ts-14"><p class="test-quote">“My counselor gave me the same advice every year. The Advisor gave me advice that was specifically about me.”</p><span class="test-attr">— Rahul M., Carnegie Mellon '25</span></div>
+        <div class="test-slide" id="ts-15"><p class="test-quote">“I almost skipped the AI advisor entirely. Thirty minutes in and it made everything click.”</p><span class="test-attr">— Sara D., Yale '27</span></div>
         <div class="test-slide" id="ts-16"><p class="test-quote">“The Codex made me list honestly. Easier to write when you're not performing.”</p><span class="test-attr">— Tyler B., Rice '26</span></div>
-        <div class="test-slide" id="ts-17"><p class="test-quote">“Twelve easter eggs in three days. The Grimoire done in one. Pretty good weekend.”</p><span class="test-attr">— Alex W., WUSTL '26</span></div>
+        <div class="test-slide" id="ts-17"><p class="test-quote">“Twelve easter eggs in three days. The Tracker done in one. Pretty good weekend.”</p><span class="test-attr">— Alex W., WUSTL '26</span></div>
         <div class="test-slide" id="ts-18"><p class="test-quote">“I came for the ECs and stayed for the lore. I also got into my top choice, so.”</p><span class="test-attr">— Nadia V., Emory '26</span></div>
         <div class="test-slide" id="ts-19"><p class="test-quote">“The EC detail page alone is worth it. I had no idea what NSLI-Y was before I found it here.”</p><span class="test-attr">— James Y., Tufts '26</span></div>
         <div class="test-slide" id="ts-20"><p class="test-quote">“Three Branches on RSI made me reconsider my timeline. I started with smaller research first. Smart.”</p><span class="test-attr">— Fatima O., UT Austin '26</span></div>
-        <div class="test-slide" id="ts-21"><p class="test-quote">“Jebadias at 23 told me to slow down. Jebadias at 237 told me why. Both were right.”</p><span class="test-attr">— Ben A., Williams '26</span></div>
+        <div class="test-slide" id="ts-21"><p class="test-quote">“The Advisor told me to slow down freshman year. By senior year I finally understood why. Worth the wait.”</p><span class="test-attr">— Ben A., Williams '26</span></div>
         <div class="test-slide" id="ts-22"><p class="test-quote">“I listed a nonprofit I founded and got actual signups within a week. Didn't expect that.”</p><span class="test-attr">— Grace L., Pomona '26</span></div>
         <div class="test-slide" id="ts-23"><p class="test-quote">“Arcanum is the first tool that treated me like I could handle honest information about difficulty.”</p><span class="test-attr">— David N., Colby '26</span></div>
-        <div class="test-slide" id="ts-24"><p class="test-quote">“My counselor didn't know what iGEM was. Jebadias did. And he told me exactly why it fit my profile.”</p><span class="test-attr">— Soo-Jin K., UIUC '25</span></div>
+        <div class="test-slide" id="ts-24"><p class="test-quote">“My counselor didn't know what iGEM was. The Advisor did. And he told me exactly why it fit my profile.”</p><span class="test-attr">— Soo-Jin K., UIUC '25</span></div>
         <div class="test-slide" id="ts-25"><p class="test-quote">“Found Arcanum in October junior year. Even then it changed how I thought about my last few months.”</p><span class="test-attr">— Mia T., UVA '26</span></div>
-        <div class="test-slide" id="ts-26"><p class="test-quote">“The fragments are real. I won't say more. Do the map.”</p><span class="test-attr">— Oliver H., Middlebury '26</span></div>
-        <div class="test-slide" id="ts-27"><p class="test-quote">“I gave Jebadias my full situation and he gave me a roadmap that actually accounted for all of it.”</p><span class="test-attr">— Amara J., Spelman '26</span></div>
+        <div class="test-slide" id="ts-26"><p class="test-quote">“There's more under the surface than you'd think. I won't say more. Just dig around.”</p><span class="test-attr">— Oliver H., Middlebury '26</span></div>
+        <div class="test-slide" id="ts-27"><p class="test-quote">“I gave the Advisor my full situation and he gave me a roadmap that actually accounted for all of it.”</p><span class="test-attr">— Amara J., Spelman '26</span></div>
         <div class="test-slide" id="ts-28"><p class="test-quote">“Found three ECs I was eligible for that I'd never heard of. Applied to two. Got one. That's a win.”</p><span class="test-attr">— Chris M., Lehigh '26</span></div>
-        <div class="test-slide" id="ts-29"><p class="test-quote">“Used Spellbook to Grimoire flow junior year. My activities section basically wrote itself.”</p><span class="test-attr">— Lily K., Brown '27</span></div>
+        <div class="test-slide" id="ts-29"><p class="test-quote">“Saved, then tracked, all through junior year. My activities section basically wrote itself.”</p><span class="test-attr">— Lily K., Brown '27</span></div>
       </div>
       </div>
       <div class="test-dots2" style="display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap">
@@ -2038,7 +2049,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:22px">
           <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin-bottom:10px">02 — IMPACT IS VERIFIABLE</div>
-          <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">Raised $3,000 for a local shelter. Published two research papers. Reached 8,000 users. These are facts. "Contributed to the team's overall success" is not. Arcanum's Grimoire tracker is built to help you document specific, verifiable milestones as they happen.</p>
+          <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">Raised $3,000 for a local shelter. Published two research papers. Reached 8,000 users. These are facts. "Contributed to the team's overall success" is not. Arcanum's <span data-std="Tracker">Grimoire tracker</span> is built to help you document specific, verifiable milestones as they happen.</p>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:22px">
           <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin-bottom:10px">03 — RARITY IS RELATIVE</div>
@@ -2046,7 +2057,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:22px">
           <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin-bottom:10px">04 — NARRATIVE WINS</div>
-          <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">The strongest applications have a through-line — a coherent story about who you are and what you build. Your ECs should reinforce a single narrative, not scatter across every possible category. Jebadias can help you find your thread and build around it.</p>
+          <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0">The strongest applications have a through-line — a coherent story about who you are and what you build. Your ECs should reinforce a single narrative, not scatter across every possible category. <span data-std="The Advisor">Jebadias</span> can help you find your thread and build around it.</p>
         </div>
         <div style="background:var(--card);border:1px solid var(--border);padding:22px">
           <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin-bottom:10px">05 — START EARLIER THAN YOU THINK</div>
@@ -2060,7 +2071,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
     </div>
 
     <!-- JEBADIAS SPOTLIGHT (expanded) -->
-    <div class="page-inner" style="padding-top:0">
+    <div class="page-inner mode-hide" style="padding-top:0">
       <div class="jeb-spotlight" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;background:var(--card);border:1px solid var(--border);padding:28px">
         <div>
           <div style="font-family:var(--px);font-size:6px;color:var(--text3);margin-bottom:10px">✦ YOUR ADVISOR ✦</div>
@@ -2076,13 +2087,28 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         </div>
       </div>
     </div>
+    <div class="page-inner std-only" style="padding-top:0">
+      <div class="jeb-spotlight" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;background:var(--card);border:1px solid var(--border);padding:28px">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Your Advisor</div>
+          <h2 style="font-family:var(--chic);font-size:26px;color:var(--text);margin:0 0 14px;line-height:1.3;font-weight:700">Meet your AI advisor.</h2>
+          <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0 0 14px">It doesn't give generic advice. It asks real questions until it understands your specific situation, then builds a roadmap that fits your actual life — your grade, your goals, your constraints.</p>
+          <p style="font-size:13px;color:var(--text2);line-height:1.8;margin:0 0 20px">It remembers context across your conversations, and it has more to say about itself than you'd expect — ask it sometime.</p>
+          <button class="btn btn-primary" onclick="nav('jebadias')">Talk to the Advisor</button>
+        </div>
+        <div style="text-align:center">
+          <div style="display:inline-block;margin-bottom:12px;font-size:48px">🔮</div>
+          <div style="font-family:'Newsreader',serif;font-style:italic;font-size:15px;color:var(--text2);line-height:1.75;max-width:300px;margin:0 auto">"Tell me what you are trying to build. Not what you think I want to hear. What you are actually trying to build. We will go from there."</div>
+        </div>
+      </div>
+    </div>
         <div class="home-cta-final">
       <div class="sec-label">✦ BEGIN ✦</div>
       <div class="sec-title" style="font-size:clamp(12px,2.5vw,18px)">Your Path Is Waiting.</div>
       <p data-std="The Marketplace is open. The Advisor is ready. Your Saved list is empty and waiting." style="color:var(--text2);margin:0 auto 24px;max-width:440px;font-size:14px;line-height:1.65">The Marketplace is open. Jebadias is available. Your Spellbook is empty and ready.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="nav('marketplace')">Enter the Marketplace</button>
-        <button class="btn btn-secondary" onclick="nav('jebadias')">🔮 Consult Jebadias</button>
+        <button class="btn btn-secondary" data-std="Talk to the Advisor" onclick="nav('jebadias')">🔮 Consult Jebadias</button>
       </div>
     </div>
   </div>
@@ -2209,7 +2235,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div id="ec-detail-apply" style="font-size:13px;color:var(--text2);line-height:1.8"></div>
       <div class="ec-section" id="ec-signal-wrap" style="display:none"><div class="ec-section-label">Why this matters to colleges</div><div id="ec-detail-signal" style="font-size:13px;color:var(--text2);line-height:1.85"></div></div>
       <div class="ec-section" id="ec-reader-wrap" style="display:none"><div class="ec-section-label">What admissions readers look for</div><div id="ec-detail-reader" style="font-size:13px;color:var(--text2);line-height:1.85"></div></div>
-      <div class="ec-section" id="ec-tips-wrap" style="display:none"><div class="ec-section-label">Jebadias advises</div><div id="ec-detail-tips" style="font-size:13px;color:var(--text2);line-height:1.85;font-style:italic;padding-left:14px;border-left:2px solid var(--accent)"></div></div>
+      <div class="ec-section" id="ec-tips-wrap" style="display:none"><div class="ec-section-label" data-std="The Advisor says">Jebadias advises</div><div id="ec-detail-tips" style="font-size:13px;color:var(--text2);line-height:1.85;font-style:italic;padding-left:14px;border-left:2px solid var(--accent)"></div></div>
       </div>
       <div class="ec-section"><div class="ec-section-label">Impact &amp; Commitment</div><div class="ec-facts" id="ec-detail-facts"></div></div>
       <div class="ec-section">
@@ -2249,8 +2275,8 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         <div class="jeb-status-wrap"><div class="jeb-dot"></div><div class="jeb-status-txt" id="jeb-status">AVAILABLE</div></div>
       </div>
       <div class="persona-section">
-        <div class="persona-label">SELECT ADVISOR</div>
-        <div class="persona-grid" id="persona-grid"></div>
+        <div class="persona-label mode-hide">SELECT ADVISOR</div>
+        <div class="persona-grid mode-hide" id="persona-grid"></div>
         <button onclick="openQuiz()" style="width:100%;margin-top:12px;background:transparent;border:1px solid var(--accent);color:var(--accent);padding:11px;border-radius:9px;font-size:12px;cursor:pointer">✦ Take the intake quiz</button>
       </div>
     </div>
@@ -2431,9 +2457,9 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   <span class="codex-section-icon">🤝</span>
   <span>COMMUNITY RULES</span>
 </div>
-    <div class="codex-rule"><div class="codex-num">07</div><div class="codex-text">Jebadias's advice is AI-generated and reflects general patterns, not guaranteed outcomes. Verify program details, deadlines, and eligibility requirements independently before committing. Arcanum is not responsible for outcomes based on AI recommendations.</div></div>
+    <div class="codex-rule"><div class="codex-num">07</div><div class="codex-text"><span data-std="The Advisor's">Jebadias's</span> advice is AI-generated and reflects general patterns, not guaranteed outcomes. Verify program details, deadlines, and eligibility requirements independently before committing. Arcanum is not responsible for outcomes based on AI recommendations.</div></div>
     <div class="codex-rule"><div class="codex-num">08</div><div class="codex-text">Reviews must reflect genuine personal experience. Do not write reviews for ECs you haven't done, do not write fake positive reviews for ECs you want to promote, and do not write negative reviews for competitive programs you want to deter others from applying to.</div></div>
-    <div class="codex-rule"><div class="codex-num">09</div><div class="codex-text">Do not use Jebadias or any Arcanum feature to generate content intended to deceive colleges, fabricate experiences, or assist with academic dishonesty. Arcanum is a planning tool, not a ghostwriting service.</div></div>
+    <div class="codex-rule"><div class="codex-num">09</div><div class="codex-text">Do not use <span data-std="the Advisor">Jebadias</span> or any Arcanum feature to generate content intended to deceive colleges, fabricate experiences, or assist with academic dishonesty. Arcanum is a planning tool, not a ghostwriting service.</div></div>
     <div class="codex-rule"><div class="codex-num">10</div><div class="codex-text">Treat the platform as you would want others to treat it. Every listing you contribute is read by real students making real decisions. The accuracy of what you write directly affects the quality of their choices.</div></div>
 
     <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin:28px 0 16px;letter-spacing:1px">MODERATION & APPEALS</div>
@@ -2466,7 +2492,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       </div>
       <div style="background:var(--card);border:1px solid var(--border);padding:20px">
         <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin-bottom:10px">THE SOLUTION</div>
-        <p style="color:var(--text2);line-height:1.9;font-size:13px">So Arcanum is a catalog of extracurriculars where the ratings come from students who actually did them, not some algorithm guessing. Each one gets scored on four things that actually matter — how meaningful it is, how hard it is, how much time it eats, and how competitive it is to get into — so you can filter for what fits your life. And the advisor, Jebadias, doesn't just say "do more community service." You tell him your grade, your goals, and what you're working with, and he builds an actual plan around you.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px">So Arcanum is a catalog of extracurriculars where the ratings come from students who actually did them, not some algorithm guessing. Each one gets scored on four things that actually matter — how meaningful it is, how hard it is, how much time it eats, and how competitive it is to get into — so you can filter for what fits your life. And <span data-std="the AI advisor doesn't just say">the advisor, Jebadias, doesn't just say</span> "do more community service." You tell him your grade, your goals, and what you're working with, and he builds an actual plan around you.</p>
       </div>
       <div style="background:var(--card);border:1px solid var(--border);padding:20px">
         <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin-bottom:10px">WHO BUILT THIS</div>
@@ -2479,7 +2505,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px">
         <div style="font-family:var(--px);font-size:7px;color:var(--accent);margin-bottom:10px">HOW IT'S BUILT · DATA · AI</div>
         <p style="color:var(--text2);line-height:1.9;font-size:13px">Arcanum is a single-page web app I built and deployed myself. The catalog, the tracker, and all the logic live in one file, with a Cloudflare Worker proxying the AI requests and Supabase handling optional accounts and sync.</p>
-        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-top:12px"><strong style="color:var(--text)">On AI, straight up:</strong> Jebadias is powered by Anthropic's Claude. The sample reviews on activities are AI-generated to show the kind of feedback something tends to get — they're labeled as samples, not real student quotes. The four ratings are illustrative starting points, not survey data. Anything the AI drafts — the Common App export, the master plan — is a draft for you to edit, never a finished answer. I used AI to help build parts of this too, and I can explain how every piece works.</p>
+        <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-top:12px"><strong style="color:var(--text)">On AI, straight up:</strong> <span data-std="The Advisor is">Jebadias is</span> powered by Anthropic's Claude. The sample reviews on activities are AI-generated to show the kind of feedback something tends to get — they're labeled as samples, not real student quotes. The four ratings are illustrative starting points, not survey data. Anything the AI drafts — the Common App export, the master plan — is a draft for you to edit, never a finished answer. I used AI to help build parts of this too, and I can explain how every piece works.</p>
         <p style="color:var(--text2);line-height:1.9;font-size:13px;margin-top:12px"><strong style="color:var(--text)">On your data:</strong> everything saves to your own browser by default and never leaves it unless you make an account — in which case it syncs to a private database so it follows you across devices. No ads. No trackers. Nothing sold. Ever.</p>
       </div>
     </div>
@@ -2621,9 +2647,9 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I unlock the advisor's other personas?<span class="faq-arrow">▼</span></div>
         <div class="faq-a"><p>Just keep talking to Jebadias and exploring the world — his different eras unlock as you go. They change his personality and the stories he tells, never the quality of the advice.</p></div>
       </div>
-      <div class="faq-item">
+      <div class="faq-item mode-hide">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I have to use the fantasy stuff?<span class="faq-arrow">▼</span></div>
-        <div class="faq-a"><p>Not at all. Open Settings and turn off Game mode — you get a clean, plain version with normal names (Marketplace, Advisor, Tracker) and zero lore. Every feature stays; only the styling changes.</p></div>
+        <div class="faq-a"><p>Not at all — you're already seeing it, which means you found your way in. If you'd rather go back to the plain version, you know how you got here.</p></div>
       </div>
       <div class="faq-q-divider" style="font-family:var(--px);font-size:7px;color:var(--accent);margin:26px 0 4px;letter-spacing:1px">MORE STRATEGY</div>
       <div class="faq-item">
@@ -2705,9 +2731,9 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div style="background:var(--card);border:1px solid var(--border);padding:18px">
         <div style="font-family:var(--px);font-size:6px;color:var(--accent);margin-bottom:12px">GOOD TO KNOW</div>
         <div style="font-size:13px;color:var(--text2);line-height:1.75">
-          <p style="margin-bottom:8px">For new EC submissions, use the <span onclick="nav('list')" style="color:var(--accent);cursor:pointer;text-decoration:underline">The Quill</span> page — not Contact.</p>
-          <p style="margin-bottom:8px">For Jebadias issues, try clearing your chat history in Settings first.</p>
-          <p style="margin-bottom:0">For lore questions — you're on your own. That's kind of the point.</p>
+          <p style="margin-bottom:8px">For new EC submissions, use the <span onclick="nav('list')" style="color:var(--accent);cursor:pointer;text-decoration:underline" data-std="Submit EC">The Quill</span> page — not Contact.</p>
+          <p style="margin-bottom:8px">For <span data-std="advisor">Jebadias</span> issues, try clearing your chat history in Settings first.</p>
+          <p class="mode-hide" style="margin-bottom:0">For lore questions — you're on your own. That's kind of the point.</p>
         </div>
       </div>
       <div style="background:var(--card);border:1px solid var(--border);padding:18px">
@@ -5358,7 +5384,7 @@ body { background-color: var(--bg); background-image: none; }
         </div>
       </div>
     </div>
-    <div class="setting-group">
+    <div class="setting-group mode-hide">
       <div class="setting-label">KEYBOARD SHORTCUTS</div>
       <div class="setting-row"><span class="setting-name">↑ ↑ ↓ ↓ ← → ← → B A</span><span style="font-size:11px;color:var(--text3)">Something opens</span></div>
       <div class="setting-row"><span class="setting-name">Type anywhere</span><span style="font-size:11px;color:var(--text3)">Certain words do certain things</span></div>
@@ -5369,11 +5395,11 @@ body { background-color: var(--bg); background-image: none; }
     <div class="setting-group">
       <div class="setting-label">ABOUT</div>
       <div class="setting-row"><span class="setting-name">App</span><span style="font-size:12px;color:var(--text3)">Arcanum v1.0</span></div>
-      <div class="setting-row"><span class="setting-name">Built for</span><span style="font-size:12px;color:var(--text3)">Congressional App Challenge 2026</span></div>
+      <div class="setting-row"><span class="setting-name">Built for</span><span style="font-size:12px;color:var(--text3)">Free, for high schoolers everywhere</span></div>
       <div class="setting-row"><span class="setting-name">Stack</span><span style="font-size:12px;color:var(--text3)">Single HTML file · Claude API · Cloudflare Workers</span></div>
       <div class="setting-row"><span class="setting-name">AI outputs</span><span style="font-size:12px;color:var(--text3)">May contain inaccuracies — verify independently</span></div>
       <div class="setting-row"><span class="setting-name">Data storage</span><span style="font-size:12px;color:var(--text3)">localStorage only · no server · no account</span></div>
-      <div class="setting-row"><span class="setting-name">Jebadias Hawthorne</span><span style="font-size:12px;color:var(--text3)">Fictional · Age 237 · Still working on it</span></div>
+      <div class="setting-row mode-hide"><span class="setting-name">Jebadias Hawthorne</span><span style="font-size:12px;color:var(--text3)">Fictional · Age 237 · Still working on it</span></div>
     </div>
 
     <!-- ── SECTION 3: DISPLAY PREFERENCES ── -->
@@ -5673,18 +5699,18 @@ body { background-color: var(--bg); background-image: none; }
   <div class="ss-inner">
     <div class="ss-eyebrow">✦ THE ASCENSION ✦</div>
     <h1 class="ss-title">The Ascension</h1>
-    <p class="ss-sub">Everything you've committed to, made personal. Open any card for a breakdown built around <em>you</em> — and when you're ready, let Jebadias read the whole picture at once.</p>
+    <p class="ss-sub">Everything you've committed to, made personal. Open any card for a breakdown built around <em>you</em> — and when you're ready, let <span data-std="the Advisor">Jebadias</span> read the whole picture at once.</p>
     <div style="text-align:center;margin-bottom:24px"><button class="ss-tool" onclick="exitPhaseTwo()">⟵ Return</button></div>
     <div id="p2-stats"></div>
     <div id="p2-cards"></div>
     <div class="ss-section" style="margin-top:26px">
-      <h2>Jebadias's Master Plan</h2>
+      <h2><span data-std="The Advisor's">Jebadias's</span> Master Plan</h2>
       <div id="ss-intro">
-        <p class="ss-sub" style="margin:0 0 16px">When your Grimoire holds enough, Jebadias reads all of it at once and returns a full strategic debrief — narrative, gaps, your Common App section, a timeline, essay angles, and his own letter.</p>
+        <p class="ss-sub" style="margin:0 0 16px">When your <span data-std="Tracker">Grimoire</span> holds enough, <span data-std="the Advisor">Jebadias</span> reads all of it at once and returns a full strategic debrief — narrative, gaps, your Common App section, a timeline, essay angles, and his own letter.</p>
         <button class="ss-cta" id="ss-generate-btn" onclick="generateSecondSeaPlan()">Generate my master plan</button>
         <p id="ss-gate-note" style="text-align:center;color:#9a8a5a;font-size:12px;margin-top:14px"></p>
       </div>
-      <div id="ss-loading" class="ss-loading" style="display:none">Jebadias is reading your Grimoire…<br>Tracing the pattern across everything you've committed to.</div>
+      <div id="ss-loading" class="ss-loading" style="display:none"><span data-std="The Advisor is">Jebadias is</span> reading your <span data-std="Tracker">Grimoire</span>…<br>Tracing the pattern across everything you've committed to.</div>
       <div id="ss-output" style="display:none"></div>
       <div id="ss-toolbar" class="ss-toolbar" style="display:none">
         <button class="ss-tool" onclick="copySecondSea()">⧉ Copy plan</button>
@@ -5700,8 +5726,8 @@ body { background-color: var(--bg); background-image: none; }
   <div style="max-width:440px;background:#1c1408;border:1px solid #6b5226;border-radius:16px;padding:28px;text-align:center;color:#f0e4c8">
     <div style="font-size:34px;margin-bottom:10px">✦</div>
     <h2 style="font-family:'Cinzel',serif;color:#f3e2b0;margin:0 0 12px">Welcome to the Ascension</h2>
-    <p style="font-size:14px;line-height:1.7;color:#cbb98a">You've crossed from discovery into commitment. This is the Ascension — every EC you've committed to lives here as a card. Tap any card for a breakdown built around <em>your</em> goals. When you're ready, have Jebadias read the whole picture and write your master plan.</p>
-    <p style="font-size:13px;line-height:1.6;color:#9a8a5a;margin-top:12px">To add more, return and add ECs to your Spellbook, then come back. You'll stay here until you choose to leave — from the button up top or from Settings.</p>
+    <p style="font-size:14px;line-height:1.7;color:#cbb98a">You've crossed from discovery into commitment. This is the Ascension — every EC you've committed to lives here as a card. Tap any card for a breakdown built around <em>your</em> goals. When you're ready, have <span data-std="the Advisor">Jebadias</span> read the whole picture and write your master plan.</p>
+    <p style="font-size:13px;line-height:1.6;color:#9a8a5a;margin-top:12px">To add more, return and add ECs to your <span data-std="Saved list">Spellbook</span>, then come back. You'll stay here until you choose to leave — from the button up top or from Settings.</p>
     <button onclick="dismissP2Welcome()" style="margin-top:18px;background:linear-gradient(180deg,#d4a73c,#a67c1f);color:#1a1206;border:none;padding:13px 26px;border-radius:10px;font-weight:700;cursor:pointer">Enter the realm</button>
   </div>
 </div>
@@ -9937,7 +9963,7 @@ function openEC(ec) {
   if (ec.img && imgWrap && imgEl) { imgEl.src=ec.img; imgWrap.style.display='block'; }
   else if (imgWrap) imgWrap.style.display='none';
   document.getElementById('ec-detail-desc').textContent = ec.desc || '';
-  document.getElementById('ec-detail-what').textContent = ec.what || `Complete this ${ec.cat} activity and document your experience. Consult Jebadias for guidance on how to get started and what application materials are needed.`;
+  document.getElementById('ec-detail-what').textContent = ec.what || `Complete this ${ec.cat} activity and document your experience. Consult ${(typeof isGameMode==='function'&&isGameMode())?'Jebadias':'the Advisor'} for guidance on how to get started and what application materials are needed.`;
   document.getElementById('ec-detail-facts').innerHTML = `
     <div class="ec-fact"><div class="ec-fact-label">TIME COMMITMENT</div><div class="ec-fact-val">${ec.time||'Varies'}</div></div>
     <div class="ec-fact"><div class="ec-fact-label">IMPACT LEVEL</div><div class="ec-fact-val">${(ec.impact||'Local').charAt(0).toUpperCase()+(ec.impact||'Local').slice(1)}</div></div>
@@ -9969,7 +9995,7 @@ function openEC(ec) {
       else if(comp>=2.5) ahtml='<p>Moderately accessible. Show genuine interest and relevant experience. Most prepared applicants get in.</p>';
       else               ahtml='<p>Generally accessible. A short specific email to the organizer asking how to get involved is usually all it takes.</p>';
       if((ec.rarity==='Legendary'||ec.rarity==='Epic')&&(ec.impact==='National'||ec.impact==='International'))
-        ahtml+='<div style="margin-top:10px;padding:10px 14px;background:var(--card);border-left:2px solid var(--accent);font-size:12px">Given this EC\'s prestige, consider consulting Jebadias about how it fits your narrative before committing.</div>';
+        ahtml+='<div style="margin-top:10px;padding:10px 14px;background:var(--card);border-left:2px solid var(--accent);font-size:12px">Given this EC\'s prestige, consider consulting '+((typeof isGameMode==='function'&&isGameMode())?'Jebadias':'the Advisor')+' about how it fits your narrative before committing.</div>';
     }
     ael.innerHTML=ahtml; awrap.style.display='block';
   })();
@@ -10272,8 +10298,9 @@ function updateJebHeader() {
   if (!p) return;
   const nameEl = document.getElementById('jeb-name');
   const roleEl = document.getElementById('jeb-role');
-  if (nameEl) nameEl.textContent = p.name;
-  if (roleEl) roleEl.textContent = p.age + ' · ' + (currentPersona==='oracle'?'Oracle & Master Wizard':'Advisor, The Academy');
+  var game = (typeof isGameMode==='function') && isGameMode();
+  if (nameEl) nameEl.textContent = game ? p.name : 'The Advisor';
+  if (roleEl) roleEl.textContent = game ? (p.age + ' · ' + (currentPersona==='oracle'?'Oracle & Master Wizard':'Advisor, The Academy')) : 'Your AI advisor';
 }
 function initJeb() {
   buildPersonaGrid();
@@ -10995,9 +11022,10 @@ function renderQuizResults(){
   var body=document.getElementById('quiz-body'); if(!body) return;
   var recs=quizRecs(); window._quizRecs=recs;
   var html='<div class="quiz-progress-wrap"><div class="quiz-progress" style="width:100%"></div></div>';
-  html+='<div class="quiz-q">Jebadias has read your answers.</div>';
+  var jebGame = (typeof isGameMode==='function'&&isGameMode());
+  html+='<div class="quiz-q">'+(jebGame?'Jebadias':'The Advisor')+' has read your answers.</div>';
   html+='<p style="color:var(--text2);font-size:14px;line-height:1.6;margin-bottom:18px">A starter set drawn from your interests. Add them to your '+trackerLabel()+' and refine from there.</p>';
-  if(!recs.length){ html+='<p style="color:var(--text3)">No clear matches yet — explore The Stacks and Jebadias will learn as you save.</p>'; }
+  if(!recs.length){ html+='<p style="color:var(--text3)">No clear matches yet — explore '+(jebGame?'The Stacks':'the Marketplace')+' and '+(jebGame?'Jebadias':'the Advisor')+' will learn as you save.</p>'; }
   else { html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px">'
     +recs.map(function(s){ return '<div onclick="closeQuiz();openECById(\''+s.id+'\')" style="cursor:pointer;border:1px solid var(--border);border-radius:9px;padding:12px;background:var(--card)"><div style="font-size:18px">'+(s.icon||'📌')+'</div><div style="font-size:12px;color:var(--text);font-weight:600;margin-top:5px;line-height:1.3">'+escH(s.name)+'</div><div style="font-size:10px;color:var(--accent);margin-top:4px">'+escH(s.rarity||'Common')+' · '+escH(s.cat||'')+'</div></div>'; }).join('')+'</div>'; }
   html+='<div class="quiz-nav"><button class="quiz-back" onclick="quizState.step='+(QUIZ_Q.length-1)+';renderQuizStep()">← Back</button>';
@@ -11387,7 +11415,10 @@ function checkPersonaUnlocks() {
   });
   if (newly) {
     const p = JEB_PERSONAS[newly];
-    if (typeof showNotif==='function') showNotif('A new era of Jebadias has opened: ' + (p?p.name:newly) + ' 🔓');
+    if (typeof showNotif==='function') {
+      if (typeof isGameMode==='function' && isGameMode()) showNotif('A new era of Jebadias has opened: ' + (p?p.name:newly) + ' 🔓');
+      else showNotif('✦ The Advisor has more to say now.');
+    }
     setTimeout(buildPersonaGrid, 500);
   }
 }
