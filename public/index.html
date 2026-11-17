@@ -95,8 +95,6 @@ h1,h2,h3{font-family:var(--px);line-height:1.6;}
 .nav-right{display:flex;align-items:center;gap:8px;}
 .nav-theme-btn{background:var(--card2);border:1px solid var(--border);color:var(--text2);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;}
 .nav-theme-btn:hover{border-color:var(--accent);color:var(--accent);}
-.grimoire-btn{font-family:var(--px);font-size:6px;background:var(--accent);color:#fff;border:none;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px;position:relative;}
-.grimoire-badge{background:#fff;color:var(--accent);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;}
 /* Hamburger */
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:1px solid var(--border);}
 .hamburger span{width:20px;height:2px;background:var(--text2);transition:all .2s;}
@@ -733,7 +731,6 @@ body {
 
 /* Theme button */
 [data-theme="light"] .nav-theme-btn { background: #ede5d4; border-color: #d4c4a0; }
-[data-theme="light"] .grimoire-btn { background: var(--accent); }
 
 /* Scroll bar */
 [data-theme="light"] ::-webkit-scrollbar-track { background: #ede5d4; }
@@ -1179,7 +1176,6 @@ html[data-contrast="high"][data-theme="light"] .page-banner-sub{ color:#241a0e; 
 [data-mode="standard"] .page-banner-title,
 [data-mode="standard"] .ec-badge,
 [data-mode="standard"] .frag-num,
-[data-mode="standard"] .grimoire-btn,
 [data-mode="standard"] .notif,
 [data-mode="standard"] .scroll-pill,
 [data-mode="standard"] .feat-title{
@@ -1194,7 +1190,6 @@ html[data-contrast="high"][data-theme="light"] .page-banner-sub{ color:#241a0e; 
 [data-mode="standard"] .scroll-pill{font-size:13px;letter-spacing:.04em;padding:9px 18px;}
 [data-mode="standard"] .feat-title{font-size:16px;font-weight:600;}
 [data-mode="standard"] .setting-label{font-size:12px;font-weight:600;letter-spacing:.04em !important;text-transform:uppercase;}
-[data-mode="standard"] .grimoire-btn{font-size:13px;font-weight:600;border-radius:8px;}
 
 /* cards: softer, modern */
 [data-mode="standard"] .ec-card,
@@ -1382,11 +1377,11 @@ html[data-mode="standard"][data-theme="light"] .ec-card:hover{
 
 /* ══ CRAFT LAYER — interactive states + micro-typography (both modes) ══════
    §4 cohesive hover/focus/active on every control; §6 balanced headings. */
-.btn, .filter-chip, .sort-chip, .grimoire-btn, .persona-btn, .quiz-opt, .toggle, .nav-theme-btn {
+.btn, .filter-chip, .sort-chip, .persona-btn, .quiz-opt, .toggle, .nav-theme-btn {
   transition: transform .13s cubic-bezier(.2,.7,.3,1), background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;
 }
 /* §4 click elasticity — a subtle mechanical press */
-.btn:active, .filter-chip:active, .sort-chip:active, .grimoire-btn:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: scale(.97); }
+.btn:active, .filter-chip:active, .sort-chip:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: scale(.97); }
 /* §4 tailored dual-ring focus, brand-tinted, replaces the generic outline */
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -1399,7 +1394,7 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
 .home-logo-wordmark, .ob-title, .jebmem-title, .feat-title, .how-item-title { text-wrap: balance; }
 /* §1 accessibility — press feedback becomes a crossfade under reduced motion */
 @media (prefers-reduced-motion: reduce){
-  .btn:active, .filter-chip:active, .sort-chip:active, .grimoire-btn:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: none; }
+  .btn:active, .filter-chip:active, .sort-chip:active, .persona-btn:active, .quiz-opt:active, .nav-theme-btn:active { transform: none; }
 }
 
 /* ══ PLANAR EDITORIAL HERO — value-prop headline + a living catalog wall ═════
@@ -1516,8 +1511,6 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
    dark-theme accent, #e0894a, is too light for white text); light theme's accent
    is dark enough that white already passes (5.01:1), left alone. */
 [data-mode="standard"]:not([data-theme="light"]) .persona-btn.active{ color:#1a0f06; }
-/* same white-on-accent contrast fix, same root cause, for the nav Tracker button */
-[data-mode="standard"]:not([data-theme="light"]) .grimoire-btn{ color:#1a0f06; }
 [data-mode="standard"] .chat-win{ border-radius:16px; padding:20px; gap:16px; }
 [data-mode="standard"] .bubble{ font-size:15px; line-height:1.65; border-radius:16px; padding:13px 17px; }
 [data-mode="standard"] .bubble-jeb{ border-radius:5px 16px 16px 16px; }
@@ -1639,13 +1632,10 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
    Measured at 390px: .nav-left 124px + .nav-right 279px + 32px padding = 435px
    in a 390px bar, so .nav-right ended at x=421 and only ~11px of the
    hamburger's 42px tap target was on screen — the mobile menu was nearly
-   unopenable. The Tracker button was the biggest consumer at 130px, so drop
-   its text label on phones; the 📖 icon + count badge still read, and the
-   drawer keeps a full "Tracker" row. */
-@media (max-width:600px){
-  #grim-btn-label{ display:none; }
-  .grimoire-btn{ padding:7px 9px; gap:4px; }
-}
+   unopenable. The floating Tracker button that used to live here was
+   the biggest consumer at 130px; it's since been removed entirely (it
+   duplicated the "Tracker" nav link and, worse, showed the Saved count
+   instead of the Tracker count), which also resolves this. */
 </style>
 <body>
 
@@ -1683,9 +1673,6 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
   <div class="nav-right">
     <button class="nav-theme-btn" id="nav-auth" onclick="openAuth()" title="Sign in / create account" style="width:auto;padding:0 12px;font-size:10px;font-family:var(--px);color:var(--accent-text)">Sign in</button>
     <button class="nav-theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
-    <button class="grimoire-btn" onclick="nav('grimoire')">
-      📖 <span id="grim-btn-label">Spellbook</span> <span class="grimoire-badge" id="grim-count">0</span>
-    </button>
     <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -2226,8 +2213,9 @@ h1, h2, h3, .home-title, .page-banner-title, .sec-title, .home-what-label,
       <div class="ec-detail-title" id="ec-detail-title"></div>
       <div class="ec-detail-cat" id="ec-detail-cat"></div>
       <div class="ec-detail-branches" id="ec-detail-branches"></div>
-      <button class="btn btn-primary" id="ec-add-btn" onclick="addFromDetail()" style="width:100%;margin-top:8px">+ Add to Spellbook</button>
-      <button class="btn btn-ghost" id="ec-commit-btn" onclick="commitFromDetail()" style="width:100%;margin-top:8px">📖 Commit to Grimoire</button>
+      <button class="btn btn-ghost" id="ec-add-btn" onclick="addFromDetail()" style="width:100%;margin-top:8px">+ Add to Spellbook</button>
+      <div class="form-hint" id="ec-save-hint" style="margin:4px 0"></div>
+      <button class="btn btn-primary" id="ec-commit-btn" onclick="commitFromDetail()" style="width:100%">📖 Commit to Grimoire</button>
       <button class="btn btn-ghost" id="ec-compare-btn" data-ec="" onclick="if(this.getAttribute('data-ec'))toggleCompare(this.getAttribute('data-ec'))" style="width:100%;margin-top:8px">⊕ Compare</button>
       <button class="btn btn-ghost" id="ec-copy-btn" onclick="copyECLink(currentEC&&currentEC.id)" style="font-size:11px;margin-top:4px;width:100%">🔗 Copy EC Link</button>
       <button class="btn btn-ghost" onclick="nav('marketplace')" style="width:100%">←</button>
@@ -9965,6 +9953,8 @@ function openEC(ec) {
     cbtn.textContent = inSpell ? '✓ In Your '+trackerLabel() : '📖 Commit to '+trackerLabel();
     cbtn.style.opacity = inSpell ? '0.6' : '1';
   }
+  const hintEl = document.getElementById('ec-save-hint');
+  if (hintEl) hintEl.textContent = savedLabel()+' is just a shortlist. Commit to your '+trackerLabel()+' once you\'re actually doing it.';
 
   const imgWrap = document.getElementById('ec-detail-img-wrap');
   const imgEl = document.getElementById('ec-detail-img');
