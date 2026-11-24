@@ -1,7 +1,10 @@
 # Arcanum — Progress & Roadmap
 
-> Living doc for Arcanum (extracurricular marketplace + AI advisor, 2026 Congressional App Challenge, deadline **Oct 26 2026**).
-> Last updated: 2026-08-14. Branch: `main` (deploys automatically to Cloudflare).
+> Living doc for Arcanum (extracurricular marketplace + AI advisor). No longer going to the
+> Congressional App Challenge — that slot went to a different project (Plainscript) on
+> Oct 26 2026. Current target: **Technovation Challenge**, due ~May 2027; **Webby Awards**
+> is a possible second entry (paid, allows pre-existing apps, exact deadline not yet tracked).
+> Last updated: 2026-11-23. Branch: `main` (deploys automatically to Cloudflare).
 
 ---
 
